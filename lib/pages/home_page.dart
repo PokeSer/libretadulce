@@ -58,42 +58,122 @@ class _HomePageState extends State<HomePage> {
 
   void _showUpdateDialog(UpdateInfo update) {
     final l10n = AppLocalizations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tag = 'v${update.version}';
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        title: Text(l10n.localeName.startsWith('es') 
-            ? 'Nueva versión disponible'
-            : 'New version available'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('v${update.version}'),
-            if (update.releaseNotes.isNotEmpty) ...[
-              const SizedBox(height: 8),
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.teal.withValues(alpha: isDark ? 0.15 : 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.system_update_rounded,
+                    color: Colors.teal, size: 40),
+              ),
+              const SizedBox(height: 16),
               Text(
-                update.releaseNotes.length > 200
-                    ? '${update.releaseNotes.substring(0, 200)}...'
-                    : update.releaseNotes,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                l10n.updateAvailable,
+                style: const TextStyle(
+                    fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                decoration: BoxDecoration(
+                  color: Colors.teal.withValues(alpha: isDark ? 0.2 : 0.1),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  l10n.updateVersion(tag),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.teal,
+                    fontFamily: 'monospace',
+                  ),
+                ),
+              ),
+              if (update.releaseNotes.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text(
+                  l10n.updateWhatIsNew,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? Colors.grey.shade900
+                        : Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  constraints: const BoxConstraints(maxHeight: 120),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      update.releaseNotes,
+                      style: TextStyle(
+                        fontSize: 13,
+                        height: 1.4,
+                        color:
+                            isDark ? Colors.grey.shade300 : Colors.grey.shade700,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(l10n.updateLater),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: FilledButton.icon(
+                      onPressed: () {
+                        Navigator.pop(ctx);
+                        _downloadUpdate(update);
+                      },
+                      icon: const Icon(Icons.download, size: 18),
+                      label: Text(l10n.updateDownload),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.teal,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
-          ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text(l10n.localeName.startsWith('es') ? 'Ahora no' : 'Later'),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _downloadUpdate(update);
-            },
-            child: Text(l10n.localeName.startsWith('es') ? 'Descargar' : 'Download'),
-          ),
-        ],
       ),
     );
   }
@@ -102,9 +182,7 @@ class _HomePageState extends State<HomePage> {
     final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(l10n.localeName.startsWith('es')
-            ? 'Descargando...'
-            : 'Downloading...'),
+        content: Text(l10n.updateDownloading),
         duration: const Duration(seconds: 60),
       ),
     );
@@ -115,11 +193,7 @@ class _HomePageState extends State<HomePage> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       if (!success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.localeName.startsWith('es')
-                ? 'Error al descargar. Visita github.com/PokeSer/libretadulce/releases'
-                : 'Download failed. Visit github.com/PokeSer/libretadulce/releases'),
-          ),
+          SnackBar(content: Text(l10n.updateError)),
         );
       }
     }

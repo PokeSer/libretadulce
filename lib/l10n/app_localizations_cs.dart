@@ -797,4 +797,28 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get confirmDeleteButton => 'Smazat';
+
+  @override
+  String get updateAvailable => 'Aktualizace k dispozici';
+
+  @override
+  String updateVersion(String version) {
+    return 'Verze $version';
+  }
+
+  @override
+  String get updateLater => 'Později';
+
+  @override
+  String get updateDownload => 'Stáhnout';
+
+  @override
+  String get updateDownloading => 'Stahování aktualizace...';
+
+  @override
+  String get updateError =>
+      'Stahování selhalo. Navštivte github.com/PokeSer/libretadulce/releases';
+
+  @override
+  String get updateWhatIsNew => 'Co je nového';
 }

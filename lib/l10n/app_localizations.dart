@@ -1531,6 +1531,48 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Eliminar'**
   String get confirmDeleteButton;
+
+  /// Title for the update available dialog
+  ///
+  /// In es, this message translates to:
+  /// **'Actualización disponible'**
+  String get updateAvailable;
+
+  /// No description provided for @updateVersion.
+  ///
+  /// In es, this message translates to:
+  /// **'Versión {version}'**
+  String updateVersion(String version);
+
+  /// No description provided for @updateLater.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora no'**
+  String get updateLater;
+
+  /// No description provided for @updateDownload.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargar'**
+  String get updateDownload;
+
+  /// No description provided for @updateDownloading.
+  ///
+  /// In es, this message translates to:
+  /// **'Descargando actualización...'**
+  String get updateDownloading;
+
+  /// No description provided for @updateError.
+  ///
+  /// In es, this message translates to:
+  /// **'Error al descargar. Visita github.com/PokeSer/libretadulce/releases'**
+  String get updateError;
+
+  /// No description provided for @updateWhatIsNew.
+  ///
+  /// In es, this message translates to:
+  /// **'Novedades'**
+  String get updateWhatIsNew;
 }
 
 class _AppLocalizationsDelegate

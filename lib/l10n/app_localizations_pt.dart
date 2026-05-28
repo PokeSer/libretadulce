@@ -799,4 +799,28 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get confirmDeleteButton => 'Excluir';
+
+  @override
+  String get updateAvailable => 'Atualização disponível';
+
+  @override
+  String updateVersion(String version) {
+    return 'Versão $version';
+  }
+
+  @override
+  String get updateLater => 'Depois';
+
+  @override
+  String get updateDownload => 'Baixar';
+
+  @override
+  String get updateDownloading => 'Baixando atualização...';
+
+  @override
+  String get updateError =>
+      'Falha no download. Visite github.com/PokeSer/libretadulce/releases';
+
+  @override
+  String get updateWhatIsNew => 'Novidades';
 }

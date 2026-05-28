@@ -250,5 +250,13 @@
 
   "confirmDeleteTitle": "Conferma eliminazione",
   "confirmDeleteCancel": "Annulla",
-  "confirmDeleteButton": "Elimina"
+  "confirmDeleteButton": "Elimina",
+
+  "updateAvailable": "Aggiornamento disponibile",
+  "updateVersion": "Versione {version}",
+  "updateLater": "Dopo",
+  "updateDownload": "Scarica",
+  "updateDownloading": "Scaricamento aggiornamento...",
+  "updateError": "Download fallito. Visita github.com/PokeSer/libretadulce/releases",
+  "updateWhatIsNew": "Novità"
 }

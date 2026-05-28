@@ -250,5 +250,13 @@
 
   "confirmDeleteTitle": "Potvrdit smazání",
   "confirmDeleteCancel": "Zrušit",
-  "confirmDeleteButton": "Smazat"
+  "confirmDeleteButton": "Smazat",
+
+  "updateAvailable": "Aktualizace k dispozici",
+  "updateVersion": "Verze {version}",
+  "updateLater": "Později",
+  "updateDownload": "Stáhnout",
+  "updateDownloading": "Stahování aktualizace...",
+  "updateError": "Stahování selhalo. Navštivte github.com/PokeSer/libretadulce/releases",
+  "updateWhatIsNew": "Co je nového"
 }
