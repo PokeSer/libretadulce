@@ -8,6 +8,7 @@ import 'profile_page.dart';
 import 'admin_page.dart';
 import 'history_page.dart';
 import '../l10n/app_localizations.dart';
+import '../services/update_service.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +26,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _checkAdminStatus();
+    _checkForUpdates();
   }
 
   Future<void> _checkAdminStatus() async {
@@ -43,6 +45,82 @@ class _HomePageState extends State<HomePage> {
         if (userDoc.data()?['role'] == 'admin') {
           if (mounted) setState(() => _isAdmin = true);
         }
+      }
+    }
+  }
+
+  Future<void> _checkForUpdates() async {
+    final update = await UpdateService.checkForUpdate();
+    if (update != null && mounted) {
+      _showUpdateDialog(update);
+    }
+  }
+
+  void _showUpdateDialog(UpdateInfo update) {
+    final l10n = AppLocalizations.of(context);
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.localeName.startsWith('es') 
+            ? 'Nueva versión disponible'
+            : 'New version available'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('v${update.version}'),
+            if (update.releaseNotes.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                update.releaseNotes.length > 200
+                    ? '${update.releaseNotes.substring(0, 200)}...'
+                    : update.releaseNotes,
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(l10n.localeName.startsWith('es') ? 'Ahora no' : 'Later'),
+          ),
+          FilledButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              _downloadUpdate(update);
+            },
+            child: Text(l10n.localeName.startsWith('es') ? 'Descargar' : 'Download'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _downloadUpdate(UpdateInfo update) async {
+    final l10n = AppLocalizations.of(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.localeName.startsWith('es')
+            ? 'Descargando...'
+            : 'Downloading...'),
+        duration: const Duration(seconds: 60),
+      ),
+    );
+
+    final success = await UpdateService.downloadAndInstall(update.downloadUrl);
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      if (!success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.localeName.startsWith('es')
+                ? 'Error al descargar. Visita github.com/PokeSer/libretadulce/releases'
+                : 'Download failed. Visit github.com/PokeSer/libretadulce/releases'),
+          ),
+        );
       }
     }
   }
