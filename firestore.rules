@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Comprueba si el usuario autenticado tiene rol de admin local
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Reglas para los documentos maestros de usuarios (nuevo).
+    // Cada usuario puede leer/escribir su propio documento base.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Reglas para los alimentos personales del usuario.
+    match /users/{userId}/foods/{foodId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Reglas para el historial personal del usuario.
+    match /users/{userId}/history/{mealId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Reglas para los ajustes personales del usuario (ratio insulina, etc).
+    match /users/{userId}/settings/{docId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Reglas para la base de datos global de alimentos.
+    match /global_foods/{docId} {
+      allow read: if request.auth != null; 
+      // SOLO admins pueden escribir globalmente
+      allow write: if request.auth != null && isAdmin();
+    }
+
+    // Reglas para las peticiones de nuevos alimentos.
+    match /food_requests/{docId} {
+      allow create: if request.auth != null;
+      // SOLO admins pueden leer, aprobar o borrar las peticiones globales
+      allow update, delete, read: if request.auth != null && isAdmin();
+    }
+  }
+}
