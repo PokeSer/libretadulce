@@ -55,7 +55,9 @@ app.*.map.json
 *.p12
 
 # Firebase
-google-services.json
+# (firebase_options.dart y google-services.json son necesarios para compilar.
+#  Las API keys de Firebase cliente no son secretos: van incrustadas en el APK.
+#  La seguridad de los datos la gestionan las Firestore Security Rules.)
 GoogleService-Info.plist
 
 # Agent tools (not part of the app)

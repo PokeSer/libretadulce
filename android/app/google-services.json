@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "719361605717",
+    "project_id": "libretadulce",
+    "storage_bucket": "libretadulce.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719361605717:android:47338acf6351907a4fd4dc",
+        "android_client_info": {
+          "package_name": "com.example.libretadulce"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "719361605717-kml98dgime03vkhnkpr2vg3qtitrv2bi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.libretadulce",
+            "certificate_hash": "cfd10c3a4de2e98f7076975029e166482e76c639"
+          }
+        },
+        {
+          "client_id": "719361605717-i40g4vdoa3e1cdl5i9rccq615bmt6o4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVCfp-hFquk-IbpwDTVZasNNlb2t727do"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "719361605717-i40g4vdoa3e1cdl5i9rccq615bmt6o4s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "719361605717-4so6oq41c6nvfunuga1s1e054s7e0atu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.libretadulce"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
