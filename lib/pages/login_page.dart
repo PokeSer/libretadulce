@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/auth_service.dart';
 import '../l10n/app_localizations.dart';
+import '../services/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,26 +13,32 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   Future<void> _handleGoogleSignIn() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     final authService = AuthService();
-    await authService.signInWithGoogle();
+    try {
+      await authService.signInWithGoogle();
+    } on AuthException catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.message),
+            backgroundColor: Colors.red.shade700,
+            duration: const Duration(seconds: 8),
+          ),
+        );
+      }
+    }
 
     if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
-    // Una vez autenticado, la navegación se gestionará en main.dart
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    // Usamos colores de salud: azul claro, verde azulado, blancos
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -42,24 +48,22 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Icono / Logo principal
               ExcludeSemantics(
                 child: Container(
-                margin: const EdgeInsets.only(bottom: 40),
-                padding: const EdgeInsets.all(32),
-                decoration: BoxDecoration(
-                  color: Colors.teal.shade50,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.favorite_rounded,
-                  size: 100,
-                  color: Colors.teal.shade600,
+                  margin: const EdgeInsets.only(bottom: 40),
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: Colors.teal.shade50,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.favorite_rounded,
+                    size: 100,
+                    color: Colors.teal.shade600,
+                  ),
                 ),
               ),
-              ),
-              
-              // Título
+
               Text(
                 l10n.loginTitle,
                 textAlign: TextAlign.center,
@@ -70,10 +74,9 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.teal.shade900,
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
-              // Subtítulo
+
               Text(
                 l10n.loginSubtitle,
                 textAlign: TextAlign.center,
@@ -86,7 +89,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 60),
 
-              // Botón de Inicio de sesión
               _isLoading
                   ? Center(
                       child: Semantics(
@@ -129,7 +131,6 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 32),
 
-              // Texto de privacidad o garantía de salud
               Text(
                 l10n.loginPrivacyText,
                 textAlign: TextAlign.center,
