@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "719361605717-ou7uigmkcombci6a19modjkag8gb51q6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.libretadulce",
+            "certificate_hash": "68ed11c91beb388ec1cb66f4243645c9a09cd3b8"
+          }
+        },
+        {
           "client_id": "719361605717-i40g4vdoa3e1cdl5i9rccq615bmt6o4s.apps.googleusercontent.com",
           "client_type": 3
         }
