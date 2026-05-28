@@ -61,22 +61,21 @@ class UpdateService {
     final aParts = a.split(RegExp(r'[.-]'));
     final bParts = b.split(RegExp(r'[.-]'));
 
-    for (int i = 0; i < aParts.length && i < bParts.length; i++) {
-      final aNum = int.tryParse(aParts[i]) ?? 0;
-      final bNum = int.tryParse(bParts[i]) ?? 0;
+    final maxLen = aParts.length > bParts.length ? aParts.length : bParts.length;
+    for (int i = 0; i < maxLen; i++) {
+      final aNum = _parseLeadingInt(i < aParts.length ? aParts[i] : '');
+      final bNum = _parseLeadingInt(i < bParts.length ? bParts[i] : '');
       final cmp = aNum.compareTo(bNum);
       if (cmp != 0) return cmp;
-
-      final aStr = aParts[i].toLowerCase();
-      final bStr = bParts[i].toLowerCase();
-      if (aStr != bStr) {
-        if (aStr.isEmpty && bStr.isNotEmpty) return 1;
-        if (bStr.isEmpty && aStr.isNotEmpty) return -1;
-        return aStr.compareTo(bStr);
-      }
     }
+    return 0;
+  }
 
-    return aParts.length.compareTo(bParts.length);
+  static int _parseLeadingInt(String s) {
+    if (s.isEmpty) return 0;
+    final match = RegExp(r'^(\d+)').firstMatch(s);
+    if (match == null) return 0;
+    return int.parse(match.group(0)!);
   }
 
   static Future<bool> downloadAndInstall(String url) async {
