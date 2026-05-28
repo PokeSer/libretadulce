@@ -45,7 +45,7 @@ jobs:
           echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" > android/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=keystore.jks" >> android/key.properties
+          echo "storeFile=app/keystore.jks" >> android/key.properties
           echo "=== Verifying keystore SHA-1 ==="
           keytool -list -v -keystore android/app/keystore.jks -alias upload -storepass "${{ secrets.KEYSTORE_PASSWORD }}" 2>/dev/null | grep SHA1 || true
           flutter build apk --release --split-per-abi
