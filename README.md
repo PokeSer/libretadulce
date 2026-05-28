@@ -74,6 +74,25 @@ Libreta Dulce te ayuda a:
 
 ---
 
+## Descargar e instalar (usuarios)
+
+Si solo quieres usar la app sin compilar, descarga el APK desde [GitHub Releases](https://github.com/PokeSer/libretadulce/releases). La versión precompilada incluye Firebase ya configurado, por lo que el login con Google y la base de datos de alimentos compartida funcionan directamente.
+
+Elige el APK según tu dispositivo:
+
+| APK | Para qué dispositivo |
+|-----|---------------------|
+| `app-arm64-v8a-release.apk` | La gran mayoría de móviles modernos (2017+) |
+| `app-armeabi-v7a-release.apk` | Dispositivos antiguos (32-bit) |
+| `app-x86_64-release.apk` | Emuladores de Android en PC |
+| `app-debug.apk` | Para pruebas, no instalar en uso diario |
+
+> Si no sabes cuál elegir, usa `app-arm64-v8a-release.apk`.
+
+También puedes descargar el `app-release.aab` si prefieres instalar desde Google Play Store (próximamente) o tiendas alternativas.
+
+---
+
 ## Empezar a desarrollar
 
 ```bash
