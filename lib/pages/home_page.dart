@@ -269,7 +269,10 @@ class _HomePageState extends State<HomePage> {
             ),
         ],
       ),
-      body: _pages[safeIndex],
+      body: IndexedStack(
+        index: safeIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: safeIndex,
         onDestinationSelected: (int index) {
