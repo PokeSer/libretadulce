@@ -646,8 +646,10 @@ class _HistoryPageState extends State<HistoryPage> {
       final file = File('${dir.path}/libretadulce_historial.csv');
       await file.writeAsString(buffer.toString());
 
-      await Share.shareXFiles([XFile(file.path)],
-          subject: l10n.historyShareSubject);
+      await SharePlus.instance.share(ShareParams(
+        files: [XFile(file.path)],
+        subject: l10n.historyShareSubject,
+      ));
     } catch (e) {
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.historyExportError(e.toString()))),
