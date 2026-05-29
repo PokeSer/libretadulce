@@ -44,12 +44,14 @@ class UpdateService {
         }
       }
 
-      downloadUrl = data['html_url'] as String?;
+      downloadUrl ??= data['html_url'] as String?;
       if (downloadUrl == null || downloadUrl.isEmpty) return null;
+
+      final cleanNotes = _cleanReleaseNotes(data['body'] as String? ?? '');
       return UpdateInfo(
         version: latestTag,
         downloadUrl: downloadUrl,
-        releaseNotes: data['body'] as String? ?? '',
+        releaseNotes: cleanNotes,
       );
     } catch (e) {
       debugPrint('Update check failed: $e');
@@ -76,6 +78,15 @@ class UpdateService {
     final match = RegExp(r'^(\d+)').firstMatch(s);
     if (match == null) return 0;
     return int.parse(match.group(0)!);
+  }
+
+  static String _cleanReleaseNotes(String raw) {
+    var text = raw;
+    text = text.replaceAll(RegExp(r'\[([^\]]*)\]\([^)]*\)'), r'$1');
+    text = text.replaceAll(RegExp(r'^#{1,6}\s*', multiLine: true), '');
+    text = text.replaceAll(RegExp(r'\*{1,3}([^*]+)\*{1,3}'), r'$1');
+    text = text.replaceAll(RegExp(r'`([^`]+)`'), r'$1');
+    return text.trim();
   }
 
   static Future<bool> downloadAndInstall(String url) async {
