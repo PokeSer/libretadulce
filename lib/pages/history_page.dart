@@ -367,6 +367,40 @@ class _HistoryPageState extends State<HistoryPage> {
                                         ],
                                       ),
                                     ),
+                                    if (entry.glucose != null) ...[
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                                        decoration: BoxDecoration(
+                                          color: context.isDarkMode
+                                              ? Colors.red.withValues(alpha: 0.08)
+                                              : Colors.red.shade50,
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Icon(Icons.monitor_heart, size: 14, color: Colors.redAccent),
+                                                const SizedBox(width: 4),
+                                                Text(l10n.calcGlucoseLabel,
+                                                    style: const TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        fontSize: 12,
+                                                        color: Colors.redAccent)),
+                                              ],
+                                            ),
+                                            Text(
+                                              '${entry.glucose!.toStringAsFixed(0)} mg/dL',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.redAccent),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                     if (entry.totalBolus != null) ...[
                                       const SizedBox(height: 8),
                                       Container(
@@ -627,17 +661,19 @@ class _HistoryPageState extends State<HistoryPage> {
       }
 
       final buffer = StringBuffer();
-      buffer.writeln(l10n.historyCsvHeader);
+      buffer.writeln('${l10n.historyCsvHeader},Glucemia (mg/dL),Bolo (uds)');
 
       for (final entry in entries) {
         final dateStr = DateFormat('yyyy-MM-dd').format(entry.timestamp);
         final timeStr = DateFormat('HH:mm').format(entry.timestamp);
+        final glucoseStr = entry.glucose?.toStringAsFixed(0) ?? '';
+        final bolusStr = entry.totalBolus?.toStringAsFixed(1) ?? '';
 
         if (entry.items.isEmpty) {
-          buffer.writeln('$dateStr,$timeStr,"${entry.mealType.rawValue}","-",-,"${entry.totalRations.toStringAsFixed(1)}","${entry.totalCarbs.toStringAsFixed(1)}"');
+          buffer.writeln('$dateStr,$timeStr,"${entry.mealType.rawValue}","-",-,"${entry.totalRations.toStringAsFixed(1)}","${entry.totalCarbs.toStringAsFixed(1)}",$glucoseStr,$bolusStr');
         } else {
           for (final item in entry.items) {
-            buffer.writeln('$dateStr,$timeStr,"${entry.mealType.rawValue}","${item.name}","${item.grams.toStringAsFixed(0)}","${item.raciones.toStringAsFixed(1)}","${item.carbs.toStringAsFixed(1)}"');
+            buffer.writeln('$dateStr,$timeStr,"${entry.mealType.rawValue}","${item.name}","${item.grams.toStringAsFixed(0)}","${item.raciones.toStringAsFixed(1)}","${item.carbs.toStringAsFixed(1)}",$glucoseStr,$bolusStr');
           }
         }
       }

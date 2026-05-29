@@ -274,5 +274,9 @@
   "profileThemeDark": "Tmavý",
   "profileSettingsSectionApp": "Aplikace",
   "profileSettingsSectionHealth": "Zdraví",
-  "profileSettings": "Nastavení"
+  "profileSettings": "Nastavení",
+
+  "insulinGlucoseUnit": "Jednotka glykémie",
+  "insulinGlucoseUnitDesc": "Přepínání mezi mg/dL a mmol/L",
+  "insulinGlucoseUnitLabel": "Použít mmol/L místo mg/dL"
 }

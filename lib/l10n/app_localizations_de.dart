@@ -854,4 +854,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get profileSettings => 'Einstellungen';
+
+  @override
+  String get insulinGlucoseUnit => 'Blutzucker-Einheit';
+
+  @override
+  String get insulinGlucoseUnitDesc => 'Wechsel zwischen mg/dL und mmol/L';
+
+  @override
+  String get insulinGlucoseUnitLabel => 'mmol/L statt mg/dL verwenden';
 }

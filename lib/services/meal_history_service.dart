@@ -12,6 +12,7 @@ class MealHistoryService {
     required double totalRations,
     required List<Map<String, dynamic>> items,
     double? totalBolus,
+    double? glucose,
   }) async {
     await _history(uid).add({
       'timestamp': FieldValue.serverTimestamp(),
@@ -19,7 +20,8 @@ class MealHistoryService {
       'totalCarbs': totalCarbs,
       'totalRations': totalRations,
       'items': items,
-      'totalBolus': ?totalBolus,
+      'totalBolus': totalBolus,
+      if (glucose != null) 'glucose': glucose,
     });
   }
 
@@ -40,6 +42,7 @@ class MealHistoryService {
         'raciones': i.raciones,
       }).toList(),
       'totalBolus': entry.totalBolus,
+      if (entry.glucose != null) 'glucose': entry.glucose,
     });
   }
 

@@ -164,6 +164,7 @@ class MealEntry {
   final double totalRations;
   final List<MealItem> items;
   final double? totalBolus;
+  final double? glucose;
 
   const MealEntry({
     required this.id,
@@ -173,6 +174,7 @@ class MealEntry {
     required this.totalRations,
     required this.items,
     this.totalBolus,
+    this.glucose,
   });
 
   factory MealEntry.fromFirestore(String docId, Map<String, dynamic> data) {
@@ -187,6 +189,9 @@ class MealEntry {
       totalRations: (data['totalRations'] as num).toDouble(),
       totalBolus: data['totalBolus'] != null
           ? (data['totalBolus'] as num).toDouble()
+          : null,
+      glucose: data['glucose'] != null
+          ? (data['glucose'] as num).toDouble()
           : null,
       items: rawItems.map(MealItem.fromMap).toList(),
     );

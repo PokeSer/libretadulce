@@ -12,6 +12,9 @@ class InsulinSettings {
   final double glucosaObjetivo;
   final bool supportsHalfUnits;
   final bool roundBolusDown;
+  final bool usesMmolL;
+
+  static const double _mmolConversionFactor = 18.018;
 
   const InsulinSettings({
     required this.ratioBase,
@@ -25,6 +28,7 @@ class InsulinSettings {
     required this.glucosaObjetivo,
     this.supportsHalfUnits = true,
     this.roundBolusDown = false,
+    this.usesMmolL = false,
   });
 
   double getMealRatio(MealType? mealType) {
@@ -54,6 +58,20 @@ class InsulinSettings {
   double calculateCorrection(double glucosaActual) {
     if (glucosaActual <= glucosaObjetivo) return 0;
     return (glucosaActual - glucosaObjetivo) / factorCorreccion;
+  }
+
+  double toMgdl(double value) => usesMmolL ? value * _mmolConversionFactor : value;
+
+  double toMmol(double value) => usesMmolL ? value : value / _mmolConversionFactor;
+
+  double toStoredGlucoseUnit(double value) => usesMmolL ? value / _mmolConversionFactor : value;
+
+  double fromStoredGlucoseUnit(double value) => usesMmolL ? value * _mmolConversionFactor : value;
+
+  String glucoseLabel() => usesMmolL ? 'mmol/L' : 'mg/dL';
+
+  String formatGlucose(double value) {
+    return usesMmolL ? value.toStringAsFixed(1) : value.toStringAsFixed(0);
   }
 
   double roundBolus(double units) {
@@ -99,6 +117,7 @@ class InsulinSettings {
       glucosaObjetivo: (data['glucosaObjetivo'] as num).toDouble(),
       supportsHalfUnits: data['supportsHalfUnits'] ?? true,
       roundBolusDown: data['roundBolusDown'] ?? false,
+      usesMmolL: data['usesMmolL'] ?? false,
     );
   }
 
@@ -115,6 +134,7 @@ class InsulinSettings {
       'glucosaObjetivo': glucosaObjetivo,
       'supportsHalfUnits': supportsHalfUnits,
       'roundBolusDown': roundBolusDown,
+      'usesMmolL': usesMmolL,
     };
   }
 
@@ -136,6 +156,7 @@ class InsulinSettings {
     double? glucosaObjetivo,
     bool? supportsHalfUnits,
     bool? roundBolusDown,
+    bool? usesMmolL,
   }) {
     return InsulinSettings(
       ratioBase: ratioBase ?? this.ratioBase,
@@ -154,6 +175,7 @@ class InsulinSettings {
       glucosaObjetivo: glucosaObjetivo ?? this.glucosaObjetivo,
       supportsHalfUnits: supportsHalfUnits ?? this.supportsHalfUnits,
       roundBolusDown: roundBolusDown ?? this.roundBolusDown,
+      usesMmolL: usesMmolL ?? this.usesMmolL,
     );
   }
 }

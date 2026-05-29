@@ -850,4 +850,13 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get profileSettings => 'Nastavení';
+
+  @override
+  String get insulinGlucoseUnit => 'Jednotka glykémie';
+
+  @override
+  String get insulinGlucoseUnitDesc => 'Přepínání mezi mg/dL a mmol/L';
+
+  @override
+  String get insulinGlucoseUnitLabel => 'Použít mmol/L místo mg/dL';
 }

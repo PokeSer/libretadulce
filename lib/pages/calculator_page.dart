@@ -205,6 +205,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
         final mealTypeEnum = MealType.fromString(selectedMealType!);
 
         double? totalBolus;
+        double? glucoseMgdl;
         if (_insulinSettings != null) {
           final mealBolus = _insulinSettings!.calculateMealBolus(_mealTotalCarbs,
               mealType: mealTypeEnum);
@@ -213,6 +214,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           if (glucText.isNotEmpty) {
             final gluc = double.tryParse(glucText);
             if (gluc != null) {
+              glucoseMgdl = _insulinSettings!.toStoredGlucoseUnit(gluc);
               correction = _insulinSettings!.calculateCorrection(gluc);
             }
           }
@@ -226,6 +228,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           totalRations: _mealTotalRaciones,
           items: _mealItems,
           totalBolus: totalBolus,
+          glucose: glucoseMgdl,
         );
 
         if (mounted) {
@@ -1041,7 +1044,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12)),
                           prefixIcon: const Icon(Icons.monitor_heart),
-                          suffixText: l10n.calcGlucoseSuffix,
+                          suffixText: _insulinSettings?.glucoseLabel() ?? l10n.calcGlucoseSuffix,
                           filled: true,
                           fillColor: isDark
                               ? const Color(0xFF333333)

@@ -274,5 +274,9 @@
   "profileThemeDark": "Ciemny",
   "profileSettingsSectionApp": "Aplikacja",
   "profileSettingsSectionHealth": "Zdrowie",
-  "profileSettings": "Ustawienia"
+  "profileSettings": "Ustawienia",
+
+  "insulinGlucoseUnit": "Jednostka glukozy",
+  "insulinGlucoseUnitDesc": "Przełącz między mg/dL a mmol/L",
+  "insulinGlucoseUnitLabel": "Używaj mmol/L zamiast mg/dL"
 }

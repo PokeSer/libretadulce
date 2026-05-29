@@ -22,6 +22,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
   bool _showMealRatios = false;
   bool _supportsHalfUnits = true;
   bool _roundBolusDown = false;
+  bool _usesMmolL = false;
 
   late TextEditingController _ratioBaseCtrl;
   late TextEditingController _ratioDesayunoCtrl;
@@ -59,6 +60,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
           _glucosaObjetivoCtrl.text = settings.glucosaObjetivo.toString();
           _supportsHalfUnits = settings.supportsHalfUnits;
           _roundBolusDown = settings.roundBolusDown;
+          _usesMmolL = settings.usesMmolL;
           if (settings.ratioDesayuno != null) {
             _ratioDesayunoCtrl.text = settings.ratioDesayuno.toString();
             _showMealRatios = true;
@@ -91,6 +93,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
       glucosaObjetivo: double.parse(_glucosaObjetivoCtrl.text.trim()),
       supportsHalfUnits: _supportsHalfUnits,
       roundBolusDown: _roundBolusDown,
+      usesMmolL: _usesMmolL,
     );
 
     await InsulinSettingsService.saveSettings(_user.uid, settings);
@@ -258,7 +261,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                   hintText: l10n.insulinFactorHint,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.trending_down),
-                  suffixText: l10n.insulinFactorSuffix,
+                  suffixText: _usesMmolL ? 'mmol/L por ud' : l10n.insulinFactorSuffix,
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return l10n.insulinFactorRequired;
@@ -278,7 +281,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                   hintText: l10n.insulinGlucoseTargetHint,
                   border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.track_changes),
-                  suffixText: l10n.insulinGlucoseTargetSuffix,
+                  suffixText: _usesMmolL ? 'mmol/L' : l10n.insulinGlucoseTargetSuffix,
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return l10n.insulinGlucoseTargetRequired;
@@ -307,6 +310,26 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 activeTrackColor: Colors.teal.shade200,
                 activeThumbColor: Colors.teal,
                 onChanged: (v) => setState(() => _roundBolusDown = v),
+              ),
+
+              const Divider(height: 32),
+
+              Text(
+                l10n.insulinGlucoseUnit,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal.shade800,
+                ),
+              ),
+              const SizedBox(height: 8),
+              SwitchListTile(
+                title: Text(l10n.insulinGlucoseUnitDesc),
+                subtitle: Text(l10n.insulinGlucoseUnitLabel),
+                value: _usesMmolL,
+                activeTrackColor: Colors.teal.shade200,
+                activeThumbColor: Colors.teal,
+                onChanged: (v) => setState(() => _usesMmolL = v),
               ),
 
               const SizedBox(height: 32),

@@ -1627,6 +1627,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ajustes'**
   String get profileSettings;
+
+  /// No description provided for @insulinGlucoseUnit.
+  ///
+  /// In es, this message translates to:
+  /// **'Unidad de glucemia'**
+  String get insulinGlucoseUnit;
+
+  /// No description provided for @insulinGlucoseUnitDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Alternar entre mg/dL y mmol/L'**
+  String get insulinGlucoseUnitDesc;
+
+  /// No description provided for @insulinGlucoseUnitLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Usar mmol/L en lugar de mg/dL'**
+  String get insulinGlucoseUnitLabel;
 }
 
 class _AppLocalizationsDelegate
