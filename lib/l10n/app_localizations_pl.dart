@@ -216,6 +216,14 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get calcUndo => 'Cofnij';
+
+  @override
+  String calcItemRemoved(Object name) {
+    return '$name usunięto';
+  }
+
+  @override
   String get calcMustLogin => 'Musisz się zalogować';
 
   @override

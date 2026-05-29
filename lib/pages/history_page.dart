@@ -231,9 +231,19 @@ class _HistoryPageState extends State<HistoryPage> {
                               );
                             },
                             onDismissed: (direction) {
+                              final deletedEntry = entry;
                               MealHistoryService.deleteEntry(user!.uid, entry.id);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(l10n.historyDeleteSuccess)),
+                                SnackBar(
+                                  content: Text(l10n.historyDeleteSuccess),
+                                  action: SnackBarAction(
+                                    label: l10n.calcUndo,
+                                    onPressed: () {
+                                      MealHistoryService.restoreEntry(user!.uid, deletedEntry);
+                                    },
+                                  ),
+                                  duration: const Duration(seconds: 5),
+                                ),
                               );
                             },
                             child: Card(
@@ -297,10 +307,19 @@ class _HistoryPageState extends State<HistoryPage> {
                                                   ),
                                                 );
                                                 if (confirmed == true && mounted) {
+                                                  final deletedEntry = entry;
                                                   MealHistoryService.deleteEntry(user!.uid, entry.id);
                                                   messenger.showSnackBar(
                                                     SnackBar(
-                                                        content: Text(l10n.historyDeleteSuccess)),
+                                                      content: Text(l10n.historyDeleteSuccess),
+                                                      action: SnackBarAction(
+                                                        label: l10n.calcUndo,
+                                                        onPressed: () {
+                                                          MealHistoryService.restoreEntry(user!.uid, deletedEntry);
+                                                        },
+                                                      ),
+                                                      duration: const Duration(seconds: 5),
+                                                    ),
                                                   );
                                                 }
                                               },

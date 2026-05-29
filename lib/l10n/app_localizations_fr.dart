@@ -216,6 +216,14 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get calcUndo => 'Annuler';
+
+  @override
+  String calcItemRemoved(Object name) {
+    return '$name supprimé';
+  }
+
+  @override
   String get calcMustLogin => 'Vous devez vous connecter';
 
   @override

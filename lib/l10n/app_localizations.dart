@@ -470,6 +470,18 @@ abstract class AppLocalizations {
   /// **'Error al guardar: {error}'**
   String calcSaveError(String error);
 
+  /// No description provided for @calcUndo.
+  ///
+  /// In es, this message translates to:
+  /// **'Deshacer'**
+  String get calcUndo;
+
+  /// SnackBar shown when an item is removed from the meal plate
+  ///
+  /// In es, this message translates to:
+  /// **'{name} eliminado'**
+  String calcItemRemoved(Object name);
+
   /// No description provided for @calcMustLogin.
   ///
   /// In es, this message translates to:

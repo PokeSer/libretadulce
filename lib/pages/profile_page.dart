@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../services/auth_service.dart';
 import 'insulin_settings_page.dart';
 import '../l10n/app_localizations.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String _appVersion = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    final info = await PackageInfo.fromPlatform();
+    if (mounted) {
+      setState(() => _appVersion = 'v${info.version}+${info.buildNumber}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +72,16 @@ class ProfilePage extends StatelessWidget {
             user.email ?? '',
             style: TextStyle(fontSize: 16, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
           ),
+          if (_appVersion.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Semantics(
+              label: l10n.updateVersion(_appVersion),
+              child: Text(
+                _appVersion,
+                style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+              ),
+            ),
+          ],
 
           const Spacer(),
 

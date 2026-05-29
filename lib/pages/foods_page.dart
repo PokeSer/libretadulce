@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/utils/formatters.dart';
@@ -263,11 +264,27 @@ class _FoodsPageState extends State<FoodsPage> {
     );
   }
 
-  void _deleteFood(String docId) async {
-    await FoodRepository.deleteFood(user!.uid, docId);
+  void _deleteFood(Food food) async {
+    await FoodRepository.deleteFood(user!.uid, food.id);
+    if (mounted) {
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.calcItemRemoved(food.displayName)),
+          action: SnackBarAction(
+            label: l10n.calcUndo,
+            onPressed: () async {
+              await FoodRepository.addFood(user!.uid, food);
+            },
+          ),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    }
   }
 
   void _toggleFavorite(String docId, bool currentStatus) async {
+    HapticFeedback.lightImpact();
     await FoodRepository.toggleFavorite(user!.uid, docId, currentStatus);
   }
 
@@ -387,7 +404,7 @@ class _FoodsPageState extends State<FoodsPage> {
                            content: l10n.foodsDeleteConfirm(food.name),
                         );
                       },
-                      onDismissed: (direction) => _deleteFood(food.id),
+                      onDismissed: (direction) => _deleteFood(food),
                       child: FoodListItem(
                         food: food,
                         trailing: Wrap(
@@ -410,7 +427,7 @@ class _FoodsPageState extends State<FoodsPage> {
                                   content: l10n.foodsDeleteConfirm(food.name),
                                 );
                                 if (confirmed) {
-                                  _deleteFood(food.id);
+                                  _deleteFood(food);
                                 }
                               },
                             ),

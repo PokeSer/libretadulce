@@ -64,6 +64,14 @@
   "calcSaveSuccessBolus": "Gespeichert als {mealType}. Bolus: {bolus} Einheiten",
   "calcSaveSuccess": "Erfolgreich als {mealType} gespeichert",
   "calcSaveError": "Fehler beim Speichern: {error}",
+  "calcUndo": "Rückgängig",
+  "calcItemRemoved": "{name} entfernt",
+  "@calcItemRemoved": {
+    "description": "SnackBar shown when an item is removed from the meal plate",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "calcMustLogin": "Du musst dich anmelden",
   "calcGramsModeAccessibility": "Ich habe die Gramm, berechne Rationen",
   "calcRationsModeAccessibility": "Ich will Rationen essen, berechne Gramm",

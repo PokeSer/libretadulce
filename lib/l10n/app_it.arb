@@ -64,6 +64,14 @@
   "calcSaveSuccessBolus": "Salvato come {mealType}. Bolo: {bolus} unità",
   "calcSaveSuccess": "Salvato come {mealType} con successo",
   "calcSaveError": "Errore durante il salvataggio: {error}",
+  "calcUndo": "Annulla",
+  "calcItemRemoved": "{name} rimosso",
+  "@calcItemRemoved": {
+    "description": "SnackBar shown when an item is removed from the meal plate",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "calcMustLogin": "Devi accedere",
   "calcGramsModeAccessibility": "Ho i grammi, calcola le razioni",
   "calcRationsModeAccessibility": "Voglio mangiare razioni, calcola i grammi",

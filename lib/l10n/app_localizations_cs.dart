@@ -215,6 +215,14 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get calcUndo => 'Zpět';
+
+  @override
+  String calcItemRemoved(Object name) {
+    return '$name odstraněno';
+  }
+
+  @override
   String get calcMustLogin => 'Musíte se přihlásit';
 
   @override

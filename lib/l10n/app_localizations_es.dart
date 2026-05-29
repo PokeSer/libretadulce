@@ -215,6 +215,14 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get calcUndo => 'Deshacer';
+
+  @override
+  String calcItemRemoved(Object name) {
+    return '$name eliminado';
+  }
+
+  @override
   String get calcMustLogin => 'Debes iniciar sesión';
 
   @override

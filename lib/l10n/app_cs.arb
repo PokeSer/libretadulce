@@ -64,6 +64,14 @@
   "calcSaveSuccessBolus": "Uloženo jako {mealType}. Bolus: {bolus} jedn.",
   "calcSaveSuccess": "Uloženo jako {mealType} úspěšně",
   "calcSaveError": "Chyba při ukládání: {error}",
+  "calcUndo": "Zpět",
+  "calcItemRemoved": "{name} odstraněno",
+  "@calcItemRemoved": {
+    "description": "SnackBar shown when an item is removed from the meal plate",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "calcMustLogin": "Musíte se přihlásit",
   "calcGramsModeAccessibility": "Znám gramy, spočítej VJ",
   "calcRationsModeAccessibility": "Chci sníst VJ, spočítej gramy",

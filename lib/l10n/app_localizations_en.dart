@@ -215,6 +215,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get calcUndo => 'Undo';
+
+  @override
+  String calcItemRemoved(Object name) {
+    return '$name removed';
+  }
+
+  @override
   String get calcMustLogin => 'You must log in';
 
   @override

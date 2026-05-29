@@ -27,6 +27,22 @@ class MealHistoryService {
     await _history(uid).doc(entryId).delete();
   }
 
+  static Future<void> restoreEntry(String uid, MealEntry entry) async {
+    await _history(uid).add({
+      'timestamp': Timestamp.fromDate(entry.timestamp),
+      'mealType': entry.mealType.rawValue,
+      'totalCarbs': entry.totalCarbs,
+      'totalRations': entry.totalRations,
+      'items': entry.items.map((i) => {
+        'name': i.name,
+        'grams': i.grams,
+        'carbs': i.carbs,
+        'raciones': i.raciones,
+      }).toList(),
+      'totalBolus': entry.totalBolus,
+    });
+  }
+
   static Stream<List<MealEntry>> watchDaily(String uid, DateTime date) {
     final start = DateTime(date.year, date.month, date.day);
     final end = start.add(const Duration(days: 1));

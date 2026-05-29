@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/utils/formatters.dart';
 import '../models/food.dart';
@@ -40,6 +42,22 @@ class _CalculatorPageState extends State<CalculatorPage> {
   InsulinSettings? _insulinSettings;
   bool _settingsLoaded = false;
 
+  static const _prefsLastMealTypeKey = 'last_meal_type';
+
+  Future<void> _loadLastMealType() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString(_prefsLastMealTypeKey);
+    if (raw != null && mounted) {
+      final mealType = MealType.fromString(raw);
+      setState(() => _selectedMealType = mealType);
+    }
+  }
+
+  Future<void> _saveLastMealType(MealType type) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_prefsLastMealTypeKey, type.rawValue);
+  }
+
   void _calculateMacros() {
     if (_inputController.text.isEmpty || _selectedCarbsPer100g == 0.0) {
       setState(() {
@@ -68,6 +86,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   void _addToMeal() {
     if (_selectedFoodName != null && _calculatedGrams > 0) {
+      HapticFeedback.lightImpact();
       setState(() {
         _mealItems.add({
           'name': _selectedFoodName,
@@ -82,16 +101,50 @@ class _CalculatorPageState extends State<CalculatorPage> {
   }
 
   void _clearMeal() {
+    final l10n = AppLocalizations.of(context);
+    final savedItems = List<Map<String, dynamic>>.from(_mealItems);
+    final savedMealType = _selectedMealType;
     setState(() {
       _mealItems.clear();
       _selectedMealType = null;
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.calcClear),
+        action: SnackBarAction(
+          label: l10n.calcUndo,
+          onPressed: () {
+            setState(() {
+              _mealItems.addAll(savedItems);
+              _selectedMealType = savedMealType;
+            });
+          },
+        ),
+        duration: const Duration(seconds: 4),
+      ),
+    );
   }
 
   void _removeMealItem(int index) {
+    final l10n = AppLocalizations.of(context);
+    final removedItem = _mealItems[index];
     setState(() {
       _mealItems.removeAt(index);
     });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.calcItemRemoved(removedItem['name'])),
+        action: SnackBarAction(
+          label: l10n.calcUndo,
+          onPressed: () {
+            setState(() {
+              _mealItems.insert(index, removedItem);
+            });
+          },
+        ),
+        duration: const Duration(seconds: 4),
+      ),
+    );
   }
 
   double get _mealTotalRaciones =>
@@ -176,6 +229,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
         );
 
         if (mounted) {
+          HapticFeedback.mediumImpact();
           final localizedType =
               mealTypeLocalizedLabel(MealType.fromString(selectedMealType!), l10n);
           ScaffoldMessenger.of(context).showSnackBar(
@@ -200,6 +254,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   void initState() {
     super.initState();
     _loadInsulinSettings();
+    _loadLastMealType();
   }
 
   Future<void> _loadInsulinSettings() async {
@@ -938,8 +993,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     selected: isSelected,
                     selectedColor: Colors.teal.withValues(alpha: 0.3),
                     checkmarkColor: Colors.teal,
-                    onSelected: (_) =>
-                        setState(() => _selectedMealType = type),
+                    onSelected: (_) {
+                      setState(() => _selectedMealType = type);
+                      _saveLastMealType(type);
+                    },
                   );
                 }).toList(),
               ),

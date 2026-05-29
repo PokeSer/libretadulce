@@ -64,6 +64,14 @@
   "calcSaveSuccessBolus": "Zapisano jako {mealType}. Bolus: {bolus} jedn.",
   "calcSaveSuccess": "Zapisano jako {mealType} pomyślnie",
   "calcSaveError": "Błąd zapisu: {error}",
+  "calcUndo": "Cofnij",
+  "calcItemRemoved": "{name} usunięto",
+  "@calcItemRemoved": {
+    "description": "SnackBar shown when an item is removed from the meal plate",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "calcMustLogin": "Musisz się zalogować",
   "calcGramsModeAccessibility": "Znam gramy, oblicz wymienniki",
   "calcRationsModeAccessibility": "Chcę zjeść wymienniki, oblicz gramy",

@@ -216,6 +216,14 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get calcUndo => 'Desfazer';
+
+  @override
+  String calcItemRemoved(Object name) {
+    return '$name removido';
+  }
+
+  @override
   String get calcMustLogin => 'Você precisa iniciar sessão';
 
   @override

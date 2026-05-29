@@ -151,6 +151,14 @@
       }
     }
   },
+  "calcUndo": "Deshacer",
+  "calcItemRemoved": "{name} eliminado",
+  "@calcItemRemoved": {
+    "description": "SnackBar shown when an item is removed from the meal plate",
+    "placeholders": {
+      "name": {}
+    }
+  },
   "calcMustLogin": "Debes iniciar sesión",
   "calcGramsModeAccessibility": "Tengo los gramos, calcular raciones",
   "calcRationsModeAccessibility": "Quiero comer raciones, calcular gramos",
