@@ -21,7 +21,7 @@ class MealHistoryService {
       'totalRations': totalRations,
       'items': items,
       'totalBolus': totalBolus,
-      if (glucose != null) 'glucose': glucose,
+      'glucose': glucose,
     });
   }
 
@@ -42,7 +42,7 @@ class MealHistoryService {
         'raciones': i.raciones,
       }).toList(),
       'totalBolus': entry.totalBolus,
-      if (entry.glucose != null) 'glucose': entry.glucose,
+      'glucose': entry.glucose,
     });
   }
 
