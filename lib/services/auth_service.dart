@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
 import 'package:flutter/material.dart';
 
 class AuthService {
@@ -13,9 +13,7 @@ class AuthService {
 
   Future<void> _ensureInitialized() async {
     if (_initialized) return;
-    await GoogleSignInPlatform.instance.init(
-      const InitParameters(serverClientId: _serverClientId),
-    );
+    await _googleSignIn.initialize(serverClientId: _serverClientId);
     _initialized = true;
   }
 
