@@ -77,8 +77,10 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.teal.withValues(alpha: isDark ? 0.15 : 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.system_update_rounded,
-                    color: Colors.teal, size: 40),
+                child: ExcludeSemantics(
+                  child: const Icon(Icons.system_update_rounded,
+                      color: Colors.teal, size: 40),
+                ),
               ),
               const SizedBox(height: 16),
               Text(

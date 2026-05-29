@@ -316,7 +316,12 @@ class _FoodsPageState extends State<FoodsPage> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator(color: Colors.teal));
+                  return Center(
+                    child: Semantics(
+                      label: l10n.foodSearchTitle,
+                      child: const CircularProgressIndicator(color: Colors.teal),
+                    ),
+                  );
                 }
 
                 final foods = snapshot.data ?? [];

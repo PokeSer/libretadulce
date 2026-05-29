@@ -780,6 +780,27 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       child: const Icon(Icons.delete,
                           color: Colors.white, size: 28),
                     ),
+                    confirmDismiss: (direction) async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: Text(l10n.calcDeleteFromPlate),
+                          content: Text(l10n.historyDeleteConfirm),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(false),
+                              child: Text(l10n.historyCancelButton),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(true),
+                              child: Text(l10n.historyDeleteButton,
+                                  style: const TextStyle(color: Colors.redAccent)),
+                            ),
+                          ],
+                        ),
+                      );
+                      return confirm ?? false;
+                    },
                     onDismissed: (direction) => _removeMealItem(index),
                     child: Card(
                       margin: const EdgeInsets.only(bottom: 8),

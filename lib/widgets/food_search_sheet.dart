@@ -96,8 +96,11 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                 builder: (context, snapshot) {
               if (snapshot.connectionState ==
                   ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
+                return Center(
+                  child: Semantics(
+                    label: l10n.foodSearchTitle,
+                    child: const CircularProgressIndicator(),
+                  ),
                 );
               }
 

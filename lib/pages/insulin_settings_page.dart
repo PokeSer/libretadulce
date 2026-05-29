@@ -130,8 +130,13 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
     final l10n = AppLocalizations.of(context);
 
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator(color: Colors.teal)),
+      return Scaffold(
+        body: Center(
+          child: Semantics(
+            label: l10n.insulinTitle,
+            child: const CircularProgressIndicator(color: Colors.teal),
+          ),
+        ),
       );
     }
 

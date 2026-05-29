@@ -413,7 +413,12 @@ class _HistoryPageState extends State<HistoryPage> {
       stream: MealHistoryService.watchRange(user!.uid, startOfWeek, endOfWeek),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(
+            child: Semantics(
+              label: l10n.historyLoading,
+              child: const CircularProgressIndicator(),
+            ),
+          );
         }
 
         final mealEntries = snapshot.data ?? [];
@@ -478,8 +483,10 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
               const SizedBox(height: 16),
               Expanded(
-                child: BarChart(
-                  BarChartData(
+                child: Semantics(
+                  label: _buildChartSemanticsLabel(entries, l10n),
+                  child: BarChart(
+                    BarChartData(
                     maxY: maxTotal,
                     minY: 0,
                     alignment: BarChartAlignment.spaceAround,
@@ -570,11 +577,21 @@ class _HistoryPageState extends State<HistoryPage> {
                   ),
                 ),
               ),
+              ),
             ],
           ),
         );
       },
     );
+  }
+
+  String _buildChartSemanticsLabel(
+    List<MapEntry<String, double>> entries,
+    AppLocalizations l10n,
+  ) {
+    if (entries.isEmpty) return l10n.historyNoData7Days;
+    final parts = entries.map((e) => '${e.key}: ${e.value.toStringAsFixed(1)}g');
+    return '${l10n.historyLast7Days}. ${parts.join(', ')}. ${l10n.historyTotalCarbs}';
   }
 
   Future<void> _exportCSV() async {
