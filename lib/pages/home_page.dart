@@ -5,6 +5,7 @@ import 'calculator_page.dart';
 import 'foods_page.dart';
 import 'global_foods_page.dart';
 import 'profile_page.dart';
+import 'settings_page.dart';
 import 'admin_page.dart';
 import 'history_page.dart';
 import '../l10n/app_localizations.dart';
@@ -240,6 +241,17 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         actions: [
+          if (safeIndex == 4)
+            IconButton(
+              icon: const Icon(Icons.settings),
+              tooltip: l10n.profileSettings,
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const SettingsPage()),
+                );
+              },
+            ),
           // Botón de Admin en la barra superior (solo si el rol en BD es admin)
           if (_isAdmin)
             IconButton(

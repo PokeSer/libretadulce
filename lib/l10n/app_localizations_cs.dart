@@ -829,4 +829,25 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get updateWhatIsNew => 'Co je nového';
+
+  @override
+  String get profileThemeLabel => 'Motiv aplikace';
+
+  @override
+  String get profileThemeSystem => 'Systém';
+
+  @override
+  String get profileThemeLight => 'Světlý';
+
+  @override
+  String get profileThemeDark => 'Tmavý';
+
+  @override
+  String get profileSettingsSectionApp => 'Aplikace';
+
+  @override
+  String get profileSettingsSectionHealth => 'Zdraví';
+
+  @override
+  String get profileSettings => 'Nastavení';
 }

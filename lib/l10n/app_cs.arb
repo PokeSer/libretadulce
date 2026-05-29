@@ -266,5 +266,13 @@
   "updateDownload": "Stáhnout",
   "updateDownloading": "Stahování aktualizace...",
   "updateError": "Stahování selhalo. Navštivte github.com/PokeSer/libretadulce/releases",
-  "updateWhatIsNew": "Co je nového"
+  "updateWhatIsNew": "Co je nového",
+
+  "profileThemeLabel": "Motiv aplikace",
+  "profileThemeSystem": "Systém",
+  "profileThemeLight": "Světlý",
+  "profileThemeDark": "Tmavý",
+  "profileSettingsSectionApp": "Aplikace",
+  "profileSettingsSectionHealth": "Zdraví",
+  "profileSettings": "Nastavení"
 }

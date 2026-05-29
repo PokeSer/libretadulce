@@ -266,5 +266,13 @@
   "updateDownload": "Baixar",
   "updateDownloading": "Baixando atualização...",
   "updateError": "Falha no download. Visite github.com/PokeSer/libretadulce/releases",
-  "updateWhatIsNew": "Novidades"
+  "updateWhatIsNew": "Novidades",
+
+  "profileThemeLabel": "Tema da app",
+  "profileThemeSystem": "Sistema",
+  "profileThemeLight": "Claro",
+  "profileThemeDark": "Escuro",
+  "profileSettingsSectionApp": "Aplicação",
+  "profileSettingsSectionHealth": "Saúde",
+  "profileSettings": "Configurações"
 }

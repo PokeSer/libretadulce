@@ -833,4 +833,25 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get updateWhatIsNew => 'Neuigkeiten';
+
+  @override
+  String get profileThemeLabel => 'App-Design';
+
+  @override
+  String get profileThemeSystem => 'System';
+
+  @override
+  String get profileThemeLight => 'Hell';
+
+  @override
+  String get profileThemeDark => 'Dunkel';
+
+  @override
+  String get profileSettingsSectionApp => 'Anwendung';
+
+  @override
+  String get profileSettingsSectionHealth => 'Gesundheit';
+
+  @override
+  String get profileSettings => 'Einstellungen';
 }

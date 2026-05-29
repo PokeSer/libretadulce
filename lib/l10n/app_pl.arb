@@ -266,5 +266,13 @@
   "updateDownload": "Pobierz",
   "updateDownloading": "Pobieranie aktualizacji...",
   "updateError": "Pobieranie nie powiodło się. Odwiedź github.com/PokeSer/libretadulce/releases",
-  "updateWhatIsNew": "Co nowego"
+  "updateWhatIsNew": "Co nowego",
+
+  "profileThemeLabel": "Motyw aplikacji",
+  "profileThemeSystem": "Systemowy",
+  "profileThemeLight": "Jasny",
+  "profileThemeDark": "Ciemny",
+  "profileSettingsSectionApp": "Aplikacja",
+  "profileSettingsSectionHealth": "Zdrowie",
+  "profileSettings": "Ustawienia"
 }

@@ -1585,6 +1585,48 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Novedades'**
   String get updateWhatIsNew;
+
+  /// No description provided for @profileThemeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Tema de la app'**
+  String get profileThemeLabel;
+
+  /// No description provided for @profileThemeSystem.
+  ///
+  /// In es, this message translates to:
+  /// **'Sistema'**
+  String get profileThemeSystem;
+
+  /// No description provided for @profileThemeLight.
+  ///
+  /// In es, this message translates to:
+  /// **'Claro'**
+  String get profileThemeLight;
+
+  /// No description provided for @profileThemeDark.
+  ///
+  /// In es, this message translates to:
+  /// **'Oscuro'**
+  String get profileThemeDark;
+
+  /// No description provided for @profileSettingsSectionApp.
+  ///
+  /// In es, this message translates to:
+  /// **'Aplicación'**
+  String get profileSettingsSectionApp;
+
+  /// No description provided for @profileSettingsSectionHealth.
+  ///
+  /// In es, this message translates to:
+  /// **'Salud'**
+  String get profileSettingsSectionHealth;
+
+  /// No description provided for @profileSettings.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajustes'**
+  String get profileSettings;
 }
 
 class _AppLocalizationsDelegate

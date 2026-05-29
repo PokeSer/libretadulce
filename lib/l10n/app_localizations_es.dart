@@ -831,4 +831,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get updateWhatIsNew => 'Novedades';
+
+  @override
+  String get profileThemeLabel => 'Tema de la app';
+
+  @override
+  String get profileThemeSystem => 'Sistema';
+
+  @override
+  String get profileThemeLight => 'Claro';
+
+  @override
+  String get profileThemeDark => 'Oscuro';
+
+  @override
+  String get profileSettingsSectionApp => 'Aplicación';
+
+  @override
+  String get profileSettingsSectionHealth => 'Salud';
+
+  @override
+  String get profileSettings => 'Ajustes';
 }
