@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<void> _loadVersion() async {
     final info = await PackageInfo.fromPlatform();
     if (mounted) {
-      setState(() => _appVersion = 'v${info.version}+${info.buildNumber}');
+      setState(() => _appVersion = 'v${info.version}');
     }
   }
 
