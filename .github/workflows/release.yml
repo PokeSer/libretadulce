@@ -38,9 +38,6 @@ jobs:
       - name: Generate l10n
         run: flutter gen-l10n
 
-      - name: Build APK debug
-        run: flutter build apk --debug
-
       - name: Build release (signed)
         run: |
           printf '%s' "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/app/keystore.jks
@@ -81,7 +78,6 @@ jobs:
           tag_name: ${{ steps.tag.outputs.value }}
           body: ${{ steps.changelog.outputs.body }}
           files: |
-            build/app/outputs/flutter-apk/app-debug.apk
             build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
             build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
             build/app/outputs/flutter-apk/app-x86_64-release.apk
