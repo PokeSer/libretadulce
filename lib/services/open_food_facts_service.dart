@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
 
 class FoodScanResult {
   final String name;
@@ -25,13 +26,14 @@ class OpenFoodFactsService {
   static const _baseUrl = 'https://world.openfoodfacts.org/api/v0/product';
 
   static Future<String?> scanBarcode(BuildContext context) async {
+    final l10n = AppLocalizations.of(context);
     return SimpleBarcodeScanner.scanBarcode(
       context,
-      barcodeAppBar: const BarcodeAppBar(
-        appBarTitle: 'Escanea el codigo de barras',
+      barcodeAppBar: BarcodeAppBar(
+        appBarTitle: l10n.barcodeTitle,
         centerTitle: false,
         enableBackButton: true,
-        backButtonIcon: Icon(Icons.arrow_back_ios),
+        backButtonIcon: const Icon(Icons.arrow_back_ios),
       ),
       isShowFlashIcon: true,
       delayMillis: 1000,
@@ -39,7 +41,7 @@ class OpenFoodFactsService {
     );
   }
 
-  static Future<FoodScanResult?> lookupBarcode(String barcode) async {
+  static Future<FoodScanResult?> lookupBarcode(String barcode, {String fallbackName = 'Food'}) async {
     final url = Uri.parse('$_baseUrl/$barcode.json');
     final response = await http.get(url).timeout(const Duration(seconds: 15));
 
@@ -54,7 +56,7 @@ class OpenFoodFactsService {
     return FoodScanResult(
       name: product['product_name_es'] ??
           product['product_name'] ??
-          'Alimento escaneado',
+          fallbackName,
       brand: product['brands'] ?? '',
       carbsPer100g: nutriments?['carbohydrates_100g'] is num
           ? (nutriments['carbohydrates_100g'] as num).toDouble()

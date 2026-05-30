@@ -34,7 +34,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
         SnackBar(content: Text(l10n.globalScanning)),
       );
 
-      final result = await OpenFoodFactsService.lookupBarcode(barcode);
+      final result = await OpenFoodFactsService.lookupBarcode(barcode, fallbackName: l10n.barcodeScannedFood);
 
       if (result != null && mounted) {
         setState(() {

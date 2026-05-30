@@ -65,7 +65,7 @@ class _FoodsPageState extends State<FoodsPage> {
     );
 
     try {
-      final result = await OpenFoodFactsService.lookupBarcode(barcode);
+      final result = await OpenFoodFactsService.lookupBarcode(barcode, fallbackName: l10n.barcodeScannedFood);
       if (result != null) {
         setState(() {
           _nameController.text = result.name;
