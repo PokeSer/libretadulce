@@ -689,6 +689,9 @@ class _HistoryPageState extends State<HistoryPage> {
       'grams': i.grams,
       'carbsPer100g': (i.carbs / i.grams * 100),
     }).toList();
+    final List<TextEditingController> gramsControllers = editableItems
+        .map((i) => TextEditingController(text: (i['grams'] as double).toStringAsFixed(0)))
+        .toList();
 
     const hcPerRation = 10.0;
 
@@ -732,6 +735,7 @@ class _HistoryPageState extends State<HistoryPage> {
               'grams': 100.0,
               'carbsPer100g': food.carbsPer100g,
             });
+            gramsControllers.add(TextEditingController(text: '100'));
           });
         }
 
@@ -927,7 +931,11 @@ class _HistoryPageState extends State<HistoryPage> {
                                           color: Colors.redAccent, size: 20),
                                       tooltip: l10n.calcDeleteFromPlate,
                                       onPressed: () {
-                                        setDialogState(() => editableItems.removeAt(idx));
+                                        setDialogState(() {
+                                          editableItems.removeAt(idx);
+                                          gramsControllers[idx].dispose();
+                                          gramsControllers.removeAt(idx);
+                                        });
                                       },
                                     ),
                                   ],
@@ -948,7 +956,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                         ),
                                         keyboardType:
                                             const TextInputType.numberWithOptions(decimal: true),
-                                        controller: TextEditingController(text: grams.toStringAsFixed(0)),
+                                        controller: gramsControllers[idx],
                                         onChanged: (v) {
                                           final val = double.tryParse(v);
                                           if (val != null && val > 0) {
