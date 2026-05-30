@@ -187,14 +187,20 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
               ),
               const SizedBox(height: 16),
 
-              InkWell(
-                onTap: () => setState(() => _showMealRatios = !_showMealRatios),
-                child: Row(
-                  children: [
-                    Icon(
-                      _showMealRatios ? Icons.expand_less : Icons.expand_more,
-                      color: Colors.teal,
-                    ),
+              Semantics(
+                button: true,
+                label: l10n.insulinMealRatios,
+                expanded: _showMealRatios,
+                child: InkWell(
+                  onTap: () => setState(() => _showMealRatios = !_showMealRatios),
+                  child: Row(
+                    children: [
+                      ExcludeSemantics(
+                        child: Icon(
+                          _showMealRatios ? Icons.expand_less : Icons.expand_more,
+                          color: Colors.teal,
+                        ),
+                      ),
                     const SizedBox(width: 8),
                     Text(
                       l10n.insulinMealRatios,
@@ -202,6 +208,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                     ),
                   ],
                 ),
+              ),
               ),
               if (_showMealRatios) ...[
                 const SizedBox(height: 12),

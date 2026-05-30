@@ -99,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     title: Row(
                       children: [
-                        const Icon(Icons.favorite, color: Colors.redAccent),
+                        const ExcludeSemantics(child: Icon(Icons.favorite, color: Colors.redAccent)),
                         const SizedBox(width: 8),
                         Text(l10n.profileAboutDialogTitle),
                       ],

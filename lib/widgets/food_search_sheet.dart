@@ -167,8 +167,8 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                           style:
                               TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade700),
                         ),
-                        trailing: const Icon(Icons.chevron_right,
-                            color: Colors.teal),
+                        trailing: const ExcludeSemantics(child: Icon(Icons.chevron_right,
+                            color: Colors.teal)),
                         onTap: () => Navigator.pop(context, food),
                       );
                     },

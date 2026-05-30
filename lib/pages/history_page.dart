@@ -279,7 +279,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                       children: [
                                         Row(
                                           children: [
-                                            Icon(entry.mealType.icon, color: Colors.teal),
+                                            ExcludeSemantics(child: Icon(entry.mealType.icon, color: Colors.teal)),
                                             const SizedBox(width: 8),
                                             Text(
                                               mealTypeLocalizedLabel(entry.mealType, l10n).toUpperCase(),
@@ -407,7 +407,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                           children: [
                                             Row(
                                               children: [
-                                                const Icon(Icons.monitor_heart, size: 14, color: Colors.redAccent),
+                                                const ExcludeSemantics(child: Icon(Icons.monitor_heart, size: 14, color: Colors.redAccent)),
                                                 const SizedBox(width: 4),
                                                 Text(l10n.calcGlucoseLabel,
                                                     style: const TextStyle(
@@ -441,7 +441,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                           children: [
                                             Row(
                                               children: [
-                                                const Icon(Icons.water_drop, size: 14, color: Colors.orange),
+                                                const ExcludeSemantics(child: Icon(Icons.water_drop, size: 14, color: Colors.orange)),
                                                 const SizedBox(width: 4),
                                                 Text(l10n.historyBolus,
                                                     style: const TextStyle(
@@ -607,7 +607,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           reservedSize: 42,
                           interval: interval,
                           getTitlesWidget: (value, meta) {
-                            if (value == meta.max) return const SizedBox.shrink();
+                            if (value == meta.max) return const ExcludeSemantics(child: SizedBox.shrink());
                             return Padding(
                               padding: const EdgeInsets.only(right: 6),
                               child: Text(
@@ -631,7 +631,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 style: const TextStyle(fontSize: 11),
                               );
                             }
-                            return const SizedBox.shrink();
+                            return const ExcludeSemantics(child: SizedBox.shrink());
                           },
                         ),
                       ),
@@ -756,6 +756,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.teal)),
                           IconButton(
                             icon: const Icon(Icons.close),
+                            tooltip: MaterialLocalizations.of(ctx).closeButtonLabel,
                             onPressed: () => Navigator.of(ctx).pop(),
                           ),
                         ],
@@ -770,12 +771,17 @@ class _HistoryPageState extends State<HistoryPage> {
                         spacing: 8,
                         runSpacing: 6,
                         children: MealType.mealList.map((type) {
-                          return ChoiceChip(
-                            label: Text(mealTypeLocalizedLabel(type, l10n), style: const TextStyle(fontSize: 12)),
-                            selected: mealType == type,
-                            selectedColor: Colors.teal.withValues(alpha: 0.3),
-                            checkmarkColor: Colors.teal,
-                            onSelected: (_) => setDialogState(() => mealType = type),
+                          final isSelected = mealType == type;
+                          return Semantics(
+                            checked: isSelected,
+                            label: mealTypeLocalizedLabel(type, l10n),
+                            child: ChoiceChip(
+                              label: Text(mealTypeLocalizedLabel(type, l10n), style: const TextStyle(fontSize: 12)),
+                              selected: isSelected,
+                              selectedColor: Colors.teal.withValues(alpha: 0.3),
+                              checkmarkColor: Colors.teal,
+                              onSelected: (_) => setDialogState(() => mealType = type),
+                            ),
                           );
                         }).toList(),
                       ),
@@ -812,7 +818,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                             child: Row(
                               children: [
-                                Icon(Icons.calendar_today, color: Theme.of(ctx).colorScheme.primary),
+                                ExcludeSemantics(child: Icon(Icons.calendar_today, color: Theme.of(ctx).colorScheme.primary)),
                                 const SizedBox(width: 12),
                                 Text(l10n.calcDateLabel,
                                     style: TextStyle(fontSize: 14, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),
@@ -858,7 +864,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             ),
                             child: Row(
                               children: [
-                                Icon(Icons.access_time, color: Theme.of(ctx).colorScheme.primary),
+                                ExcludeSemantics(child: Icon(Icons.access_time, color: Theme.of(ctx).colorScheme.primary)),
                                 const SizedBox(width: 12),
                                 Text(l10n.calcTimeLabel,
                                     style: TextStyle(fontSize: 14, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),

@@ -552,7 +552,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
               stream: FoodRepository.watchFavoriteFoods(user!.uid),
               builder: (context, snapshot) {
                 final favFoods = snapshot.data ?? [];
-                if (favFoods.isEmpty) return const SizedBox.shrink();
+                if (favFoods.isEmpty) return const ExcludeSemantics(child: SizedBox.shrink());
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -577,34 +577,38 @@ class _CalculatorPageState extends State<CalculatorPage> {
                               _selectedFoodName == food.displayName;
                           return Padding(
                             padding: const EdgeInsets.only(right: 8),
-                            child: FilterChip(
-                              label: Text(
-                                food.displayName,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
+                            child: Semantics(
+                              checked: isSelected,
+                              label: food.displayName,
+                              child: FilterChip(
+                                label: Text(
+                                  food.displayName,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
                                 ),
-                              ),
-                              selected: isSelected,
-                              onSelected: (_) {
-                                setState(() {
-                                  _selectedFoodName = food.displayName;
-                                  _selectedCarbsPer100g = food.carbsPer100g;
-                                  _calculateMacros();
-                                });
-                              },
-                              backgroundColor: isDark
-                                  ? Colors.grey.shade800
-                                  : Colors.grey.shade100,
-                              selectedColor:
-                                  Colors.teal.withValues(alpha: 0.25),
-                              checkmarkColor: Colors.teal,
-                              side: BorderSide(
-                                color: isSelected
-                                    ? Colors.teal
-                                    : Colors.transparent,
+                                selected: isSelected,
+                                onSelected: (_) {
+                                  setState(() {
+                                    _selectedFoodName = food.displayName;
+                                    _selectedCarbsPer100g = food.carbsPer100g;
+                                    _calculateMacros();
+                                  });
+                                },
+                                backgroundColor: isDark
+                                    ? Colors.grey.shade800
+                                    : Colors.grey.shade100,
+                                selectedColor:
+                                    Colors.teal.withValues(alpha: 0.25),
+                                checkmarkColor: Colors.teal,
+                                side: BorderSide(
+                                  color: isSelected
+                                      ? Colors.teal
+                                      : Colors.transparent,
+                                ),
                               ),
                             ),
                           );
@@ -674,7 +678,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           ],
                         ),
                       ),
-                      const Icon(Icons.search, color: Colors.grey),
+                      const ExcludeSemantics(child: Icon(Icons.search, color: Colors.grey)),
                     ],
                   ),
                 ),
@@ -906,9 +910,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     child: Card(
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
-                        leading: Icon(
-                          Icons.check_circle,
-                          color: Theme.of(context).colorScheme.primary,
+                        leading: ExcludeSemantics(
+                          child: Icon(
+                            Icons.check_circle,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                         ),
                         title: Text(
                           item['name'],
@@ -1033,16 +1039,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 runSpacing: 6,
                 children: MealType.mealList.map((type) {
                   final isSelected = _selectedMealType == type;
-                  return ChoiceChip(
-                    label: Text(mealTypeLocalizedLabel(type, l10n),
-                        style: const TextStyle(fontSize: 12)),
-                    selected: isSelected,
-                    selectedColor: Colors.teal.withValues(alpha: 0.3),
-                    checkmarkColor: Colors.teal,
-                    onSelected: (_) {
-                      setState(() => _selectedMealType = type);
-                      _saveLastMealType(type);
-                    },
+                  return Semantics(
+                    checked: isSelected,
+                    label: mealTypeLocalizedLabel(type, l10n),
+                    child: ChoiceChip(
+                      label: Text(mealTypeLocalizedLabel(type, l10n),
+                          style: const TextStyle(fontSize: 12)),
+                      selected: isSelected,
+                      selectedColor: Colors.teal.withValues(alpha: 0.3),
+                      checkmarkColor: Colors.teal,
+                      onSelected: (_) {
+                        setState(() => _selectedMealType = type);
+                        _saveLastMealType(type);
+                      },
+                    ),
                   );
                 }).toList(),
               ),
@@ -1069,8 +1079,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.calendar_today,
-                            color: Theme.of(context).colorScheme.primary),
+                        ExcludeSemantics(child: Icon(Icons.calendar_today,
+                            color: Theme.of(context).colorScheme.primary)),
                         const SizedBox(width: 12),
                         Text(
                           l10n.calcDateLabel,
@@ -1090,7 +1100,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                        const ExcludeSemantics(child: Icon(Icons.arrow_drop_down, color: Colors.grey)),
                       ],
                     ),
                   ),
@@ -1118,8 +1128,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.access_time,
-                            color: Theme.of(context).colorScheme.primary),
+                        ExcludeSemantics(child: Icon(Icons.access_time,
+                            color: Theme.of(context).colorScheme.primary)),
                         const SizedBox(width: 12),
                         Text(
                           l10n.calcTimeLabel,
@@ -1139,7 +1149,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           ),
                         ),
                         const SizedBox(width: 4),
-                        const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                        const ExcludeSemantics(child: Icon(Icons.arrow_drop_down, color: Colors.grey)),
                       ],
                     ),
                   ),
@@ -1162,8 +1172,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.water_drop,
-                              color: Colors.teal, size: 20),
+                          const ExcludeSemantics(child: Icon(Icons.water_drop,
+                              color: Colors.teal, size: 20)),
                           const SizedBox(width: 8),
                           Text(
                             l10n.calcBolusTitle,
@@ -1209,8 +1219,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        const Icon(Icons.water_drop,
-                            color: Colors.grey, size: 28),
+                        const ExcludeSemantics(child: Icon(Icons.water_drop,
+                            color: Colors.grey, size: 28)),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(

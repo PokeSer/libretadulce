@@ -103,17 +103,17 @@ class SettingsPage extends StatelessWidget {
                 segments: [
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.system,
-                    icon: const Icon(Icons.phone_android, size: 18),
+                    icon: const ExcludeSemantics(child: Icon(Icons.phone_android, size: 18)),
                     label: Text(l10n.profileThemeSystem, style: const TextStyle(fontSize: 12)),
                   ),
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.light,
-                    icon: const Icon(Icons.light_mode, size: 18),
+                    icon: const ExcludeSemantics(child: Icon(Icons.light_mode, size: 18)),
                     label: Text(l10n.profileThemeLight, style: const TextStyle(fontSize: 12)),
                   ),
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.dark,
-                    icon: const Icon(Icons.dark_mode, size: 18),
+                    icon: const ExcludeSemantics(child: Icon(Icons.dark_mode, size: 18)),
                     label: Text(l10n.profileThemeDark, style: const TextStyle(fontSize: 12)),
                   ),
                 ],
