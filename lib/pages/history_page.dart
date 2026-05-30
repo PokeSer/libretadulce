@@ -972,6 +972,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             };
                           }).toList();
 
+                          final messenger = ScaffoldMessenger.of(context);
                           await MealHistoryService.updateEntry(
                             user!.uid,
                             entry.id,
@@ -984,7 +985,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           );
                           if (ctx.mounted) {
                             Navigator.of(ctx).pop();
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            messenger.showSnackBar(
                               SnackBar(content: Text(l10n.historyEditSuccess)),
                             );
                           }
