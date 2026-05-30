@@ -8,7 +8,7 @@ plugins {
 import java.util.Properties
 
 android {
-    namespace = "com.example.libretadulce"
+    namespace = "io.github.pokeser.libretadulce"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -22,7 +22,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.libretadulce"
+        applicationId = "io.github.pokeser.libretadulce"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

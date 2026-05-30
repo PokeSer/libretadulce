@@ -7,26 +7,26 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:719361605717:android:47338acf6351907a4fd4dc",
+        "mobilesdk_app_id": "1:719361605717:android:6a5f17755bc225044fd4dc",
         "android_client_info": {
-          "package_name": "com.example.libretadulce"
+          "package_name": "io.github.pokeser.libretadulce"
         }
       },
       "oauth_client": [
         {
-          "client_id": "719361605717-kml98dgime03vkhnkpr2vg3qtitrv2bi.apps.googleusercontent.com",
+          "client_id": "719361605717-6dntig0qlrfatmj0k7rgj2q3751koimp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.libretadulce",
-            "certificate_hash": "cfd10c3a4de2e98f7076975029e166482e76c639"
+            "package_name": "io.github.pokeser.libretadulce",
+            "certificate_hash": "68ed11c91beb388ec1cb66f4243645c9a09cd3b8"
           }
         },
         {
-          "client_id": "719361605717-ou7uigmkcombci6a19modjkag8gb51q6.apps.googleusercontent.com",
+          "client_id": "719361605717-iiu787b955j3qcodg3oq9v5rre7a0jlc.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.libretadulce",
-            "certificate_hash": "68ed11c91beb388ec1cb66f4243645c9a09cd3b8"
+            "package_name": "io.github.pokeser.libretadulce",
+            "certificate_hash": "cfd10c3a4de2e98f7076975029e166482e76c639"
           }
         },
         {
@@ -47,10 +47,10 @@
               "client_type": 3
             },
             {
-              "client_id": "719361605717-4so6oq41c6nvfunuga1s1e054s7e0atu.apps.googleusercontent.com",
+              "client_id": "719361605717-gg56mlav7udpgs3f99ulk1aovaqkckne.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.libretadulce"
+                "bundle_id": "io.github.pokeser.libretadulce"
               }
             }
           ]

@@ -17,7 +17,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCVCfp-hFquk-IbpwDTVZasNNlb2t727do',
-    appId: '1:719361605717:android:47338acf6351907a4fd4dc',
+    appId: '1:719361605717:android:6a5f17755bc225044fd4dc',
     messagingSenderId: '719361605717',
     projectId: 'libretadulce',
     storageBucket: 'libretadulce.firebasestorage.app',
@@ -25,10 +25,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAWprPZ64rjP6p7w7ediRoSlHS4nQHii4E',
-    appId: '1:719361605717:ios:035d3e810c9e51ea4fd4dc',
+    appId: '1:719361605717:ios:1807b92fe80b27c94fd4dc',
     messagingSenderId: '719361605717',
     projectId: 'libretadulce',
     storageBucket: 'libretadulce.firebasestorage.app',
-    iosBundleId: 'com.example.libretadulce',
+    iosBundleId: 'io.github.pokeser.libretadulce',
   );
 }
