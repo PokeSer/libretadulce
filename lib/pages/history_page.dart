@@ -16,6 +16,7 @@ import '../models/insulin_settings.dart';
 import '../services/meal_history_service.dart';
 import '../services/insulin_settings_service.dart';
 import '../widgets/app_common_widgets.dart';
+import '../widgets/food_search_sheet.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -683,27 +684,28 @@ class _HistoryPageState extends State<HistoryPage> {
     MealType mealType = entry.mealType;
     DateTime selectedTime = entry.timestamp;
     double? editedGlucose = entry.glucose;
-    final itemGrams = entry.items.map((i) => i.grams).toList();
+    final List<Map<String, dynamic>> editableItems = entry.items.map((i) => {
+      'name': i.name,
+      'grams': i.grams,
+      'carbsPer100g': (i.carbs / i.grams * 100),
+    }).toList();
 
     const hcPerRation = 10.0;
 
-    void recalcItem(int idx, double newGrams, void Function(void Function()) setDialogState) {
-      setDialogState(() {
-        itemGrams[idx] = newGrams;
-      });
+    double itemCarbs(int idx) {
+      final item = editableItems[idx];
+      return (item['grams'] as double) * (item['carbsPer100g'] as double) / 100;
     }
 
-    double recalcTotalCarbs() {
-      double total = 0;
-      for (int i = 0; i < entry.items.length; i++) {
-        final item = entry.items[i];
-        final origRatio = item.carbs / item.grams;
-        total += itemGrams[i] * origRatio;
+    double totalCarbs() {
+      double t = 0;
+      for (int i = 0; i < editableItems.length; i++) {
+        t += itemCarbs(i);
       }
-      return total;
+      return t;
     }
 
-    double recalcTotalRations() => recalcTotalCarbs() / hcPerRation;
+    double totalRaciones() => totalCarbs() / hcPerRation;
 
     if (!mounted) return;
 
@@ -715,6 +717,24 @@ class _HistoryPageState extends State<HistoryPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (ctx) {
+        Future<void> addFood(void Function(void Function()) setDialogState) async {
+          final sheetCtx = ctx;
+          final Food? food = await showModalBottomSheet<Food>(
+            context: sheetCtx,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (_) => const FoodSearchSheet(),
+          );
+          if (food == null || !sheetCtx.mounted) return;
+          setDialogState(() {
+            editableItems.add({
+              'name': food.displayName,
+              'grams': 100.0,
+              'carbsPer100g': food.carbsPer100g,
+            });
+          });
+        }
+
         return DraggableScrollableSheet(
           initialChildSize: 0.85,
           minChildSize: 0.5,
@@ -851,19 +871,38 @@ class _HistoryPageState extends State<HistoryPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 20),
 
-                      ...entry.items.asMap().entries.map((e) {
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(l10n.calcMyPlate,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.teal)),
+                          Semantics(
+                            button: true,
+                            label: l10n.calcAddToPlate,
+                            child: TextButton.icon(
+                              onPressed: () => addFood(setDialogState),
+                              icon: const Icon(Icons.add_circle_outline, color: Colors.teal),
+                              label: Text(l10n.calcAddToPlate,
+                                  style: const TextStyle(color: Colors.teal, fontSize: 13)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+
+                      ...editableItems.asMap().entries.map((e) {
                         final idx = e.key;
-                        final item = e.value;
-                        final origRatio = item.carbs / item.grams;
-                        final currentGrams = itemGrams[idx];
-                        final currentCarbs = currentGrams * origRatio;
+                        final item = editableItems[idx];
+                        final grams = item['grams'] as double;
+                        final carbsPer100 = item['carbsPer100g'] as double;
+                        final carbs = grams * carbsPer100 / 100;
 
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
+                          padding: const EdgeInsets.only(bottom: 8),
                           child: Container(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8, right: 4),
                             decoration: BoxDecoration(
                               color: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
                               borderRadius: BorderRadius.circular(12),
@@ -871,32 +910,50 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                                const SizedBox(height: 8),
                                 Row(
                                   children: [
                                     Expanded(
+                                      child: Text(item['name'] as String,
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.remove_circle_outline,
+                                          color: Colors.redAccent, size: 20),
+                                      tooltip: l10n.calcDeleteFromPlate,
+                                      onPressed: () {
+                                        setDialogState(() => editableItems.removeAt(idx));
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 80,
                                       child: TextField(
                                         decoration: InputDecoration(
                                           labelText: l10n.historyEditGramsLabel,
                                           suffixText: 'g',
                                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                                           isDense: true,
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                                         ),
-                                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                        controller: TextEditingController(text: currentGrams.toStringAsFixed(0)),
+                                        keyboardType:
+                                            const TextInputType.numberWithOptions(decimal: true),
+                                        controller: TextEditingController(text: grams.toStringAsFixed(0)),
                                         onChanged: (v) {
                                           final val = double.tryParse(v);
                                           if (val != null && val > 0) {
-                                            recalcItem(idx, val, setDialogState);
+                                            setDialogState(() => editableItems[idx]['grams'] = val);
                                           }
                                         },
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
-                                    Text('${currentCarbs.toStringAsFixed(1)}g HC',
-                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.teal)),
+                                    const SizedBox(width: 12),
+                                    Text('${carbs.toStringAsFixed(1)}g HC',
+                                        style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.teal)),
                                   ],
                                 ),
                               ],
@@ -904,6 +961,8 @@ class _HistoryPageState extends State<HistoryPage> {
                           ),
                         );
                       }),
+
+                      const SizedBox(height: 16),
 
                       TextField(
                         decoration: InputDecoration(
@@ -941,14 +1000,14 @@ class _HistoryPageState extends State<HistoryPage> {
                         children: [
                           Expanded(child: StatCard(
                             title: l10n.calcRations,
-                            value: recalcTotalRations().toStringAsFixed(1),
+                            value: totalRaciones().toStringAsFixed(1),
                             color: Colors.amber.shade800,
                             isDark: isDark,
                           )),
                           const SizedBox(width: 12),
                           Expanded(child: StatCard(
                             title: l10n.calcGramsHC,
-                            value: '${recalcTotalCarbs().toStringAsFixed(1)}g',
+                            value: '${totalCarbs().toStringAsFixed(1)}g',
                             color: Colors.teal,
                             isDark: isDark,
                           )),
@@ -957,18 +1016,16 @@ class _HistoryPageState extends State<HistoryPage> {
                       const SizedBox(height: 24),
 
                       FilledButton.icon(
-                        onPressed: () async {
-                          final updatedItems = entry.items.asMap().entries.map((e) {
-                            final idx = e.key;
-                            final item = e.value;
-                            final origRatio = item.carbs / item.grams;
-                            final newGrams = itemGrams[idx];
-                            final newCarbs = newGrams * origRatio;
+                        onPressed: editableItems.isEmpty ? null : () async {
+                          final updatedItems = editableItems.map((item) {
+                            final g = item['grams'] as double;
+                            final cp100 = item['carbsPer100g'] as double;
+                            final c = g * cp100 / 100;
                             return {
-                              'name': item.name,
-                              'grams': newGrams,
-                              'carbs': newCarbs,
-                              'raciones': newCarbs / hcPerRation,
+                              'name': item['name'],
+                              'grams': g,
+                              'carbs': c,
+                              'raciones': c / hcPerRation,
                             };
                           }).toList();
 
@@ -977,8 +1034,8 @@ class _HistoryPageState extends State<HistoryPage> {
                             user!.uid,
                             entry.id,
                             mealType: mealType.rawValue,
-                            totalCarbs: recalcTotalCarbs(),
-                            totalRations: recalcTotalRations(),
+                            totalCarbs: totalCarbs(),
+                            totalRations: totalRaciones(),
                             items: updatedItems,
                             glucose: editedGlucose,
                             timestamp: selectedTime,
