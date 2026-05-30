@@ -13,9 +13,10 @@ class MealHistoryService {
     required List<Map<String, dynamic>> items,
     double? totalBolus,
     double? glucose,
+    DateTime? timestamp,
   }) async {
     await _history(uid).add({
-      'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': timestamp != null ? Timestamp.fromDate(timestamp) : FieldValue.serverTimestamp(),
       'mealType': mealType,
       'totalCarbs': totalCarbs,
       'totalRations': totalRations,

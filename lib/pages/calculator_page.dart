@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/utils/formatters.dart';
@@ -37,6 +38,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   final List<Map<String, dynamic>> _mealItems = [];
   MealType? _selectedMealType;
+  DateTime _selectedTime = DateTime.now();
 
   final TextEditingController _glucosaController = TextEditingController();
   InsulinSettings? _insulinSettings;
@@ -56,6 +58,26 @@ class _CalculatorPageState extends State<CalculatorPage> {
   Future<void> _saveLastMealType(MealType type) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefsLastMealTypeKey, type.rawValue);
+  }
+
+  Future<void> _pickTime() async {
+    final now = DateTime.now();
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: _selectedTime.hour, minute: _selectedTime.minute),
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context),
+        child: child!,
+      ),
+    );
+    if (time != null) {
+      final chosen = DateTime(
+        _selectedTime.year, _selectedTime.month, _selectedTime.day,
+        time.hour, time.minute,
+      );
+      final constrained = chosen.isAfter(now) ? now : chosen;
+      setState(() => _selectedTime = constrained);
+    }
   }
 
   void _calculateMacros() {
@@ -229,6 +251,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
           items: _mealItems,
           totalBolus: totalBolus,
           glucose: glucoseMgdl,
+          timestamp: _selectedTime,
         );
 
         if (mounted) {
@@ -1002,6 +1025,56 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     },
                   );
                 }).toList(),
+              ),
+
+              const SizedBox(height: 12),
+              Semantics(
+                button: true,
+                label: l10n.calcTimeLabel,
+                child: InkWell(
+                  onTap: _pickTime,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade400,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.access_time,
+                            color: Theme.of(context).colorScheme.primary),
+                        const SizedBox(width: 12),
+                        Text(
+                          l10n.calcTimeLabel,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: isDark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade600,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          DateFormat.Hm().format(_selectedTime),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                      ],
+                    ),
+                  ),
+                ),
               ),
 
               if (_settingsLoaded && _insulinSettings != null) ...[

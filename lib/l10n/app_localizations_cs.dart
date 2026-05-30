@@ -153,6 +153,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get calcMealTypeLabel => 'Typ jídla:';
 
   @override
+  String get calcTimeLabel => 'Čas';
+
+  @override
   String get calcBolusTitle => 'Inzulínový bolus';
 
   @override

@@ -153,6 +153,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get calcMealTypeLabel => 'Tipo de comida:';
 
   @override
+  String get calcTimeLabel => 'Hora';
+
+  @override
   String get calcBolusTitle => 'Bolo de Insulina';
 
   @override

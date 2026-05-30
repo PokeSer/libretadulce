@@ -46,6 +46,7 @@
   "calcTotalRac": "{rac} Porç.",
   "calcTotalHC": "{carbs}g CHO",
   "calcMealTypeLabel": "Tipo de refeição:",
+  "calcTimeLabel": "Hora",
   "calcBolusTitle": "Bolus de Insulina",
   "calcGlucoseLabel": "Glicemia atual (opcional)",
   "calcGlucoseHint": "Ex.: 145",

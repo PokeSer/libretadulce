@@ -109,6 +109,7 @@
     }
   },
   "calcMealTypeLabel": "Tipo de comida:",
+  "calcTimeLabel": "Hora",
   "calcBolusTitle": "Bolo de Insulina",
   "calcGlucoseLabel": "Glucemia actual (opcional)",
   "calcGlucoseHint": "Ej: 145",

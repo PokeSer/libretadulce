@@ -362,6 +362,12 @@ abstract class AppLocalizations {
   /// **'Tipo de comida:'**
   String get calcMealTypeLabel;
 
+  /// No description provided for @calcTimeLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Hora'**
+  String get calcTimeLabel;
+
   /// No description provided for @calcBolusTitle.
   ///
   /// In es, this message translates to:
