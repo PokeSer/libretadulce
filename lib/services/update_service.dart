@@ -20,7 +20,7 @@ class UpdateService {
       final response = await http.get(
         Uri.parse(_apiUrl),
         headers: {'Accept': 'application/vnd.github.v3+json'},
-      );
+      ).timeout(const Duration(seconds: 15));
 
       if (response.statusCode != 200) return null;
 
@@ -90,11 +90,12 @@ class UpdateService {
   }
 
   static Future<bool> downloadAndInstall(String url) async {
+    if (!kIsWeb && Platform.isIOS) return false;
     try {
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/libretadulce_update.apk');
 
-      final response = await http.get(Uri.parse(url));
+      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 60));
       if (response.statusCode != 200) return false;
 
       await file.writeAsBytes(response.bodyBytes);

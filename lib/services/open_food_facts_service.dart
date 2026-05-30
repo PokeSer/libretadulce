@@ -41,7 +41,7 @@ class OpenFoodFactsService {
 
   static Future<FoodScanResult?> lookupBarcode(String barcode) async {
     final url = Uri.parse('$_baseUrl/$barcode.json');
-    final response = await http.get(url);
+    final response = await http.get(url).timeout(const Duration(seconds: 15));
 
     if (response.statusCode != 200) return null;
 
