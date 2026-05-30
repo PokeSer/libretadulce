@@ -745,6 +745,16 @@ class _HistoryPageState extends State<HistoryPage> {
           maxChildSize: 0.95,
           expand: false,
           builder: (ctx, scrollController) {
+            final glucoseController = TextEditingController(
+              text: (() {
+                final g = entry.glucose;
+                if (g == null) return '';
+                if (settings != null) {
+                  return settings.fromStoredGlucoseUnit(g).toStringAsFixed(0);
+                }
+                return g.toStringAsFixed(0);
+              })(),
+            );
             return StatefulBuilder(
               builder: (ctx, setDialogState) {
                 return SingleChildScrollView(
@@ -989,16 +999,7 @@ class _HistoryPageState extends State<HistoryPage> {
                           fillColor: isDark ? const Color(0xFF333333) : Colors.white,
                         ),
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                        controller: TextEditingController(
-                            text: (() {
-                              final g = entry.glucose;
-                              if (g == null) return '';
-                              if (settings != null) {
-                                return settings.fromStoredGlucoseUnit(g).toStringAsFixed(0);
-                              }
-                              return g.toStringAsFixed(0);
-                            })(),
-                        ),
+                        controller: glucoseController,
                         onChanged: (v) {
                           final val = double.tryParse(v);
                           if (val != null) {
