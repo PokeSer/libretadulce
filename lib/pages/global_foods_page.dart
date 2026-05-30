@@ -167,15 +167,14 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
     );
   }
 
-  void _copyToMyFoods(Map<String, dynamic> foodData) async {
+  void _copyToMyFoods(Food food) async {
     final l10n = AppLocalizations.of(context);
     if (user != null) {
-      final food = Food.fromFirestore('', foodData);
       await FoodRepository.copyToUserFoods(user!.uid, food);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(l10n.globalAddedToMyFoods('${foodData['name']}')),
+            content: Text(l10n.globalAddedToMyFoods(food.name)),
           ),
         );
       }
@@ -261,11 +260,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
                             color: Colors.teal,
                           ),
                           tooltip: l10n.globalCopyToMyFoods,
-                          onPressed: () => _copyToMyFoods({
-                            'name': food.name,
-                            'brand': food.brand,
-                            'carbsPer100g': food.carbsPer100g,
-                          }),
+                          onPressed: () => _copyToMyFoods(food),
                         ),
                       ),
                     );
