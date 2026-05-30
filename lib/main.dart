@@ -28,7 +28,7 @@ void main() async {
     'fr_FR',
     'it_IT',
     'de_DE',
-    'pt_BR',
+    'pt',
     'pl_PL',
     'cs_CZ',
   ];
