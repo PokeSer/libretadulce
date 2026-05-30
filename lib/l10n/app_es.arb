@@ -228,6 +228,11 @@
       }
     }
   },
+  "historyEditButton": "Editar",
+  "historyEditTitle": "Editar entrada",
+  "historyEditSave": "Guardar cambios",
+  "historyEditSuccess": "Entrada actualizada",
+  "historyEditGramsLabel": "Gramos a editar",
   "historyNoData7Days": "No hay datos en los últimos 7 días.",
   "historyLast7Days": "Últimos 7 días",
   "historyChartTooltip": "{day}\n{carbs}g HC",

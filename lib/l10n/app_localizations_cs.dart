@@ -340,6 +340,21 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get historyEditButton => 'Upravit';
+
+  @override
+  String get historyEditTitle => 'Upravit záznam';
+
+  @override
+  String get historyEditSave => 'Uložit změny';
+
+  @override
+  String get historyEditSuccess => 'Záznam aktualizován';
+
+  @override
+  String get historyEditGramsLabel => 'Gramy';
+
+  @override
   String get historyNoData7Days => 'Žádná data za posledních 7 dní.';
 
   @override

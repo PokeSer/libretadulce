@@ -698,6 +698,36 @@ abstract class AppLocalizations {
   /// **'Eliminar {mealType}'**
   String historyDeleteTooltip(String mealType);
 
+  /// No description provided for @historyEditButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar'**
+  String get historyEditButton;
+
+  /// No description provided for @historyEditTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Editar entrada'**
+  String get historyEditTitle;
+
+  /// No description provided for @historyEditSave.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar cambios'**
+  String get historyEditSave;
+
+  /// No description provided for @historyEditSuccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Entrada actualizada'**
+  String get historyEditSuccess;
+
+  /// No description provided for @historyEditGramsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Gramos a editar'**
+  String get historyEditGramsLabel;
+
   /// No description provided for @historyNoData7Days.
   ///
   /// In es, this message translates to:

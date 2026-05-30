@@ -30,6 +30,26 @@ class MealHistoryService {
     await _history(uid).doc(entryId).delete();
   }
 
+  static Future<void> updateEntry(String uid, String entryId, {
+    required String mealType,
+    required double totalCarbs,
+    required double totalRations,
+    required List<Map<String, dynamic>> items,
+    double? totalBolus,
+    double? glucose,
+    DateTime? timestamp,
+  }) async {
+    await _history(uid).doc(entryId).update({
+      'mealType': mealType,
+      'totalCarbs': totalCarbs,
+      'totalRations': totalRations,
+      'items': items,
+      'totalBolus': totalBolus,
+      'glucose': glucose,
+      if (timestamp != null) 'timestamp': Timestamp.fromDate(timestamp),
+    });
+  }
+
   static Future<void> restoreEntry(String uid, MealEntry entry) async {
     await _history(uid).add({
       'timestamp': Timestamp.fromDate(entry.timestamp),

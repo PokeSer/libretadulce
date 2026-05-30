@@ -342,6 +342,21 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get historyEditButton => 'Modifica';
+
+  @override
+  String get historyEditTitle => 'Modifica voce';
+
+  @override
+  String get historyEditSave => 'Salva modifiche';
+
+  @override
+  String get historyEditSuccess => 'Voce aggiornata';
+
+  @override
+  String get historyEditGramsLabel => 'Grammi';
+
+  @override
   String get historyNoData7Days => 'Nessun dato negli ultimi 7 giorni.';
 
   @override

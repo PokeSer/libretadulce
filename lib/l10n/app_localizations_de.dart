@@ -343,6 +343,21 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get historyEditButton => 'Bearbeiten';
+
+  @override
+  String get historyEditTitle => 'Eintrag bearbeiten';
+
+  @override
+  String get historyEditSave => 'Änderungen speichern';
+
+  @override
+  String get historyEditSuccess => 'Eintrag aktualisiert';
+
+  @override
+  String get historyEditGramsLabel => 'Gramm';
+
+  @override
   String get historyNoData7Days => 'Keine Daten in den letzten 7 Tagen.';
 
   @override

@@ -342,6 +342,21 @@ class AppLocalizationsPl extends AppLocalizations {
   }
 
   @override
+  String get historyEditButton => 'Edytuj';
+
+  @override
+  String get historyEditTitle => 'Edytuj wpis';
+
+  @override
+  String get historyEditSave => 'Zapisz zmiany';
+
+  @override
+  String get historyEditSuccess => 'Wpis zaktualizowany';
+
+  @override
+  String get historyEditGramsLabel => 'Gramy';
+
+  @override
   String get historyNoData7Days => 'Brak danych z ostatnich 7 dni.';
 
   @override

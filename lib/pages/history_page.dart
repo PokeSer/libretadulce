@@ -11,7 +11,10 @@ import '../core/extensions/context_extensions.dart';
 import '../core/utils/meal_type_localizer.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
+import '../models/meal_type.dart';
+import '../models/insulin_settings.dart';
 import '../services/meal_history_service.dart';
+import '../services/insulin_settings_service.dart';
 import '../widgets/app_common_widgets.dart';
 
 class HistoryPage extends StatefulWidget {
@@ -199,9 +202,19 @@ class _HistoryPageState extends State<HistoryPage> {
 
                           return Dismissible(
                             key: Key(entry.id),
-                            direction: DismissDirection.endToStart,
+                            direction: DismissDirection.horizontal,
                             dismissThresholds: const {DismissDirection.endToStart: 0.25},
                             background: Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              decoration: BoxDecoration(
+                                color: Colors.teal,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              alignment: Alignment.centerLeft,
+                              padding: const EdgeInsets.only(left: 20),
+                              child: const Icon(Icons.edit, color: Colors.white, size: 30),
+                            ),
+                            secondaryBackground: Container(
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
                                 color: Colors.redAccent,
@@ -212,6 +225,10 @@ class _HistoryPageState extends State<HistoryPage> {
                               child: const Icon(Icons.delete, color: Colors.white, size: 30),
                             ),
                             confirmDismiss: (direction) async {
+                              if (direction == DismissDirection.startToEnd) {
+                                _showEditDialog(entry);
+                                return false;
+                              }
                               return await showDialog(
                                 context: context,
                                 builder: (context) => AlertDialog(
@@ -231,6 +248,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               );
                             },
                             onDismissed: (direction) {
+                              if (direction == DismissDirection.startToEnd) return;
                               final deletedEntry = entry;
                               MealHistoryService.deleteEntry(user!.uid, entry.id);
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -278,7 +296,13 @@ class _HistoryPageState extends State<HistoryPage> {
                                               DateFormat('HH:mm').format(date),
                                               style: const TextStyle(color: Colors.grey),
                                             ),
-                                            const SizedBox(width: 8),
+                                            const SizedBox(width: 4),
+                                            IconButton(
+                                              icon: const Icon(Icons.edit_outlined,
+                                                  color: Colors.teal, size: 20),
+                                              tooltip: l10n.historyEditButton,
+                                              onPressed: () => _showEditDialog(entry),
+                                            ),
                                             IconButton(
                                               icon: const Icon(Icons.delete_outline,
                                                   color: Colors.redAccent, size: 20),
@@ -645,6 +669,345 @@ class _HistoryPageState extends State<HistoryPage> {
     if (entries.isEmpty) return l10n.historyNoData7Days;
     final parts = entries.map((e) => '${e.key}: ${e.value.toStringAsFixed(1)}g');
     return '${l10n.historyLast7Days}. ${parts.join(', ')}. ${l10n.historyTotalCarbs}';
+  }
+
+  Future<void> _showEditDialog(MealEntry entry) async {
+    final l10n = AppLocalizations.of(context);
+    final isDark = context.isDarkMode;
+
+    InsulinSettings? settings;
+    if (user != null) {
+      settings = await InsulinSettingsService.getSettings(user!.uid);
+    }
+
+    MealType mealType = entry.mealType;
+    DateTime selectedTime = entry.timestamp;
+    double? editedGlucose = entry.glucose;
+    final itemGrams = entry.items.map((i) => i.grams).toList();
+
+    const hcPerRation = 10.0;
+
+    void recalcItem(int idx, double newGrams, void Function(void Function()) setDialogState) {
+      setDialogState(() {
+        itemGrams[idx] = newGrams;
+      });
+    }
+
+    double recalcTotalCarbs() {
+      double total = 0;
+      for (int i = 0; i < entry.items.length; i++) {
+        final item = entry.items[i];
+        final origRatio = item.carbs / item.grams;
+        total += itemGrams[i] * origRatio;
+      }
+      return total;
+    }
+
+    double recalcTotalRations() => recalcTotalCarbs() / hcPerRation;
+
+    if (!mounted) return;
+
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.85,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (ctx, scrollController) {
+            return StatefulBuilder(
+              builder: (ctx, setDialogState) {
+                return SingleChildScrollView(
+                  controller: scrollController,
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(l10n.historyEditTitle,
+                              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.teal)),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () => Navigator.of(ctx).pop(),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+
+                      Text(l10n.calcMealTypeLabel,
+                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
+                              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
+                        children: MealType.mealList.map((type) {
+                          return ChoiceChip(
+                            label: Text(mealTypeLocalizedLabel(type, l10n), style: const TextStyle(fontSize: 12)),
+                            selected: mealType == type,
+                            selectedColor: Colors.teal.withValues(alpha: 0.3),
+                            checkmarkColor: Colors.teal,
+                            onSelected: (_) => setDialogState(() => mealType = type),
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 16),
+
+                      Semantics(
+                        button: true,
+                        label: l10n.calcDateLabel,
+                        child: InkWell(
+                          onTap: () async {
+                            final date = await showDatePicker(
+                              context: ctx,
+                              initialDate: selectedTime,
+                              firstDate: DateTime(2020),
+                              lastDate: DateTime.now(),
+                              builder: (context, child) => MediaQuery(
+                                data: MediaQuery.of(context),
+                                child: child!,
+                              ),
+                            );
+                            if (date != null) {
+                              setDialogState(() => selectedTime = DateTime(
+                                date.year, date.month, date.day,
+                                selectedTime.hour, selectedTime.minute,
+                              ));
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.calendar_today, color: Theme.of(ctx).colorScheme.primary),
+                                const SizedBox(width: 12),
+                                Text(l10n.calcDateLabel,
+                                    style: TextStyle(fontSize: 14, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),
+                                const Spacer(),
+                                Text(DateFormat.yMMMd().format(selectedTime),
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+
+                      Semantics(
+                        button: true,
+                        label: l10n.calcTimeLabel,
+                        child: InkWell(
+                          onTap: () async {
+                            final now = DateTime.now();
+                            final time = await showTimePicker(
+                              context: ctx,
+                              initialTime: TimeOfDay(hour: selectedTime.hour, minute: selectedTime.minute),
+                              builder: (context, child) => MediaQuery(
+                                data: MediaQuery.of(context),
+                                child: child!,
+                              ),
+                            );
+                            if (time != null) {
+                              final chosen = DateTime(
+                                selectedTime.year, selectedTime.month, selectedTime.day,
+                                time.hour, time.minute,
+                              );
+                              setDialogState(() => selectedTime = chosen.isAfter(now) ? now : chosen);
+                            }
+                          },
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade400),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.access_time, color: Theme.of(ctx).colorScheme.primary),
+                                const SizedBox(width: 12),
+                                Text(l10n.calcTimeLabel,
+                                    style: TextStyle(fontSize: 14, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),
+                                const Spacer(),
+                                Text(DateFormat.Hm().format(selectedTime),
+                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      ...entry.items.asMap().entries.map((e) {
+                        final idx = e.key;
+                        final item = e.value;
+                        final origRatio = item.carbs / item.grams;
+                        final currentGrams = itemGrams[idx];
+                        final currentCarbs = currentGrams * origRatio;
+
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                          labelText: l10n.historyEditGramsLabel,
+                                          suffixText: 'g',
+                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                          isDense: true,
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                        ),
+                                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                        controller: TextEditingController(text: currentGrams.toStringAsFixed(0)),
+                                        onChanged: (v) {
+                                          final val = double.tryParse(v);
+                                          if (val != null && val > 0) {
+                                            recalcItem(idx, val, setDialogState);
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text('${currentCarbs.toStringAsFixed(1)}g HC',
+                                        style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.teal)),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+
+                      TextField(
+                        decoration: InputDecoration(
+                          labelText: l10n.calcGlucoseLabel,
+                          hintText: l10n.calcGlucoseHint,
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.monitor_heart),
+                          suffixText: settings?.glucoseLabel() ?? l10n.calcGlucoseSuffix,
+                          filled: true,
+                          fillColor: isDark ? const Color(0xFF333333) : Colors.white,
+                        ),
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        controller: TextEditingController(
+                            text: (() {
+                              final g = entry.glucose;
+                              if (g == null) return '';
+                              if (settings != null) {
+                                return settings.fromStoredGlucoseUnit(g).toStringAsFixed(0);
+                              }
+                              return g.toStringAsFixed(0);
+                            })(),
+                        ),
+                        onChanged: (v) {
+                          final val = double.tryParse(v);
+                          if (val != null) {
+                            setDialogState(() => editedGlucose =
+                                settings?.toStoredGlucoseUnit(val) ?? val);
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 24),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Expanded(child: StatCard(
+                            title: l10n.calcRations,
+                            value: recalcTotalRations().toStringAsFixed(1),
+                            color: Colors.amber.shade800,
+                            isDark: isDark,
+                          )),
+                          const SizedBox(width: 12),
+                          Expanded(child: StatCard(
+                            title: l10n.calcGramsHC,
+                            value: '${recalcTotalCarbs().toStringAsFixed(1)}g',
+                            color: Colors.teal,
+                            isDark: isDark,
+                          )),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+
+                      FilledButton.icon(
+                        onPressed: () async {
+                          final updatedItems = entry.items.asMap().entries.map((e) {
+                            final idx = e.key;
+                            final item = e.value;
+                            final origRatio = item.carbs / item.grams;
+                            final newGrams = itemGrams[idx];
+                            final newCarbs = newGrams * origRatio;
+                            return {
+                              'name': item.name,
+                              'grams': newGrams,
+                              'carbs': newCarbs,
+                              'raciones': newCarbs / hcPerRation,
+                            };
+                          }).toList();
+
+                          await MealHistoryService.updateEntry(
+                            user!.uid,
+                            entry.id,
+                            mealType: mealType.rawValue,
+                            totalCarbs: recalcTotalCarbs(),
+                            totalRations: recalcTotalRations(),
+                            items: updatedItems,
+                            glucose: editedGlucose,
+                            timestamp: selectedTime,
+                          );
+                          if (ctx.mounted) {
+                            Navigator.of(ctx).pop();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(l10n.historyEditSuccess)),
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.save),
+                        label: Text(l10n.historyEditSave,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        style: FilledButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: Colors.teal,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
   }
 
   Future<void> _exportCSV() async {
