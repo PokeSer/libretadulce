@@ -944,7 +944,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 Row(
                                   children: [
                                     SizedBox(
-                                      width: 80,
+                                      width: 110,
                                       child: TextField(
                                         decoration: InputDecoration(
                                           labelText: l10n.historyEditGramsLabel,
