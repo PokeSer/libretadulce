@@ -17,7 +17,6 @@ class FoodRepository {
   static Stream<List<Food>> watchFavoriteFoods(String uid) {
     return _foods(uid)
         .where('isFavorite', isEqualTo: true)
-        .limit(5)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
