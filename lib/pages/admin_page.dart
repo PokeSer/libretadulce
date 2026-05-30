@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 import '../core/extensions/context_extensions.dart';
 import '../l10n/app_localizations.dart';
@@ -49,12 +49,24 @@ class _AdminPageState extends State<AdminPage> {
     }
   }
 
-  void _editGlobalFood(String docId, Map<String, dynamic> currentData) {
+  void _editGlobalFood(Food food) {
     final l10n = AppLocalizations.of(context);
-    final food = Food.fromFirestore(docId, currentData);
     final nameController = TextEditingController(text: food.name);
+    final brandController = TextEditingController(text: food.brand);
     final carbsController = TextEditingController(
       text: food.carbsPer100g.toString(),
+    );
+    final kcalController = TextEditingController(
+      text: food.kcalPer100g?.toString() ?? '',
+    );
+    final proteinController = TextEditingController(
+      text: food.proteinsPer100g?.toString() ?? '',
+    );
+    final fatController = TextEditingController(
+      text: food.fatsPer100g?.toString() ?? '',
+    );
+    final urlController = TextEditingController(
+      text: food.productUrl ?? '',
     );
 
     showDialog(
@@ -62,29 +74,81 @@ class _AdminPageState extends State<AdminPage> {
       builder: (dialogContext) {
         return AlertDialog(
           title: Text(l10n.adminEditTitle),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                autofillHints: const [AutofillHints.name],
-                decoration: InputDecoration(
-                  labelText: l10n.adminNameLabel,
-                  border: const OutlineInputBorder(),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  autofillHints: const [AutofillHints.name],
+                  decoration: InputDecoration(
+                    labelText: l10n.adminNameLabel,
+                    border: const OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: carbsController,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
+                const SizedBox(height: 12),
+                TextField(
+                  controller: brandController,
+                  decoration: InputDecoration(
+                    labelText: l10n.foodsBrandLabel,
+                    border: const OutlineInputBorder(),
+                  ),
                 ),
-                decoration: InputDecoration(
-                  labelText: l10n.adminCarbsLabel,
-                  border: const OutlineInputBorder(),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: carbsController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.adminCarbsLabel,
+                    border: const OutlineInputBorder(),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                TextField(
+                  controller: kcalController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.foodsKcalLabel,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: proteinController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.foodsProteinLabel,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: fatController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.foodsFatLabel,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: urlController,
+                  autofillHints: const [AutofillHints.url],
+                  decoration: InputDecoration(
+                    labelText: l10n.globalRequestUrl,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -94,12 +158,34 @@ class _AdminPageState extends State<AdminPage> {
             ElevatedButton(
               onPressed: () async {
                 final name = nameController.text.trim();
+                final brand = brandController.text.trim();
                 final carbsRaw = carbsController.text.replaceAll(',', '.');
                 final carbs = double.tryParse(carbsRaw);
+                final kcal = double.tryParse(
+                  kcalController.text.replaceAll(',', '.'),
+                );
+                final protein = double.tryParse(
+                  proteinController.text.replaceAll(',', '.'),
+                );
+                final fat = double.tryParse(
+                  fatController.text.replaceAll(',', '.'),
+                );
+                final url = urlController.text.trim();
 
                 if (name.isNotEmpty && carbs != null) {
-                  final updated = food.copyWith(name: name, carbsPer100g: carbs);
-                  await FoodRepository.updateGlobalFood(docId, updated);
+                  final updated = food.copyWith(
+                    name: name,
+                    brand: brand,
+                    carbsPer100g: carbs,
+                    kcalPer100g: kcal,
+                    clearKcal: kcal == null,
+                    proteinsPer100g: protein,
+                    clearProteins: protein == null,
+                    fatsPer100g: fat,
+                    clearFats: fat == null,
+                    productUrl: url.isNotEmpty ? url : null,
+                  );
+                  await FoodRepository.updateGlobalFood(food.id, updated);
                   if (dialogContext.mounted) {
                     Navigator.pop(dialogContext);
                     ScaffoldMessenger.of(dialogContext).showSnackBar(
@@ -183,6 +269,18 @@ class _AdminPageState extends State<AdminPage> {
                         fontSize: 18,
                       ),
                     ),
+                    if (request.brand.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        request.brand,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: context.isDarkMode
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: 8),
                     Text(
                       l10n.adminCarbsInfo('${request.carbsPer100g}'),
@@ -190,18 +288,39 @@ class _AdminPageState extends State<AdminPage> {
                     ),
                     if (request.productUrl != null &&
                         request.productUrl!.isNotEmpty) ...[
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 4),
                       Semantics(
                         label: l10n.adminUrlInfo(request.productUrl!),
                         child: Text(
                           l10n.adminUrlInfo(request.productUrl!),
                           style: TextStyle(
+                            fontSize: 12,
                             color: Colors.blue.shade700,
                             decoration: TextDecoration.underline,
                           ),
                         ),
                       ),
                     ],
+                    const SizedBox(height: 8),
+                    Text(
+                      '${request.userId.substring(0, request.userId.length < 8 ? request.userId.length : 8)}...',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: context.isDarkMode
+                            ? Colors.grey.shade500
+                            : Colors.grey.shade600,
+                      ),
+                    ),
+                    if (request.timestamp != null)
+                      Text(
+                        DateFormat.yMd().add_jm().format(request.timestamp!),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: context.isDarkMode
+                              ? Colors.grey.shade500
+                              : Colors.grey.shade600,
+                        ),
+                      ),
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -220,7 +339,9 @@ class _AdminPageState extends State<AdminPage> {
                         FilledButton.icon(
                           onPressed: () => _approveRequest(request.id, {
                             'name': request.name,
+                            'brand': request.brand,
                             'carbsPer100g': request.carbsPer100g,
+                            'productUrl': request.productUrl,
                           }),
                           icon: const Icon(Icons.check),
                           label: Text(l10n.adminApproveButton),
@@ -242,11 +363,8 @@ class _AdminPageState extends State<AdminPage> {
 
   Widget _buildGlobalFoods() {
     final l10n = AppLocalizations.of(context);
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('global_foods')
-          .orderBy('name')
-          .snapshots(),
+    return StreamBuilder<List<Food>>(
+      stream: FoodRepository.watchGlobalFoods(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -257,17 +375,16 @@ class _AdminPageState extends State<AdminPage> {
           );
         }
 
-        final docs = snapshot.data?.docs ?? [];
+        final foods = snapshot.data ?? [];
 
-        if (docs.isEmpty) {
+        if (foods.isEmpty) {
           return Center(child: Text(l10n.adminEmptyGlobal));
         }
 
         return ListView.builder(
-          itemCount: docs.length,
+          itemCount: foods.length,
           itemBuilder: (context, index) {
-            final doc = docs[index];
-            final data = doc.data() as Map<String, dynamic>;
+            final food = foods[index];
 
             return Card(
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
@@ -283,18 +400,31 @@ class _AdminPageState extends State<AdminPage> {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.teal.withValues(alpha: 0.1),
-                  child: Icon(
+                  child: const Icon(
                     Icons.public,
                     color: Colors.teal,
-                    semanticLabel: l10n.adminGlobalFood,
                   ),
                 ),
                 title: Text(
-                  data['name'],
+                  food.displayName,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 subtitle: Text(
-                  l10n.calcCarbsPer100g('${data['carbsPer100g']}'),
+                  [
+                    l10n.calcCarbsPer100g(food.carbsPer100g.toStringAsFixed(1)),
+                    if (food.kcalPer100g != null)
+                      '${l10n.foodsKcalLabel}: ${food.kcalPer100g!.toStringAsFixed(0)}',
+                    if (food.proteinsPer100g != null)
+                      '${l10n.foodsProteinLabel}: ${food.proteinsPer100g!.toStringAsFixed(1)}g',
+                    if (food.fatsPer100g != null)
+                      '${l10n.foodsFatLabel}: ${food.fatsPer100g!.toStringAsFixed(1)}g',
+                  ].join('  ·  '),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: context.isDarkMode
+                        ? Colors.grey.shade400
+                        : Colors.grey.shade600,
+                  ),
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -304,7 +434,7 @@ class _AdminPageState extends State<AdminPage> {
                         Icons.edit_outlined,
                         color: Colors.amber.shade600,
                       ),
-                      onPressed: () => _editGlobalFood(doc.id, data),
+                      onPressed: () => _editGlobalFood(food),
                       tooltip: l10n.adminEditGlobal,
                     ),
                     IconButton(
@@ -327,7 +457,7 @@ class _AdminPageState extends State<AdminPage> {
                               ElevatedButton(
                                 onPressed: () {
                                   Navigator.pop(dialogContext);
-                                  _deleteGlobalFood(doc.id);
+                                  _deleteGlobalFood(food.id);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red,

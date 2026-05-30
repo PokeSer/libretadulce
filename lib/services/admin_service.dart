@@ -27,13 +27,20 @@ class AdminService {
 
   static Future<void> approveRequest(
       String requestId, Map<String, dynamic> data) async {
-    await FirebaseFirestore.instance
-        .collection(FirestorePaths.globalFoods)
-        .add({
+    final foodData = <String, dynamic>{
       'name': data['name'],
       'carbsPer100g': data['carbsPer100g'],
       'approvedAt': FieldValue.serverTimestamp(),
-    });
+    };
+    if ((data['brand'] as String?)?.isNotEmpty == true) {
+      foodData['brand'] = data['brand'];
+    }
+    if (data['productUrl'] != null && (data['productUrl'] as String).isNotEmpty) {
+      foodData['productUrl'] = data['productUrl'];
+    }
+    await FirebaseFirestore.instance
+        .collection(FirestorePaths.globalFoods)
+        .add(foodData);
     await _requests.doc(requestId).update({
       'status': 'approved',
       'resolvedAt': FieldValue.serverTimestamp(),
