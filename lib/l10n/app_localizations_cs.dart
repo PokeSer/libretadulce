@@ -156,6 +156,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get calcTimeLabel => 'Čas';
 
   @override
+  String get calcDateLabel => 'Datum';
+
+  @override
   String get calcBolusTitle => 'Inzulínový bolus';
 
   @override

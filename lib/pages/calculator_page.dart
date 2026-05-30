@@ -60,6 +60,26 @@ class _CalculatorPageState extends State<CalculatorPage> {
     await prefs.setString(_prefsLastMealTypeKey, type.rawValue);
   }
 
+  Future<void> _pickDate() async {
+    final now = DateTime.now();
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _selectedTime,
+      firstDate: DateTime(2020),
+      lastDate: now,
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context),
+        child: child!,
+      ),
+    );
+    if (date != null) {
+      setState(() => _selectedTime = DateTime(
+        date.year, date.month, date.day,
+        _selectedTime.hour, _selectedTime.minute,
+      ));
+    }
+  }
+
   Future<void> _pickTime() async {
     final now = DateTime.now();
     final time = await showTimePicker(
@@ -1028,6 +1048,55 @@ class _CalculatorPageState extends State<CalculatorPage> {
               ),
 
               const SizedBox(height: 12),
+              Semantics(
+                button: true,
+                label: l10n.calcDateLabel,
+                child: InkWell(
+                  onTap: _pickDate,
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: isDark
+                            ? Colors.grey.shade700
+                            : Colors.grey.shade400,
+                      ),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.calendar_today,
+                            color: Theme.of(context).colorScheme.primary),
+                        const SizedBox(width: 12),
+                        Text(
+                          l10n.calcDateLabel,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: isDark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade600,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          DateFormat.yMMMd().format(_selectedTime),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
               Semantics(
                 button: true,
                 label: l10n.calcTimeLabel,

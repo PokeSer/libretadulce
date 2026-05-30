@@ -47,6 +47,7 @@
   "calcTotalHC": "{carbs}g KH",
   "calcMealTypeLabel": "Mahlzeittyp:",
   "calcTimeLabel": "Uhrzeit",
+  "calcDateLabel": "Datum",
   "calcBolusTitle": "Insulin-Bolus",
   "calcGlucoseLabel": "Aktueller Blutzucker (optional)",
   "calcGlucoseHint": "Z.B.: 145",

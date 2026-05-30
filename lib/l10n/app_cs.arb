@@ -47,6 +47,7 @@
   "calcTotalHC": "{carbs}g sach.",
   "calcMealTypeLabel": "Typ jídla:",
   "calcTimeLabel": "Čas",
+  "calcDateLabel": "Datum",
   "calcBolusTitle": "Inzulínový bolus",
   "calcGlucoseLabel": "Aktuální glykémie (volitelné)",
   "calcGlucoseHint": "Např.: 145",

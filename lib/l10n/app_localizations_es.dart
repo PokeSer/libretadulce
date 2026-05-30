@@ -156,6 +156,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get calcTimeLabel => 'Hora';
 
   @override
+  String get calcDateLabel => 'Fecha';
+
+  @override
   String get calcBolusTitle => 'Bolo de Insulina';
 
   @override

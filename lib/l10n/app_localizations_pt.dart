@@ -156,6 +156,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get calcTimeLabel => 'Hora';
 
   @override
+  String get calcDateLabel => 'Data';
+
+  @override
   String get calcBolusTitle => 'Bolus de Insulina';
 
   @override

@@ -368,6 +368,12 @@ abstract class AppLocalizations {
   /// **'Hora'**
   String get calcTimeLabel;
 
+  /// No description provided for @calcDateLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get calcDateLabel;
+
   /// No description provided for @calcBolusTitle.
   ///
   /// In es, this message translates to:

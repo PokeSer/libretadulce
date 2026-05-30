@@ -47,6 +47,7 @@
   "calcTotalHC": "{carbs}g węgl.",
   "calcMealTypeLabel": "Rodzaj posiłku:",
   "calcTimeLabel": "Godzina",
+  "calcDateLabel": "Data",
   "calcBolusTitle": "Bolus insuliny",
   "calcGlucoseLabel": "Aktualna glikemia (opcjonalnie)",
   "calcGlucoseHint": "Np.: 145",

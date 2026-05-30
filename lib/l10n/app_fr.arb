@@ -47,6 +47,7 @@
   "calcTotalHC": "{carbs}g HC",
   "calcMealTypeLabel": "Type de repas :",
   "calcTimeLabel": "Heure",
+  "calcDateLabel": "Date",
   "calcBolusTitle": "Bolus d'Insuline",
   "calcGlucoseLabel": "Glycémie actuelle (optionnel)",
   "calcGlucoseHint": "Ex. : 145",
