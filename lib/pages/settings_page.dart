@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/extensions/context_extensions.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show appSettings;
 import 'insulin_settings_page.dart';
@@ -20,7 +21,7 @@ class SettingsPage extends StatelessWidget {
       body: ListenableBuilder(
         listenable: appSettings,
         builder: (context, _) {
-          final dark = Theme.of(context).brightness == Brightness.dark;
+          final dark = context.isDarkMode;
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: Column(

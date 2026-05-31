@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/extensions/context_extensions.dart';
 import '../models/food.dart';
 import '../l10n/app_localizations.dart';
 
@@ -17,7 +18,7 @@ class FoodListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.isDarkMode;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),

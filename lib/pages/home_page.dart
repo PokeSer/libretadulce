@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../core/extensions/context_extensions.dart';
 import 'calculator_page.dart';
 import 'foods_page.dart';
 import 'global_foods_page.dart';
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
 
   void _showUpdateDialog(UpdateInfo update) {
     final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.isDarkMode;
     final tag = 'v${update.version}';
 
     showDialog(

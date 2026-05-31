@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../core/extensions/context_extensions.dart';
 import '../models/food.dart';
 import '../services/food_repository.dart';
 import '../l10n/app_localizations.dart';
@@ -35,7 +36,7 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.isDarkMode;
 
     return FractionallySizedBox(
       heightFactor: 0.85,

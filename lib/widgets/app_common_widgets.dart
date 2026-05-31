@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/extensions/context_extensions.dart';
 
 class AppLoadingIndicator extends StatelessWidget {
   final String label;
@@ -28,7 +29,7 @@ class AppEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.isDarkMode;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../core/extensions/context_extensions.dart';
 import '../services/auth_service.dart';
 import '../l10n/app_localizations.dart';
 
@@ -31,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
     final AuthService authService = AuthService();
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.isDarkMode;
     final l10n = AppLocalizations.of(context);
 
     if (user == null) {
