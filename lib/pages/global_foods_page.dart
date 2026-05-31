@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../core/utils/formatters.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
@@ -197,7 +199,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
                 hintText: l10n.globalSearch,
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                 ),
               ),
             ),
@@ -242,7 +244,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
                         side: context.isDarkMode
                             ? BorderSide(color: Colors.grey.shade800)
                             : BorderSide.none,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                       ),
                       child: ListTile(
                         leading: CircleAvatar(
@@ -251,7 +253,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
                         ),
                         title: Text(
                           food.displayName,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: AppTextStyles.appBarTitle,
                         ),
                         subtitle: Text(l10n.calcCarbsPer100g('${food.carbsPer100g}')),
                         trailing: IconButton(

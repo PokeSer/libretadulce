@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../services/auth_service.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/app_card.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -40,7 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: AppDimens.screenPadding,
       child: Column(
         children: [
           const SizedBox(height: 24),
@@ -64,7 +68,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.teal.shade900,
+                    color: AppColors.textHeading(context),
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -76,28 +80,26 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           const Spacer(),
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            color: isDark ? const Color(0xFF2C2C2C) : Colors.white,
-            elevation: 0,
+          AppCard(
+            borderRadius: AppDimens.radiusDialog,
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               leading: const Icon(Icons.favorite, color: Colors.redAccent, semanticLabel: ''),
               title: Text(
                 l10n.profileAboutTitle,
-                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                style: AppTextStyles.cardTitle,
               ),
               subtitle: Text(
                 l10n.profileAboutSubtitle,
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+                style: AppTextStyles.cardSubtitle,
               ),
               trailing: Icon(Icons.chevron_right, color: Colors.grey.shade400, semanticLabel: ''),
               onTap: () {
                 showDialog(
                   context: context,
                   builder: (ctx) => AlertDialog(
-                    backgroundColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    backgroundColor: AppColors.cardBg(context),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusDialog)),
                     title: Row(
                       children: [
                         const ExcludeSemantics(child: Icon(Icons.favorite, color: Colors.redAccent)),
@@ -110,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       style: TextStyle(
                         height: 1.5,
                         fontSize: 15,
-                        color: isDark ? Colors.white70 : Colors.black87,
+                        color: AppColors.textBody(context),
                       ),
                     ),
                     actions: [
@@ -156,8 +158,8 @@ class _ProfilePageState extends State<ProfilePage> {
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.redAccent,
                 side: const BorderSide(color: Colors.redAccent),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                padding: AppDimens.buttonPaddingV,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
               ),
             ),
           ),
@@ -171,7 +173,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.grey.shade500 : Colors.grey.shade600,
+                    color: AppColors.textSecondary(context),
                   ),
                 ),
                 if (_appVersion.isNotEmpty)

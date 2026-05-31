@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../core/utils/formatters.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
@@ -296,10 +298,8 @@ class _FoodsPageState extends State<FoodsPage> {
       return Center(child: Text(l10n.foodsMustLogin));
     }
 
-    final isDark = context.isDarkMode;
-
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+      backgroundColor: AppColors.scaffoldBg(context),
       body: Column(
         children: [
           Padding(
@@ -310,9 +310,9 @@ class _FoodsPageState extends State<FoodsPage> {
                 hintText: l10n.foodsSearch,
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+                fillColor: AppColors.surfaceAlt(context),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 0),
@@ -353,7 +353,7 @@ class _FoodsPageState extends State<FoodsPage> {
                         Text(
                           l10n.foodsEmpty,
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600, fontSize: 16),
+                          style: AppTextStyles.bodyText(context),
                         ),
                       ],
                     ),
@@ -389,10 +389,10 @@ class _FoodsPageState extends State<FoodsPage> {
                       direction: DismissDirection.endToStart,
                       dismissThresholds: const {DismissDirection.endToStart: 0.25},
                       background: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                        margin: AppDimens.cardMargin,
                         decoration: BoxDecoration(
                           color: Colors.redAccent,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                         ),
                         alignment: Alignment.centerRight,
                         padding: const EdgeInsets.only(right: 20),

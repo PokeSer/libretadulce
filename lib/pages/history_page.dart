@@ -8,6 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../core/utils/meal_type_localizer.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
@@ -53,7 +56,7 @@ class _HistoryPageState extends State<HistoryPage> {
     return Column(
       children: [
         Container(
-          color: context.isDarkMode ? const Color(0xFF222222) : Colors.teal.shade50,
+          color: AppColors.headerBg(context),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +71,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 children: [
                   Text(
                     DateFormat('EEEE, d MMMM', Localizations.localeOf(context).toString()).format(_selectedDate).toUpperCase(),
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: AppTextStyles.sectionTitle,
                   ),
                   if (startOfDay.difference(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)).inDays == 0)
                     Text(l10n.historyToday, style: const TextStyle(color: Colors.teal, fontWeight: FontWeight.bold, fontSize: 12)),
@@ -85,7 +88,7 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
 
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: AppDimens.listTileContent,
           child: Row(
             children: [
               Semantics(
@@ -209,7 +212,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
                                 color: Colors.teal,
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
                               ),
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 20),
@@ -219,7 +222,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
                                 color: Colors.redAccent,
-                                borderRadius: BorderRadius.circular(16),
+                                borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
                               ),
                               alignment: Alignment.centerRight,
                               padding: const EdgeInsets.only(right: 20),
@@ -268,7 +271,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: Card(
                               margin: const EdgeInsets.only(bottom: 16),
                               elevation: 2,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusDialog)),
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: Column(
@@ -379,7 +382,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                         color: context.isDarkMode
                                             ? Colors.teal.withValues(alpha: 0.1)
                                             : Colors.teal.shade50,
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                                       ),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -400,7 +403,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                           color: context.isDarkMode
                                               ? Colors.red.withValues(alpha: 0.08)
                                               : Colors.red.shade50,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                                         ),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -434,7 +437,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                           color: context.isDarkMode
                                               ? Colors.orange.withValues(alpha: 0.1)
                                               : Colors.orange.shade50,
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                                         ),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -530,8 +533,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 const SizedBox(height: 16),
                 Text(
                   l10n.historyNoData7Days,
-                  style: TextStyle(
-                      color: context.isDarkMode ? Colors.grey.shade400 : Colors.grey.shade600, fontSize: 16),
+                    style: AppTextStyles.bodyText(context),
                 ),
               ],
             ),
@@ -547,7 +549,7 @@ class _HistoryPageState extends State<HistoryPage> {
         maxTotal = interval * 4;
 
         return Padding(
-          padding: const EdgeInsets.all(16),
+          padding: AppDimens.cardPadding,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -759,7 +761,7 @@ class _HistoryPageState extends State<HistoryPage> {
               builder: (ctx, setDialogState) {
                 return SingleChildScrollView(
                   controller: scrollController,
-                  padding: const EdgeInsets.all(24),
+                  padding: AppDimens.screenPadding,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -779,7 +781,7 @@ class _HistoryPageState extends State<HistoryPage> {
 
                       Text(l10n.calcMealTypeLabel,
                           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
-                              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),
+                              color: AppColors.textSecondary(context))),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 8,
@@ -823,22 +825,22 @@ class _HistoryPageState extends State<HistoryPage> {
                               ));
                             }
                           },
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             decoration: BoxDecoration(
-                              border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade400),
-                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: AppColors.borderSecondary(context)),
+                              borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                             ),
                             child: Row(
                               children: [
                                 ExcludeSemantics(child: Icon(Icons.calendar_today, color: Theme.of(ctx).colorScheme.primary)),
                                 const SizedBox(width: 12),
                                 Text(l10n.calcDateLabel,
-                                    style: TextStyle(fontSize: 14, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),
+                                     style: TextStyle(fontSize: 14, color: AppColors.textSecondary(context))),
                                 const Spacer(),
                                 Text(DateFormat.yMMMd().format(selectedTime),
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    style: AppTextStyles.sectionTitle),
                                 const Icon(Icons.arrow_drop_down, color: Colors.grey),
                               ],
                             ),
@@ -869,22 +871,22 @@ class _HistoryPageState extends State<HistoryPage> {
                               setDialogState(() => selectedTime = chosen.isAfter(now) ? now : chosen);
                             }
                           },
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             decoration: BoxDecoration(
-                              border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade400),
-                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: AppColors.borderSecondary(context)),
+                              borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                             ),
                             child: Row(
                               children: [
                                 ExcludeSemantics(child: Icon(Icons.access_time, color: Theme.of(ctx).colorScheme.primary)),
                                 const SizedBox(width: 12),
                                 Text(l10n.calcTimeLabel,
-                                    style: TextStyle(fontSize: 14, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600)),
+                                     style: TextStyle(fontSize: 14, color: AppColors.textSecondary(context))),
                                 const Spacer(),
                                 Text(DateFormat.Hm().format(selectedTime),
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                    style: AppTextStyles.sectionTitle),
                                 const Icon(Icons.arrow_drop_down, color: Colors.grey),
                               ],
                             ),
@@ -897,7 +899,7 @@ class _HistoryPageState extends State<HistoryPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(l10n.calcMyPlate,
-                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.teal)),
+                              style: AppTextStyles.sectionTitle.copyWith(color: Colors.teal)),
                           Semantics(
                             button: true,
                             label: l10n.calcAddToPlate,
@@ -924,8 +926,8 @@ class _HistoryPageState extends State<HistoryPage> {
                           child: Container(
                             padding: const EdgeInsets.only(left: 12, top: 8, bottom: 8, right: 4),
                             decoration: BoxDecoration(
-                              color: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(12),
+                              color: AppColors.surfaceAlt(context),
+                              borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -959,7 +961,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                         decoration: InputDecoration(
                                           labelText: l10n.historyEditGramsLabel,
                                           suffixText: 'g',
-                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppDimens.radiusInput)),
                                           isDense: true,
                                           contentPadding:
                                               const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -992,11 +994,11 @@ class _HistoryPageState extends State<HistoryPage> {
                         decoration: InputDecoration(
                           labelText: l10n.calcGlucoseLabel,
                           hintText: l10n.calcGlucoseHint,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
                           prefixIcon: const Icon(Icons.monitor_heart),
                           suffixText: settings?.glucoseLabel() ?? l10n.calcGlucoseSuffix,
                           filled: true,
-                          fillColor: isDark ? const Color(0xFF333333) : Colors.white,
+                          fillColor: AppColors.surfaceBg(context),
                         ),
                         keyboardType: const TextInputType.numberWithOptions(decimal: true),
                         controller: glucoseController,
@@ -1064,11 +1066,11 @@ class _HistoryPageState extends State<HistoryPage> {
                         },
                         icon: const Icon(Icons.save),
                         label: Text(l10n.historyEditSave,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            style: AppTextStyles.sectionTitle),
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           backgroundColor: Colors.teal,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
                         ),
                       ),
                       const SizedBox(height: 16),

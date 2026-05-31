@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/theme/app_dimens.dart';
 import '../l10n/app_localizations.dart';
 import '../services/auth_service.dart';
 
@@ -40,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 16, horizontal: 24),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(AppDimens.radiusRound),
                         ),
                         elevation: 2,
                       ),

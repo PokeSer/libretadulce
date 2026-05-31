@@ -4,6 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../core/utils/formatters.dart';
 import '../models/food.dart';
 import '../models/meal_type.dart';
@@ -404,7 +407,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         color: color.withValues(alpha: isDark ? 0.15 : 0.08),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
@@ -452,7 +455,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: AppDimens.screenPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -471,7 +474,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 color: isDark
                     ? Colors.teal.withValues(alpha: 0.1)
                     : Colors.teal.shade50,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppDimens.radiusCard),
               ),
               child: Row(
                 children: [
@@ -485,14 +488,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _isInverseMode = false;
                           _calculateMacros();
                         }),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
                             color: !_isInverseMode
                                 ? Colors.teal
                                 : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                           ),
                           child: Text(
                             l10n.calcGramsMode,
@@ -519,14 +522,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           _isInverseMode = true;
                           _calculateMacros();
                         }),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
                             color: _isInverseMode
                                 ? Colors.amber.shade600
                                 : Colors.transparent,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                           ),
                           child: Text(
                             l10n.calcRationsMode,
@@ -562,7 +565,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         color:
-                            isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                             AppColors.textSecondary(context),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -598,9 +601,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                     _calculateMacros();
                                   });
                                 },
-                                backgroundColor: isDark
-                                    ? Colors.grey.shade800
-                                    : Colors.grey.shade100,
+                                backgroundColor: AppColors.surfaceAlt(context),
                                 selectedColor:
                                     Colors.teal.withValues(alpha: 0.25),
                                 checkmarkColor: Colors.teal,
@@ -628,7 +629,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   : l10n.calcSearchFoodAccessibility,
               child: InkWell(
                 onTap: _openFoodSearchSheet,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -636,9 +637,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   ),
                   decoration: BoxDecoration(
                     border: Border.all(
-                        color: isDark ? Colors.grey.shade700 : Colors.grey.shade500),
-                    borderRadius: BorderRadius.circular(12),
-                    color: isDark ? const Color(0xFF333333) : Colors.white,
+                        color: AppColors.borderSecondary(context)),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+                    color: AppColors.surfaceBg(context),
                   ),
                   child: Row(
                     children: [
@@ -658,7 +659,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                     ? FontWeight.bold
                                     : FontWeight.normal,
                                 color: _selectedFoodName != null
-                                    ? (isDark ? Colors.white : Colors.black87)
+                                    ? AppColors.textHeading(context)
                                     : Colors.grey.shade600,
                               ),
                             ),
@@ -699,7 +700,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     ? l10n.calcInputGramsLabel
                     : l10n.calcInputRationsLabel,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                 ),
                 prefixIcon: Icon(
                   !_isInverseMode ? Icons.scale : Icons.restaurant_menu,
@@ -710,20 +711,20 @@ class _CalculatorPageState extends State<CalculatorPage> {
                     : l10n.calcInputRationsSuffix,
                 filled: true,
                 fillColor: _selectedFoodName == null
-                    ? (isDark ? Colors.grey.shade800 : Colors.grey.shade100)
-                    : (isDark ? const Color(0xFF333333) : Colors.white),
+                    ? AppColors.surfaceAlt(context)
+                    : (AppColors.surfaceBg(context)),
               ),
             ),
 
             const SizedBox(height: 48),
 
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: AppDimens.screenPadding,
               decoration: BoxDecoration(
                 color: !_isInverseMode
                     ? Theme.of(context).colorScheme.primary
-                    : const Color(0xFF689F38),
-                borderRadius: BorderRadius.circular(24),
+                    : AppColors.insulinGreen,
+                borderRadius: BorderRadius.circular(AppDimens.radiusXxl),
               ),
               child: Column(
                 children: [
@@ -820,15 +821,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
               icon: const Icon(Icons.add_circle_outline),
               label: Text(
                 l10n.calcAddToPlate,
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.bold),
+                style: AppTextStyles.sectionTitle,
               ),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 backgroundColor: Colors.teal.shade600,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                 ),
               ),
             ),
@@ -878,7 +878,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       margin: const EdgeInsets.only(bottom: 8),
                       decoration: BoxDecoration(
                         color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                       ),
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(right: 20),
@@ -971,12 +971,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
               const SizedBox(height: 8),
 
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: AppDimens.cardPadding,
                 decoration: BoxDecoration(
                   color: isDark
                       ? Colors.teal.withValues(alpha: 0.1)
                       : Colors.teal.shade50,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                   border: Border.all(
                       color: isDark
                           ? Colors.teal.shade800
@@ -1030,7 +1030,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color:
-                      isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                      AppColors.textSecondary(context),
                 ),
               ),
               const SizedBox(height: 8),
@@ -1063,7 +1063,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 label: l10n.calcDateLabel,
                 child: InkWell(
                   onTap: _pickDate,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -1075,7 +1075,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             ? Colors.grey.shade700
                             : Colors.grey.shade400,
                       ),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                     ),
                     child: Row(
                       children: [
@@ -1112,7 +1112,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 label: l10n.calcTimeLabel,
                 child: InkWell(
                   onTap: _pickTime,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
@@ -1124,7 +1124,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                             ? Colors.grey.shade700
                             : Colors.grey.shade400,
                       ),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                     ),
                     child: Row(
                       children: [
@@ -1162,8 +1162,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color:
-                        isDark ? const Color(0xFF2C2C2C) : Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(16),
+                        AppColors.cardBg(context),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
                     border: Border.all(
                         color: Colors.teal.withValues(alpha: 0.3)),
                   ),
@@ -1194,13 +1194,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
                           labelText: l10n.calcGlucoseLabel,
                           hintText: l10n.calcGlucoseHint,
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
+                              borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
                           prefixIcon: const Icon(Icons.monitor_heart),
                           suffixText: _insulinSettings?.glucoseLabel() ?? l10n.calcGlucoseSuffix,
                           filled: true,
-                          fillColor: isDark
-                              ? const Color(0xFF333333)
-                              : Colors.white,
+                          fillColor: AppColors.surfaceBg(context),
                         ),
                         onChanged: (_) => setState(() {}),
                       ),
@@ -1213,10 +1211,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
               if (_settingsLoaded && _insulinSettings == null)
                 Card(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  color: isDark ? const Color(0xFF333333) : Colors.white,
+                      borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
+                  color: AppColors.surfaceBg(context),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: AppDimens.cardPadding,
                     child: Row(
                       children: [
                         const ExcludeSemantics(child: Icon(Icons.water_drop,
@@ -1258,7 +1256,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   backgroundColor: Colors.teal,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                   ),
                 ),
               ),

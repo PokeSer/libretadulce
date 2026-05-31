@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
 import '../services/food_repository.dart';
@@ -245,7 +248,7 @@ class _AdminPageState extends State<AdminPage> {
             final request = requests[index];
 
             return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              margin: AppDimens.cardMargin,
               elevation: 1,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
@@ -253,10 +256,10 @@ class _AdminPageState extends State<AdminPage> {
                       ? Colors.grey.shade800
                       : Colors.grey.shade300,
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppDimens.radiusCard),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: AppDimens.cardPadding,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -387,7 +390,7 @@ class _AdminPageState extends State<AdminPage> {
             final food = foods[index];
 
             return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              margin: AppDimens.cardMargin,
               elevation: 1,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
@@ -395,7 +398,7 @@ class _AdminPageState extends State<AdminPage> {
                       ? Colors.grey.shade800
                       : Colors.grey.shade300,
                 ),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(AppDimens.radiusCard),
               ),
               child: ListTile(
                 leading: CircleAvatar(
@@ -407,7 +410,7 @@ class _AdminPageState extends State<AdminPage> {
                 ),
                 title: Text(
                   food.displayName,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: AppTextStyles.appBarTitle,
                 ),
                 subtitle: Text(
                   [
@@ -491,10 +494,10 @@ class _AdminPageState extends State<AdminPage> {
         appBar: AppBar(
           title: Text(
             l10n.adminTitle,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: AppTextStyles.appBarTitle,
           ),
           backgroundColor: context.isDarkMode
-              ? const Color(0xFF1E1E1E)
+              ? AppColors.scaffoldBg(context)
               : Colors.blueGrey.shade800,
           foregroundColor: Colors.white,
           elevation: 0,

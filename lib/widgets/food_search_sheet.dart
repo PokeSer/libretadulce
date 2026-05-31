@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
 import '../models/food.dart';
 import '../services/food_repository.dart';
 import '../l10n/app_localizations.dart';
@@ -36,13 +37,12 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isDark = context.isDarkMode;
 
     return FractionallySizedBox(
       heightFactor: 0.85,
       child: Container(
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF2C2C2C) : Colors.white,
+          color: AppColors.cardBg(context),
           borderRadius:
               const BorderRadius.vertical(top: Radius.circular(24)),
         ),
@@ -79,12 +79,9 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                   hintText: l10n.foodSearchHint,
                   prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                   ),
                   filled: true,
-                  fillColor: isDark
-                      ? Colors.grey.shade800
-                      : Colors.grey.shade100,
                 ),
                 onChanged: (val) =>
                     setState(() => _searchQuery = val.toLowerCase()),
@@ -111,7 +108,7 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                       child: Text(
                         l10n.foodSearchEmptyList,
                         style: TextStyle(
-                            color: isDark ? Colors.grey.shade400 : Colors.grey),
+                            color: AppColors.hintColor(context)),
                       ),
                     );
                   }
@@ -124,7 +121,7 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                       child: Text(
                         l10n.foodSearchNoResults(_searchQuery),
                         style: TextStyle(
-                            color: isDark ? Colors.grey.shade400 : Colors.grey),
+                            color: AppColors.hintColor(context)),
                       ),
                     );
                   }
@@ -155,18 +152,14 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: food.isFavorite
-                                ? (isDark
-                                    ? Colors.amber.shade200
-                                    : Colors.brown.shade800)
-                                : (isDark
-                                    ? Colors.white
-                                    : Colors.black87),
+                                ? AppColors.accentFavorite(context)
+                                : AppColors.textBody(context),
                           ),
                         ),
                         subtitle: Text(
                           l10n.calcCarbsPer100g('${food.carbsPer100g}'),
                           style:
-                              TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade700),
+                              TextStyle(color: AppColors.textMuted(context)),
                         ),
                         trailing: const ExcludeSemantics(child: Icon(Icons.chevron_right,
                             color: Colors.teal)),

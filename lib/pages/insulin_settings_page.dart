@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../core/utils/meal_type_localizer.dart';
 import '../l10n/app_localizations.dart';
 import '../models/insulin_settings.dart';
@@ -148,7 +150,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
         title: Text(l10n.insulinTitle),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+        padding: AppDimens.screenPadding,
         child: Form(
           key: _formKey,
           child: Column(
@@ -353,11 +355,11 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                       : const Icon(Icons.save),
                   label: Text(
                     _isSaving ? l10n.insulinSaving : l10n.insulinSave,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: AppTextStyles.sectionTitle,
                   ),
                   style: FilledButton.styleFrom(
                     backgroundColor: Colors.teal,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
                   ),
                 ),
               ),

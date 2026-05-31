@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 
 class AppLoadingIndicator extends StatelessWidget {
   final String label;
@@ -29,17 +31,16 @@ class AppEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = context.isDarkMode;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ExcludeSemantics(
-              child: Icon(icon, size: 64, color: isDark ? Colors.grey.shade400 : Colors.grey)),
+              child: Icon(icon, size: 64, color: AppColors.hintColor(context))),
           const SizedBox(height: 16),
           Text(
             message,
-            style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade600, fontSize: 16),
+            style: AppTextStyles.bodyText(context),
             textAlign: TextAlign.center,
           ),
         ],
@@ -65,10 +66,10 @@ class StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppDimens.cardPadding,
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF333333) : Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        color: AppColors.surfaceBg(context),
+        borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
         border:
             Border.all(color: color.withValues(alpha: isDark ? 0.3 : 0.2)),
         boxShadow: [
@@ -84,7 +85,7 @@ class StatCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              color: AppColors.textSecondary(context),
               fontSize: 12,
               fontWeight: FontWeight.bold,
             ),

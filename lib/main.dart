@@ -7,6 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'core/services/app_settings.dart';
+import 'core/theme/app_dimens.dart';
 import 'l10n/app_localizations.dart';
 import 'pages/login_page.dart';
 import 'pages/home_page.dart';
@@ -65,42 +66,108 @@ class MyApp extends StatelessWidget {
             return supportedLocales.first;
           },
           themeMode: appSettings.themeMode,
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blueGrey,
-              brightness: Brightness.light,
-              primary: const Color(0xFF263238),
-              secondary: const Color(0xFF546E7A),
-            ),
-            useMaterial3: true,
-            textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme),
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.transparent,
-              foregroundColor: Color(0xFF263238),
-              elevation: 0,
-              centerTitle: false,
-            ),
-          ),
-          darkTheme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.blueGrey,
-              brightness: Brightness.dark,
-              primary: const Color(0xFF90A4AE),
-              secondary: const Color(0xFF546E7A),
-            ),
-            useMaterial3: true,
-            textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
-            scaffoldBackgroundColor: const Color(0xFF121212),
-            appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.white,
-              elevation: 0,
-              centerTitle: false,
-            ),
-          ),
+          theme: _buildLightTheme(),
+          darkTheme: _buildDarkTheme(),
           home: const AuthWrapper(),
         );
       },
+    );
+  }
+
+  ThemeData _buildLightTheme() {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: const Color(0xFF00796B), // teal 700 — profesional, no chillón
+      brightness: Brightness.light,
+    );
+
+    return ThemeData(
+      colorScheme: colorScheme,
+      useMaterial3: true,
+      textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme),
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: colorScheme.surfaceContainerLow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colorScheme.surfaceContainerLow,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        foregroundColor: colorScheme.onSurface,
+        elevation: 0,
+        centerTitle: false,
+      ),
+    );
+  }
+
+  ThemeData _buildDarkTheme() {
+    const colorScheme = ColorScheme(
+      brightness: Brightness.dark,
+      primary: Color(0xFF4DB6AC),
+      onPrimary: Color(0xFF003731),
+      primaryContainer: Color(0xFF005048),
+      onPrimaryContainer: Color(0xFF70F7E4),
+      secondary: Color(0xFF80CBC4),
+      onSecondary: Color(0xFF003731),
+      secondaryContainer: Color(0xFF005048),
+      onSecondaryContainer: Color(0xFFA0F0E4),
+      tertiary: Color(0xFFFFB74D),
+      onTertiary: Color(0xFF462A00),
+      tertiaryContainer: Color(0xFF634100),
+      onTertiaryContainer: Color(0xFFFFDDB3),
+      error: Color(0xFFFFB4AB),
+      onError: Color(0xFF690005),
+      errorContainer: Color(0xFF93000A),
+      onErrorContainer: Color(0xFFFFDAD6),
+      surface: Color(0xFF101214),
+      onSurface: Color(0xFFE0E2E4),
+      onSurfaceVariant: Color(0xFFC0C6CB),
+      outline: Color(0xFF8A9095),
+      outlineVariant: Color(0xFF40474C),
+      surfaceContainerHighest: Color(0xFF1D2124),
+      surfaceContainerHigh: Color(0xFF181B1E),
+      surfaceContainer: Color(0xFF131619),
+      surfaceContainerLow: Color(0xFF0E1013),
+      inverseSurface: Color(0xFFE0E2E4),
+      onInverseSurface: Color(0xFF2D3034),
+      inversePrimary: Color(0xFF00695C),
+      shadow: Color(0xFF000000),
+      scrim: Color(0xFF000000),
+    );
+
+    return ThemeData(
+      colorScheme: colorScheme,
+      useMaterial3: true,
+      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme),
+      cardTheme: CardThemeData(
+        elevation: 0,
+        color: colorScheme.surfaceContainerHighest,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: colorScheme.surfaceContainerHighest,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+          borderSide: BorderSide.none,
+        ),
+      ),
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        foregroundColor: colorScheme.onSurface,
+        elevation: 0,
+        centerTitle: false,
+      ),
     );
   }
 }

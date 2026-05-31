@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
 import '../models/food.dart';
 import '../l10n/app_localizations.dart';
 
@@ -21,7 +23,7 @@ class FoodListItem extends StatelessWidget {
     final isDark = context.isDarkMode;
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      margin: AppDimens.cardMargin,
       elevation: 1,
       shape: RoundedRectangleBorder(
         side: food.isFavorite
@@ -29,11 +31,10 @@ class FoodListItem extends StatelessWidget {
             : (isDark
                 ? BorderSide(color: Colors.grey.shade800)
                 : BorderSide.none),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
       ),
       child: ListTile(
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: AppDimens.listTileContent,
         leading: CircleAvatar(
           backgroundColor: food.isFavorite
               ? Colors.amber.withValues(alpha: 0.2)
@@ -53,13 +54,13 @@ class FoodListItem extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: food.isFavorite
-                ? (isDark ? Colors.amber.shade200 : Colors.brown.shade800)
-                : (isDark ? Colors.white : Colors.teal.shade900),
+                ? AppColors.accentFavorite(context)
+                : AppColors.textHeading(context),
           ),
         ),
         subtitle: Text(
           l10n.calcCarbsPer100g('${food.carbsPer100g}'),
-          style: TextStyle(color: isDark ? Colors.grey.shade400 : Colors.grey.shade700),
+          style: TextStyle(color: AppColors.textMuted(context)),
         ),
         trailing: trailing,
         onTap: onTap,

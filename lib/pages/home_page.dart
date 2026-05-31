@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import 'calculator_page.dart';
 import 'foods_page.dart';
 import 'global_foods_page.dart';
@@ -67,14 +70,14 @@ class _HomePageState extends State<HomePage> {
       context: context,
       barrierDismissible: false,
       builder: (ctx) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusPill)),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: AppDimens.screenPadding,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: AppDimens.cardPadding,
                 decoration: BoxDecoration(
                   color: Colors.teal.withValues(alpha: isDark ? 0.15 : 0.1),
                   shape: BoxShape.circle,
@@ -93,10 +96,10 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 8),
               Container(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                    AppDimens.cardMargin,
                 decoration: BoxDecoration(
                   color: Colors.teal.withValues(alpha: isDark ? 0.2 : 0.1),
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                 ),
                 child: Text(
                   l10n.updateVersion(tag),
@@ -115,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                    color: AppColors.textSecondary(context),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -126,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                     color: isDark
                         ? Colors.grey.shade900
                         : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                   ),
                   constraints: const BoxConstraints(maxHeight: 120),
                   child: SingleChildScrollView(
@@ -136,7 +139,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 13,
                         height: 1.4,
                         color:
-                            isDark ? Colors.grey.shade300 : Colors.grey.shade700,
+                            AppColors.textMuted(context),
                       ),
                     ),
                   ),
@@ -149,9 +152,9 @@ class _HomePageState extends State<HomePage> {
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(ctx),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: AppDimens.buttonPaddingV,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                            borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
                       ),
                       child: Text(l10n.updateLater),
                     ),
@@ -167,9 +170,9 @@ class _HomePageState extends State<HomePage> {
                       label: Text(l10n.updateDownload),
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.teal,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        padding: AppDimens.buttonPaddingV,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
+                            borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
                       ),
                     ),
                   ),
@@ -225,7 +228,7 @@ class _HomePageState extends State<HomePage> {
             // Icono en el header
             ExcludeSemantics(
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(AppDimens.radiusInput),
                 child: Image.asset(
                   'assets/icon.png',
                   height: 36,
@@ -237,7 +240,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(width: 12),
             Text(
               l10n.appTitle,
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: AppTextStyles.appBarTitle,
             ),
           ],
         ),
