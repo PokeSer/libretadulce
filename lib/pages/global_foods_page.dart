@@ -279,6 +279,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
         icon: const Icon(Icons.outbox),
         label: Text(l10n.globalSuggestProduct),
         backgroundColor: AppColors.primary(context),
+        foregroundColor: AppColors.onPrimary(context),
       ),
     );
   }
