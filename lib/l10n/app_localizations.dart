@@ -119,7 +119,7 @@ abstract class AppLocalizations {
   /// Accessibility label for loading indicator
   ///
   /// In es, this message translates to:
-  /// **'Cargando aplicaciÃ³n'**
+  /// **'Cargando aplicación'**
   String get loadingApp;
 
   /// No description provided for @loginTitle.
@@ -143,13 +143,13 @@ abstract class AppLocalizations {
   /// No description provided for @loginIniciandoSesion.
   ///
   /// In es, this message translates to:
-  /// **'Iniciando sesiÃ³n'**
+  /// **'Iniciando sesión'**
   String get loginIniciandoSesion;
 
   /// No description provided for @loginPrivacyText.
   ///
   /// In es, this message translates to:
-  /// **'Tus datos de salud estÃ¡n protegidos\ny vinculados Ãºnicamente a tu cuenta personal.'**
+  /// **'Tus datos de salud están protegidos\ny vinculados únicamente a tu cuenta personal.'**
   String get loginPrivacyText;
 
   /// No description provided for @navCalculator.
@@ -185,7 +185,7 @@ abstract class AppLocalizations {
   /// No description provided for @navAdminTooltip.
   ///
   /// In es, this message translates to:
-  /// **'AdministraciÃ³n Global'**
+  /// **'Administración Global'**
   String get navAdminTooltip;
 
   /// No description provided for @calcTitle.
@@ -239,7 +239,7 @@ abstract class AppLocalizations {
   /// No description provided for @calcFavoritesTitle.
   ///
   /// In es, this message translates to:
-  /// **'Favoritos rÃ¡pidos'**
+  /// **'Favoritos rápidos'**
   String get calcFavoritesTitle;
 
   /// No description provided for @calcInputGramsLabel.
@@ -299,7 +299,7 @@ abstract class AppLocalizations {
   /// No description provided for @calcAddToPlate.
   ///
   /// In es, this message translates to:
-  /// **'AÃ±adir al plato actual'**
+  /// **'Añadir al plato actual'**
   String get calcAddToPlate;
 
   /// No description provided for @calcMyPlate.
@@ -407,7 +407,7 @@ abstract class AppLocalizations {
   /// No description provided for @calcBolusCorrection.
   ///
   /// In es, this message translates to:
-  /// **'CorrecciÃ³n'**
+  /// **'Corrección'**
   String get calcBolusCorrection;
 
   /// No description provided for @calcBolusTotal.
@@ -425,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @calcNoFoodsMessage.
   ///
   /// In es, this message translates to:
-  /// **'AÃ±ade alimentos al plato para ver el bolo.'**
+  /// **'Añade alimentos al plato para ver el bolo.'**
   String get calcNoFoodsMessage;
 
   /// No description provided for @calcNoMealTypeMessage.
@@ -497,7 +497,7 @@ abstract class AppLocalizations {
   /// No description provided for @calcMustLogin.
   ///
   /// In es, this message translates to:
-  /// **'Debes iniciar sesiÃ³n'**
+  /// **'Debes iniciar sesión'**
   String get calcMustLogin;
 
   /// No description provided for @calcGramsModeAccessibility.
@@ -521,7 +521,7 @@ abstract class AppLocalizations {
   /// No description provided for @mealTypeMidMorning.
   ///
   /// In es, this message translates to:
-  /// **'Media MaÃ±ana'**
+  /// **'Media Mañana'**
   String get mealTypeMidMorning;
 
   /// No description provided for @mealTypeLunch.
@@ -575,13 +575,13 @@ abstract class AppLocalizations {
   /// No description provided for @historyPrevDay.
   ///
   /// In es, this message translates to:
-  /// **'DÃ­a anterior'**
+  /// **'Día anterior'**
   String get historyPrevDay;
 
   /// No description provided for @historyNextDay.
   ///
   /// In es, this message translates to:
-  /// **'DÃ­a siguiente'**
+  /// **'Día siguiente'**
   String get historyNextDay;
 
   /// No description provided for @historyToday.
@@ -617,13 +617,13 @@ abstract class AppLocalizations {
   /// No description provided for @historyNoRecords.
   ///
   /// In es, this message translates to:
-  /// **'No hay registros este dÃ­a.'**
+  /// **'No hay registros este día.'**
   String get historyNoRecords;
 
   /// No description provided for @historyMustLogin.
   ///
   /// In es, this message translates to:
-  /// **'Debes iniciar sesiÃ³n'**
+  /// **'Debes iniciar sesión'**
   String get historyMustLogin;
 
   /// No description provided for @historyTotalRations.
@@ -671,7 +671,7 @@ abstract class AppLocalizations {
   /// No description provided for @historyDeleteConfirm.
   ///
   /// In es, this message translates to:
-  /// **'Â¿EstÃ¡s seguro de que deseas eliminar este registro del historial?'**
+  /// **'¿Estás seguro de que deseas eliminar este registro del historial?'**
   String get historyDeleteConfirm;
 
   /// No description provided for @historyDeleteButton.
@@ -731,13 +731,13 @@ abstract class AppLocalizations {
   /// No description provided for @historyNoData7Days.
   ///
   /// In es, this message translates to:
-  /// **'No hay datos en los Ãºltimos 7 dÃ­as.'**
+  /// **'No hay datos en los últimos 7 días.'**
   String get historyNoData7Days;
 
   /// No description provided for @historyLast7Days.
   ///
   /// In es, this message translates to:
-  /// **'Ãšltimos 7 dÃ­as'**
+  /// **'Últimos 7 días'**
   String get historyLast7Days;
 
   /// No description provided for @historyChartTooltip.
@@ -785,7 +785,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileNotLoggedIn.
   ///
   /// In es, this message translates to:
-  /// **'SesiÃ³n no iniciada'**
+  /// **'Sesión no iniciada'**
   String get profileNotLoggedIn;
 
   /// No description provided for @profilePhotoAccessibility.
@@ -809,7 +809,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileAboutSubtitle.
   ///
   /// In es, this message translates to:
-  /// **'Hecho con cariÃ±o por y para diabÃ©ticos'**
+  /// **'Hecho con cariño por y para diabéticos'**
   String get profileAboutSubtitle;
 
   /// No description provided for @profileAboutDialogTitle.
@@ -821,7 +821,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileAboutDialogText.
   ///
   /// In es, this message translates to:
-  /// **'Hola, soy un desarrollador independiente y he creado esta app para ayudar a gestionar los carbohidratos y raciones en el dÃ­a a dÃ­a. Si tienes sugerencias o encuentras errores, por favor compÃ¡rtelos.'**
+  /// **'Hola, soy un desarrollador independiente y he creado esta app para ayudar a gestionar los carbohidratos y raciones en el día a día. Si tienes sugerencias o encuentras errores, por favor compártelos.'**
   String get profileAboutDialogText;
 
   /// No description provided for @profileAboutDialogClose.
@@ -839,19 +839,19 @@ abstract class AppLocalizations {
   /// No description provided for @profileInsulinSettingsDesc.
   ///
   /// In es, this message translates to:
-  /// **'Ratio, factor de correcciÃ³n y glucemia objetivo'**
+  /// **'Ratio, factor de corrección y glucemia objetivo'**
   String get profileInsulinSettingsDesc;
 
   /// No description provided for @profileLogout.
   ///
   /// In es, this message translates to:
-  /// **'Cerrar SesiÃ³n'**
+  /// **'Cerrar Sesión'**
   String get profileLogout;
 
   /// No description provided for @profileLogoutConfirm.
   ///
   /// In es, this message translates to:
-  /// **'Â¿EstÃ¡s seguro de que quieres salir?'**
+  /// **'¿Estás seguro de que quieres salir?'**
   String get profileLogoutConfirm;
 
   /// No description provided for @profileLogoutCancel.
@@ -869,7 +869,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileLogoutDialogTitle.
   ///
   /// In es, this message translates to:
-  /// **'Cerrar sesiÃ³n'**
+  /// **'Cerrar sesión'**
   String get profileLogoutDialogTitle;
 
   /// No description provided for @adminTitle.
@@ -899,7 +899,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminRejected.
   ///
   /// In es, this message translates to:
-  /// **'PeticiÃ³n rechazada'**
+  /// **'Petición rechazada'**
   String get adminRejected;
 
   /// No description provided for @adminDeleted.
@@ -947,7 +947,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminNoRequests.
   ///
   /// In es, this message translates to:
-  /// **'Â¡Todo al dÃ­a! No hay nuevas peticiones de alimentos pendientes.'**
+  /// **'¡Todo al día! No hay nuevas peticiones de alimentos pendientes.'**
   String get adminNoRequests;
 
   /// No description provided for @adminNoName.
@@ -983,7 +983,7 @@ abstract class AppLocalizations {
   /// No description provided for @adminEmptyGlobal.
   ///
   /// In es, this message translates to:
-  /// **'La base global estÃ¡ vacÃ­a.'**
+  /// **'La base global está vacía.'**
   String get adminEmptyGlobal;
 
   /// No description provided for @adminGlobalFood.
@@ -1007,13 +1007,13 @@ abstract class AppLocalizations {
   /// No description provided for @adminDeleteConfirm.
   ///
   /// In es, this message translates to:
-  /// **'Â¿Eliminar alimento?'**
+  /// **'¿Eliminar alimento?'**
   String get adminDeleteConfirm;
 
   /// No description provided for @adminDeleteWarning.
   ///
   /// In es, this message translates to:
-  /// **'Esto lo borrarÃ¡ de la base pÃºblica. Los usuarios no podrÃ¡n buscarlo mÃ¡s.'**
+  /// **'Esto lo borrará de la base pública. Los usuarios no podrán buscarlo más.'**
   String get adminDeleteWarning;
 
   /// No description provided for @adminDeleteButton.
@@ -1073,7 +1073,7 @@ abstract class AppLocalizations {
   /// No description provided for @globalFound.
   ///
   /// In es, this message translates to:
-  /// **'Â¡Alimento encontrado!'**
+  /// **'¡Alimento encontrado!'**
   String get globalFound;
 
   /// No description provided for @globalNotFound.
@@ -1091,7 +1091,7 @@ abstract class AppLocalizations {
   /// No description provided for @globalRequestDesc.
   ///
   /// In es, this message translates to:
-  /// **'Tu peticiÃ³n serÃ¡ revisada por un humano antes de aÃ±adirse a la base global.'**
+  /// **'Tu petición será revisada por un humano antes de añadirse a la base global.'**
   String get globalRequestDesc;
 
   /// No description provided for @globalRequestName.
@@ -1103,7 +1103,7 @@ abstract class AppLocalizations {
   /// No description provided for @globalRequestBrand.
   ///
   /// In es, this message translates to:
-  /// **'Marca o DescripciÃ³n'**
+  /// **'Marca o Descripción'**
   String get globalRequestBrand;
 
   /// No description provided for @globalRequestCarbs.
@@ -1127,25 +1127,25 @@ abstract class AppLocalizations {
   /// No description provided for @globalRequestSent.
   ///
   /// In es, this message translates to:
-  /// **'Â¡PeticiÃ³n enviada. Gracias!'**
+  /// **'¡Petición enviada. Gracias!'**
   String get globalRequestSent;
 
   /// No description provided for @globalRequestSend.
   ///
   /// In es, this message translates to:
-  /// **'Enviar PeticiÃ³n'**
+  /// **'Enviar Petición'**
   String get globalRequestSend;
 
   /// No description provided for @globalAddedToMyFoods.
   ///
   /// In es, this message translates to:
-  /// **'{name} aÃ±adido a tus alimentos'**
+  /// **'{name} añadido a tus alimentos'**
   String globalAddedToMyFoods(String name);
 
   /// No description provided for @globalScanTooltip.
   ///
   /// In es, this message translates to:
-  /// **'Escanear cÃ³digo'**
+  /// **'Escanear código'**
   String get globalScanTooltip;
 
   /// No description provided for @globalNotFoundDB.
@@ -1157,7 +1157,7 @@ abstract class AppLocalizations {
   /// No description provided for @globalConnectionError.
   ///
   /// In es, this message translates to:
-  /// **'Error de conexiÃ³n'**
+  /// **'Error de conexión'**
   String get globalConnectionError;
 
   /// No description provided for @globalErrorFirebase.
@@ -1169,13 +1169,13 @@ abstract class AppLocalizations {
   /// No description provided for @foodsAddTitle.
   ///
   /// In es, this message translates to:
-  /// **'AÃ±adir alimento'**
+  /// **'Añadir alimento'**
   String get foodsAddTitle;
 
   /// No description provided for @foodsScanTooltip.
   ///
   /// In es, this message translates to:
-  /// **'Escanear cÃ³digo'**
+  /// **'Escanear código'**
   String get foodsScanTooltip;
 
   /// No description provided for @foodsNameLabel.
@@ -1247,7 +1247,7 @@ abstract class AppLocalizations {
   /// No description provided for @foodsCarbsInvalid.
   ///
   /// In es, this message translates to:
-  /// **'El valor de carbohidratos no es un nÃºmero vÃ¡lido.'**
+  /// **'El valor de carbohidratos no es un número válido.'**
   String get foodsCarbsInvalid;
 
   /// No description provided for @foodsSearch.
@@ -1259,7 +1259,7 @@ abstract class AppLocalizations {
   /// No description provided for @foodsMustLogin.
   ///
   /// In es, this message translates to:
-  /// **'Debes iniciar sesiÃ³n'**
+  /// **'Debes iniciar sesión'**
   String get foodsMustLogin;
 
   /// No description provided for @foodsLoadingError.
@@ -1271,13 +1271,13 @@ abstract class AppLocalizations {
   /// No description provided for @foodsEmpty.
   ///
   /// In es, this message translates to:
-  /// **'AÃºn no tienes alimentos guardados.\nÂ¡AÃ±ade el primero!'**
+  /// **'Aún no tienes alimentos guardados.\n¡Añade el primero!'**
   String get foodsEmpty;
 
   /// No description provided for @foodsDeleteConfirm.
   ///
   /// In es, this message translates to:
-  /// **'Â¿Seguro que quieres eliminar \"{name}\"?'**
+  /// **'¿Seguro que quieres eliminar \"{name}\"?'**
   String foodsDeleteConfirm(String name);
 
   /// No description provided for @foodsAddToFavorites.
@@ -1313,13 +1313,13 @@ abstract class AppLocalizations {
   /// No description provided for @foodsDetailCalories.
   ///
   /// In es, this message translates to:
-  /// **'CalorÃ­as: {value}kcal'**
+  /// **'Calorías: {value}kcal'**
   String foodsDetailCalories(String value);
 
   /// No description provided for @foodsDetailProtein.
   ///
   /// In es, this message translates to:
-  /// **'ProteÃ­nas: {value}g'**
+  /// **'Proteínas: {value}g'**
   String foodsDetailProtein(String value);
 
   /// No description provided for @foodsDetailFat.
@@ -1373,7 +1373,7 @@ abstract class AppLocalizations {
   /// No description provided for @insulinRatioTitle.
   ///
   /// In es, this message translates to:
-  /// **'Ratio de insulina (unidades por raciÃ³n)'**
+  /// **'Ratio de insulina (unidades por ración)'**
   String get insulinRatioTitle;
 
   /// No description provided for @insulinRatioBase.
@@ -1391,7 +1391,7 @@ abstract class AppLocalizations {
   /// No description provided for @insulinRatioSuffix.
   ///
   /// In es, this message translates to:
-  /// **'uds / raciÃ³n'**
+  /// **'uds / ración'**
   String get insulinRatioSuffix;
 
   /// No description provided for @insulinRatioRequired.
@@ -1403,25 +1403,25 @@ abstract class AppLocalizations {
   /// No description provided for @insulinInvalidNumber.
   ///
   /// In es, this message translates to:
-  /// **'Introduce un nÃºmero vÃ¡lido'**
+  /// **'Introduce un número válido'**
   String get insulinInvalidNumber;
 
   /// No description provided for @insulinMealRatios.
   ///
   /// In es, this message translates to:
-  /// **'Ratios especÃ­ficos por comida (opcional)'**
+  /// **'Ratios específicos por comida (opcional)'**
   String get insulinMealRatios;
 
   /// No description provided for @insulinFactorTitle.
   ///
   /// In es, this message translates to:
-  /// **'Factor de correcciÃ³n'**
+  /// **'Factor de corrección'**
   String get insulinFactorTitle;
 
   /// No description provided for @insulinFactorLabel.
   ///
   /// In es, this message translates to:
-  /// **'Factor de correcciÃ³n *'**
+  /// **'Factor de corrección *'**
   String get insulinFactorLabel;
 
   /// No description provided for @insulinFactorHint.
@@ -1439,7 +1439,7 @@ abstract class AppLocalizations {
   /// No description provided for @insulinFactorRequired.
   ///
   /// In es, this message translates to:
-  /// **'El factor de correcciÃ³n es obligatorio'**
+  /// **'El factor de corrección es obligatorio'**
   String get insulinFactorRequired;
 
   /// No description provided for @insulinMustBePositive.
@@ -1499,7 +1499,7 @@ abstract class AppLocalizations {
   /// No description provided for @insulinRoundDownDesc.
   ///
   /// In es, this message translates to:
-  /// **'Trunca el bolo en lugar de redondear al mÃ¡s cercano. Ãštil si dosificas por rangos (ej: 1 ud por cada 50 mg/dL)'**
+  /// **'Trunca el bolo en lugar de redondear al más cercano. Útil si dosificas por rangos (ej: 1 ud por cada 50 mg/dL)'**
   String get insulinRoundDownDesc;
 
   /// No description provided for @insulinSaving.
@@ -1535,7 +1535,7 @@ abstract class AppLocalizations {
   /// No description provided for @foodSearchClose.
   ///
   /// In es, this message translates to:
-  /// **'Cerrar bÃºsqueda'**
+  /// **'Cerrar búsqueda'**
   String get foodSearchClose;
 
   /// No description provided for @foodSearchHint.
@@ -1547,7 +1547,7 @@ abstract class AppLocalizations {
   /// No description provided for @foodSearchEmptyList.
   ///
   /// In es, this message translates to:
-  /// **'AÃºn no tienes alimentos en tu lista.'**
+  /// **'Aún no tienes alimentos en tu lista.'**
   String get foodSearchEmptyList;
 
   /// No description provided for @foodSearchNoResults.
@@ -1559,7 +1559,7 @@ abstract class AppLocalizations {
   /// No description provided for @barcodeTitle.
   ///
   /// In es, this message translates to:
-  /// **'Escanea el cÃ³digo de barras'**
+  /// **'Escanea el código de barras'**
   String get barcodeTitle;
 
   /// No description provided for @barcodeScannedFood.
@@ -1571,7 +1571,7 @@ abstract class AppLocalizations {
   /// No description provided for @confirmDeleteTitle.
   ///
   /// In es, this message translates to:
-  /// **'Confirmar eliminaciÃ³n'**
+  /// **'Confirmar eliminación'**
   String get confirmDeleteTitle;
 
   /// No description provided for @confirmDeleteCancel.
@@ -1589,13 +1589,13 @@ abstract class AppLocalizations {
   /// Title for the update available dialog
   ///
   /// In es, this message translates to:
-  /// **'ActualizaciÃ³n disponible'**
+  /// **'Actualización disponible'**
   String get updateAvailable;
 
   /// No description provided for @updateVersion.
   ///
   /// In es, this message translates to:
-  /// **'VersiÃ³n {version}'**
+  /// **'Versión {version}'**
   String updateVersion(String version);
 
   /// No description provided for @updateLater.
@@ -1613,7 +1613,7 @@ abstract class AppLocalizations {
   /// No description provided for @updateDownloading.
   ///
   /// In es, this message translates to:
-  /// **'Descargando actualizaciÃ³n...'**
+  /// **'Descargando actualización...'**
   String get updateDownloading;
 
   /// No description provided for @updateError.
@@ -1655,7 +1655,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileSettingsSectionApp.
   ///
   /// In es, this message translates to:
-  /// **'AplicaciÃ³n'**
+  /// **'Aplicación'**
   String get profileSettingsSectionApp;
 
   /// No description provided for @profileSettingsSectionHealth.

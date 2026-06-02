@@ -81,7 +81,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get calcFavoritesTitle => 'Preferiti Rapidi';
 
   @override
-  String get calcInputGramsLabel => 'QuantitÃ  in grammi';
+  String get calcInputGramsLabel => 'Quantità in grammi';
 
   @override
   String get calcInputRationsLabel => 'Razioni da consumare';
@@ -180,7 +180,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get calcBolusTotal => 'Totale';
 
   @override
-  String get calcBolusUnitSuffix => 'unitÃ ';
+  String get calcBolusUnitSuffix => 'unità';
 
   @override
   String get calcNoFoodsMessage =>
@@ -208,7 +208,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String calcSaveSuccessBolus(String mealType, String bolus) {
-    return 'Salvato come $mealType. Bolo: $bolus unitÃ ';
+    return 'Salvato come $mealType. Bolo: $bolus unità';
   }
 
   @override
@@ -243,7 +243,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get mealTypeBreakfast => 'Colazione';
 
   @override
-  String get mealTypeMidMorning => 'Spuntino di metÃ  mattina';
+  String get mealTypeMidMorning => 'Spuntino di metà mattina';
 
   @override
   String get mealTypeLunch => 'Pranzo';
@@ -317,7 +317,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String historyBolusUnits(String bolus) {
-    return '$bolus unitÃ  di insulina';
+    return '$bolus unità di insulina';
   }
 
   @override
@@ -501,7 +501,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get adminApproveButton => 'Approva';
 
   @override
-  String get adminEmptyGlobal => 'Il database globale Ã¨ vuoto.';
+  String get adminEmptyGlobal => 'Il database globale è vuoto.';
 
   @override
   String get adminGlobalFood => 'Alimento globale';
@@ -517,7 +517,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get adminDeleteWarning =>
-      'Questo lo rimuoverÃ  dal database pubblico. Gli utenti non potranno piÃ¹ cercarlo.';
+      'Questo lo rimuoverà dal database pubblico. Gli utenti non potranno più cercarlo.';
 
   @override
   String get adminDeleteButton => 'Elimina';
@@ -557,7 +557,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get globalRequestDesc =>
-      'La tua richiesta sarÃ  esaminata da una persona prima di essere aggiunta al database globale.';
+      'La tua richiesta sarà esaminata da una persona prima di essere aggiunta al database globale.';
 
   @override
   String get globalRequestName => 'Nome del prodotto';
@@ -633,14 +633,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get foodsSave => 'Salva';
 
   @override
-  String get foodsNameRequired => 'Il nome dell\'alimento Ã¨ obbligatorio.';
+  String get foodsNameRequired => 'Il nome dell\'alimento è obbligatorio.';
 
   @override
   String get foodsCarbsRequired => 'I carboidrati per 100g sono obbligatori.';
 
   @override
   String get foodsCarbsInvalid =>
-      'Il valore dei carboidrati non Ã¨ un numero valido.';
+      'Il valore dei carboidrati non è un numero valido.';
 
   @override
   String get foodsSearch => 'Cerca alimento...';
@@ -717,7 +717,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questi valori sono personali e privati. Configurarli consente all\'app di calcolare il bolo di insulina consigliato.';
 
   @override
-  String get insulinRatioTitle => 'Rapporto insulina (unitÃ  per razione)';
+  String get insulinRatioTitle => 'Rapporto insulina (unità per razione)';
 
   @override
   String get insulinRatioBase => 'Rapporto base *';
@@ -726,10 +726,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get insulinRatioHint => 'Es.: 1,5';
 
   @override
-  String get insulinRatioSuffix => 'unitÃ  / razione';
+  String get insulinRatioSuffix => 'unità / razione';
 
   @override
-  String get insulinRatioRequired => 'Il rapporto base Ã¨ obbligatorio';
+  String get insulinRatioRequired => 'Il rapporto base è obbligatorio';
 
   @override
   String get insulinInvalidNumber => 'Inserisci un numero valido';
@@ -747,11 +747,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get insulinFactorHint => 'Es.: 40';
 
   @override
-  String get insulinFactorSuffix => 'mg/dL per unitÃ ';
+  String get insulinFactorSuffix => 'mg/dL per unità';
 
   @override
-  String get insulinFactorRequired =>
-      'Il fattore di correzione Ã¨ obbligatorio';
+  String get insulinFactorRequired => 'Il fattore di correzione è obbligatorio';
 
   @override
   String get insulinMustBePositive => 'Deve essere maggiore di 0';
@@ -770,21 +769,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get insulinGlucoseTargetRequired =>
-      'La glicemia target Ã¨ obbligatoria';
+      'La glicemia target è obbligatoria';
 
   @override
-  String get insulinHalfUnits => 'Penna mezza unitÃ ';
+  String get insulinHalfUnits => 'Penna mezza unità';
 
   @override
   String get insulinHalfUnitsDesc =>
-      'Consente dosi con incrementi di 0,5 unitÃ ';
+      'Consente dosi con incrementi di 0,5 unità';
 
   @override
   String get insulinRoundDown => 'Arrotonda bolo per difetto';
 
   @override
   String get insulinRoundDownDesc =>
-      'Tronca il bolo invece di arrotondare al piÃ¹ vicino. Utile se dosi per fasce (es.: 1 unitÃ  ogni 50 mg/dL)';
+      'Tronca il bolo invece di arrotondare al più vicino. Utile se dosi per fasce (es.: 1 unità ogni 50 mg/dL)';
 
   @override
   String get insulinSaving => 'Salvataggio...';
@@ -852,7 +851,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Download fallito. Visita github.com/PokeSer/libretadulce/releases';
 
   @override
-  String get updateWhatIsNew => 'NovitÃ ';
+  String get updateWhatIsNew => 'Novità';
 
   @override
   String get profileThemeLabel => 'Tema dell\'app';
@@ -876,7 +875,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get profileSettings => 'Impostazioni';
 
   @override
-  String get insulinGlucoseUnit => 'UnitÃ  glicemica';
+  String get insulinGlucoseUnit => 'Unità glicemica';
 
   @override
   String get insulinGlucoseUnitDesc => 'Passa da mg/dL a mmol/L';
