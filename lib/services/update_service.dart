@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:open_filex/open_filex.dart';
@@ -37,17 +38,9 @@ class UpdateService {
       if (!isNewer) return null;
 
       final assets = data['assets'] as List<dynamic>? ?? [];
-      String? downloadUrl;
+      final downloadUrl = await _selectBestApkUrl(assets) ??
+          data['html_url'] as String?;
 
-      for (final asset in assets) {
-        final name = asset['name'] as String? ?? '';
-        if (name.contains('arm64-v8a-release') || name.contains('arm64-v8a')) {
-          downloadUrl = asset['browser_download_url'] as String?;
-          break;
-        }
-      }
-
-      downloadUrl ??= data['html_url'] as String?;
       if (downloadUrl == null || downloadUrl.isEmpty) return null;
 
       final cleanNotes = _cleanReleaseNotes(data['body'] as String? ?? '');
@@ -58,6 +51,60 @@ class UpdateService {
       );
     } catch (e) {
       debugPrint('Update check failed: $e');
+      return null;
+    }
+  }
+
+  static Future<String?> _selectBestApkUrl(List<dynamic> assets) async {
+    final abi = await _getDeviceAbi();
+    debugPrint('Device ABI: $abi');
+
+    // Build a map of asset name -> download URL
+    final apkUrls = <String, String>{};
+    for (final asset in assets) {
+      final name = asset['name'] as String? ?? '';
+      final url = asset['browser_download_url'] as String?;
+      if (name.endsWith('.apk') && url != null) {
+        apkUrls[name] = url;
+      }
+    }
+
+    if (apkUrls.isEmpty) return null;
+
+    // Priority 1: specific ABI match
+    if (abi != null) {
+      for (final entry in apkUrls.entries) {
+        if (entry.key.contains(abi)) {
+          debugPrint('Selected APK: ${entry.key} (ABI match: $abi)');
+          return entry.value;
+        }
+      }
+    }
+
+    // Priority 2: universal APK fallback
+    for (final entry in apkUrls.entries) {
+      if (entry.key.contains('universal')) {
+        debugPrint('Selected APK: ${entry.key} (universal fallback)');
+        return entry.value;
+      }
+    }
+
+    // Priority 3: any APK (last resort)
+    final first = apkUrls.entries.first;
+    debugPrint('Selected APK: ${first.key} (first available)');
+    return first.value;
+  }
+
+  static Future<String?> _getDeviceAbi() async {
+    if (kIsWeb || !Platform.isAndroid) return null;
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      final androidInfo = await deviceInfo.androidInfo;
+      return androidInfo.supportedAbis.isNotEmpty
+          ? androidInfo.supportedAbis.first
+          : null;
+    } catch (e) {
+      debugPrint('Failed to get device ABI: $e');
       return null;
     }
   }
@@ -101,7 +148,6 @@ class UpdateService {
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/libretadulce_update.apk');
 
-      // Use a client that follows redirects manually for better control
       final client = http.Client();
       try {
         final request = http.Request('GET', Uri.parse(url));

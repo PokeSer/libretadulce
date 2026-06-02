@@ -48,6 +48,8 @@ jobs:
           echo "=== Verifying keystore SHA-1 ==="
           keytool -list -v -keystore android/app/keystore.jks -alias upload -storepass "${{ secrets.KEYSTORE_PASSWORD }}" 2>/dev/null | grep SHA1 || true
           flutter build apk --release --split-per-abi
+          flutter build apk --release
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/app-universal-release.apk
           flutter build appbundle --release
 
       - name: Determine tag
@@ -81,6 +83,7 @@ jobs:
             build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
             build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
             build/app/outputs/flutter-apk/app-x86_64-release.apk
+            build/app/outputs/flutter-apk/app-universal-release.apk
             build/app/outputs/bundle/release/app-release.aab
           fail_on_unmatched_files: false
         env:
