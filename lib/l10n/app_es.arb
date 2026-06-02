@@ -1,535 +1,522 @@
-{
-  "@@locale": "es",
-  "appTitle": "Libreta Dulce",
-  "@appTitle": {
-    "description": "Application title used in the app bar and material app"
-  },
+﻿{
+    "@@locale":  "es",
+    "appTitle":  "Libreta Dulce",
+    "@appTitle":  {
+                      "description":  "Application title used in the app bar and material app"
+                  },
+    "loadingApp":  "Cargando aplicaciÃ³n",
+    "@loadingApp":  {
+                        "description":  "Accessibility label for loading indicator"
+                    },
+    "loginTitle":  "Libreta Dulce",
+    "loginSubtitle":  "Tu asistente personal para el control diario de carbohidratos y raciones.",
+    "loginButtonGoogle":  "Continuar con Google",
+    "loginIniciandoSesion":  "Iniciando sesiÃ³n",
+    "loginPrivacyText":  "Tus datos de salud estÃ¡n protegidos\ny vinculados Ãºnicamente a tu cuenta personal.",
+    "navCalculator":  "Calculadora",
+    "navFoods":  "Alimentos",
+    "navGlobal":  "Global",
+    "navHistory":  "Historial",
+    "navProfile":  "Perfil",
+    "navAdminTooltip":  "AdministraciÃ³n Global",
+    "calcTitle":  "Calculadora \u0026 Plato",
+    "calcGramsMode":  "Tengo los gramos\n(Quiero Raciones)",
+    "calcRationsMode":  "Quiero comer Raciones\n(Dime los gramos)",
+    "calcSearchFood":  "Toca para buscar alimento...",
+    "calcSearchFoodAccessibility":  "Buscar alimento",
+    "calcFoodAccessibility":  "Alimento",
+    "calcSelectedFood":  "Alimento seleccionado: {foodName}. Toca para cambiar.",
+    "@calcSelectedFood":  {
+                              "description":  "Accessibility label for selected food",
+                              "placeholders":  {
+                                                   "foodName":  {
+                                                                    "type":  "String"
+                                                                }
+                                               }
+                          },
+    "calcCarbsPer100g":  "{carbs}g HC / 100g",
+    "@calcCarbsPer100g":  {
+                              "placeholders":  {
+                                                   "carbs":  {
+                                                                 "type":  "String"
+                                                             }
+                                               }
+                          },
+    "calcFavoritesTitle":  "Favoritos rÃ¡pidos",
+    "calcInputGramsLabel":  "Cantidad en gramos",
+    "calcInputRationsLabel":  "Raciones a comer",
+    "calcInputGramsSuffix":  "gramos",
+    "calcInputRationsSuffix":  "raciones",
+    "calcResultTitle":  "RESULTADO",
+    "calcResultInverseTitle":  "TIENES QUE PESAR",
+    "calcGramsHC":  "Gramos HC",
+    "calcRations":  "Raciones",
+    "calcOfFood":  "de {foodName}",
+    "@calcOfFood":  {
+                        "placeholders":  {
+                                             "foodName":  {
+                                                              "type":  "String"
+                                                          }
+                                         }
+                    },
+    "calcAddToPlate":  "AÃ±adir al plato actual",
+    "calcMyPlate":  "Mi Plato Actual",
+    "calcClear":  "Limpiar",
+    "calcGramsConsumed":  "{grams}g consumidos",
+    "@calcGramsConsumed":  {
+                               "placeholders":  {
+                                                    "grams":  {
+                                                                  "type":  "String"
+                                                              }
+                                                }
+                           },
+    "calcRacShort":  "{rac}Rac.",
+    "@calcRacShort":  {
+                          "placeholders":  {
+                                               "rac":  {
+                                                           "type":  "String"
+                                                       }
+                                           }
+                      },
+    "calcHC":  "{carbs}g HC",
+    "@calcHC":  {
+                    "placeholders":  {
+                                         "carbs":  {
+                                                       "type":  "String"
+                                                   }
+                                     }
+                },
+    "calcDeleteFromPlate":  "Eliminar del plato",
+    "calcTotalPlate":  "TOTAL DEL PLATO:",
+    "calcTotalRac":  "{rac}Rac.",
+    "@calcTotalRac":  {
+                          "placeholders":  {
+                                               "rac":  {
+                                                           "type":  "String"
+                                                       }
+                                           }
+                      },
+    "calcTotalHC":  "{carbs}g HC",
+    "@calcTotalHC":  {
+                         "placeholders":  {
+                                              "carbs":  {
+                                                            "type":  "String"
+                                                        }
+                                          }
+                     },
+    "calcMealTypeLabel":  "Tipo de comida:",
+    "calcTimeLabel":  "Hora",
+    "calcDateLabel":  "Fecha",
+    "calcBolusTitle":  "Bolo de Insulina",
+    "calcGlucoseLabel":  "Glucemia actual (opcional)",
+    "calcGlucoseHint":  "Ej: 145",
+    "calcGlucoseSuffix":  "mg/dL",
+    "calcBolusMeal":  "Bolo comida",
+    "calcBolusCorrection":  "CorrecciÃ³n",
+    "calcBolusTotal":  "Total",
+    "calcBolusUnitSuffix":  "uds",
+    "calcNoFoodsMessage":  "AÃ±ade alimentos al plato para ver el bolo.",
+    "calcNoMealTypeMessage":  "Selecciona el tipo de comida para calcular el bolo.",
+    "calcCalculating":  "Calculando...",
+    "calcConfigureMessage":  "Configura tus ajustes de insulina para ver el bolo recomendado.",
+    "calcConfigureButton":  "Configurar",
+    "calcSaveHistory":  "Guardar en Historial Diario",
+    "calcSaveTitle":  "Guardar en Historial",
+    "calcSaveSuccessBolus":  "Guardado como {mealType}. Bolo: {bolus} uds",
+    "@calcSaveSuccessBolus":  {
+                                  "placeholders":  {
+                                                       "mealType":  {
+                                                                        "type":  "String"
+                                                                    },
+                                                       "bolus":  {
+                                                                     "type":  "String"
+                                                                 }
+                                                   }
+                              },
+    "calcSaveSuccess":  "Guardado como {mealType} exitosamente",
+    "@calcSaveSuccess":  {
+                             "placeholders":  {
+                                                  "mealType":  {
+                                                                   "type":  "String"
+                                                               }
+                                              }
+                         },
+    "calcSaveError":  "Error al guardar: {error}",
+    "@calcSaveError":  {
+                           "placeholders":  {
+                                                "error":  {
+                                                              "type":  "String"
+                                                          }
+                                            }
+                       },
+    "calcUndo":  "Deshacer",
+    "calcItemRemoved":  "{name} eliminado",
+    "@calcItemRemoved":  {
+                             "description":  "SnackBar shown when an item is removed from the meal plate",
+                             "placeholders":  {
+                                                  "name":  {
 
-  "loadingApp": "Cargando aplicación",
-  "@loadingApp": {
-    "description": "Accessibility label for loading indicator"
-  },
-
-  "loginTitle": "Libreta Dulce",
-  "loginSubtitle": "Tu asistente personal para el control diario de carbohidratos y raciones.",
-  "loginButtonGoogle": "Continuar con Google",
-  "loginIniciandoSesion": "Iniciando sesión",
-  "loginPrivacyText": "Tus datos de salud están protegidos\ny vinculados únicamente a tu cuenta personal.",
-
-  "navCalculator": "Calculadora",
-  "navFoods": "Alimentos",
-  "navGlobal": "Global",
-  "navHistory": "Historial",
-  "navProfile": "Perfil",
-  "navAdminTooltip": "Administración Global",
-
-  "calcTitle": "Calculadora & Plato",
-  "calcGramsMode": "Tengo los gramos\n(Quiero Raciones)",
-  "calcRationsMode": "Quiero comer Raciones\n(Dime los gramos)",
-  "calcSearchFood": "Toca para buscar alimento...",
-  "calcSearchFoodAccessibility": "Buscar alimento",
-  "calcFoodAccessibility": "Alimento",
-  "calcSelectedFood": "Alimento seleccionado: {foodName}. Toca para cambiar.",
-  "@calcSelectedFood": {
-    "description": "Accessibility label for selected food",
-    "placeholders": {
-      "foodName": {
-        "type": "String"
-      }
-    }
-  },
-  "calcCarbsPer100g": "{carbs}g HC / 100g",
-  "@calcCarbsPer100g": {
-    "placeholders": {
-      "carbs": {
-        "type": "String"
-      }
-    }
-  },
-  "calcFavoritesTitle": "Favoritos rápidos",
-  "calcInputGramsLabel": "Cantidad en gramos",
-  "calcInputRationsLabel": "Raciones a comer",
-  "calcInputGramsSuffix": "gramos",
-  "calcInputRationsSuffix": "raciones",
-  "calcResultTitle": "RESULTADO",
-  "calcResultInverseTitle": "TIENES QUE PESAR",
-  "calcGramsHC": "Gramos HC",
-  "calcRations": "Raciones",
-  "calcOfFood": "de {foodName}",
-  "@calcOfFood": {
-    "placeholders": {
-      "foodName": {
-        "type": "String"
-      }
-    }
-  },
-  "calcAddToPlate": "Añadir al plato actual",
-  "calcMyPlate": "Mi Plato Actual",
-  "calcClear": "Limpiar",
-  "calcGramsConsumed": "{grams}g consumidos",
-  "@calcGramsConsumed": {
-    "placeholders": {
-      "grams": {
-        "type": "String"
-      }
-    }
-  },
-  "calcRacShort": "{rac}Rac.",
-  "@calcRacShort": {
-    "placeholders": {
-      "rac": {
-        "type": "String"
-      }
-    }
-  },
-  "calcHC": "{carbs}g HC",
-  "@calcHC": {
-    "placeholders": {
-      "carbs": {
-        "type": "String"
-      }
-    }
-  },
-  "calcDeleteFromPlate": "Eliminar del plato",
-  "calcTotalPlate": "TOTAL DEL PLATO:",
-  "calcTotalRac": "{rac}Rac.",
-  "@calcTotalRac": {
-    "placeholders": {
-      "rac": {
-        "type": "String"
-      }
-    }
-  },
-  "calcTotalHC": "{carbs}g HC",
-  "@calcTotalHC": {
-    "placeholders": {
-      "carbs": {
-        "type": "String"
-      }
-    }
-  },
-  "calcMealTypeLabel": "Tipo de comida:",
-  "calcTimeLabel": "Hora",
-  "calcDateLabel": "Fecha",
-  "calcBolusTitle": "Bolo de Insulina",
-  "calcGlucoseLabel": "Glucemia actual (opcional)",
-  "calcGlucoseHint": "Ej: 145",
-  "calcGlucoseSuffix": "mg/dL",
-  "calcBolusMeal": "Bolo comida",
-  "calcBolusCorrection": "Corrección",
-  "calcBolusTotal": "Total",
-  "calcBolusUnitSuffix": "uds",
-  "calcNoFoodsMessage": "Añade alimentos al plato para ver el bolo.",
-  "calcNoMealTypeMessage": "Selecciona el tipo de comida para calcular el bolo.",
-  "calcCalculating": "Calculando...",
-  "calcConfigureMessage": "Configura tus ajustes de insulina para ver el bolo recomendado.",
-  "calcConfigureButton": "Configurar",
-  "calcSaveHistory": "Guardar en Historial Diario",
-  "calcSaveTitle": "Guardar en Historial",
-  "calcSaveSuccessBolus": "Guardado como {mealType}. Bolo: {bolus} uds",
-  "@calcSaveSuccessBolus": {
-    "placeholders": {
-      "mealType": {
-        "type": "String"
-      },
-      "bolus": {
-        "type": "String"
-      }
-    }
-  },
-  "calcSaveSuccess": "Guardado como {mealType} exitosamente",
-  "@calcSaveSuccess": {
-    "placeholders": {
-      "mealType": {
-        "type": "String"
-      }
-    }
-  },
-  "calcSaveError": "Error al guardar: {error}",
-  "@calcSaveError": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "calcUndo": "Deshacer",
-  "calcItemRemoved": "{name} eliminado",
-  "@calcItemRemoved": {
-    "description": "SnackBar shown when an item is removed from the meal plate",
-    "placeholders": {
-      "name": {}
-    }
-  },
-  "calcMustLogin": "Debes iniciar sesión",
-  "calcGramsModeAccessibility": "Tengo los gramos, calcular raciones",
-  "calcRationsModeAccessibility": "Quiero comer raciones, calcular gramos",
-
-  "mealTypeBreakfast": "Desayuno",
-  "mealTypeMidMorning": "Media Mañana",
-  "mealTypeLunch": "Almuerzo",
-  "mealTypeAfternoonSnack": "Merienda",
-  "mealTypeDinner": "Cena",
-  "mealTypeSnack": "Snack / Otro",
-
-  "historyDaily": "Diario",
-  "historyWeekly": "Semanal",
-  "historyExportButton": "Exportar",
-  "historyExportAccessibility": "Exportar historial a CSV",
-  "historyPrevDay": "Día anterior",
-  "historyNextDay": "Día siguiente",
-  "historyToday": "HOY",
-  "historyDailyAccessibility": "Vista diaria",
-  "historyWeeklyAccessibility": "Vista semanal",
-  "historyLoading": "Cargando historial",
-  "historyErrorLoading": "Error: {error}",
-  "@historyErrorLoading": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "historyNoRecords": "No hay registros este día.",
-  "historyMustLogin": "Debes iniciar sesión",
-  "historyTotalRations": "Total Raciones",
-  "historyTotalCarbs": "Total Carbohidratos",
-  "historySubtotal": "SUBTOTAL:",
-  "historyRationsCarbs": "{rac}Raciones ({carbs}g HC)",
-  "@historyRationsCarbs": {
-    "placeholders": {
-      "rac": {
-        "type": "String"
-      },
-      "carbs": {
-        "type": "String"
-      }
-    }
-  },
-  "historyBolus": "BOLO:",
-  "historyBolusUnits": "{bolus}uds insulina",
-  "@historyBolusUnits": {
-    "placeholders": {
-      "bolus": {
-        "type": "String"
-      }
-    }
-  },
-  "historyDeleteTitle": "Eliminar Comida",
-  "historyDeleteConfirm": "¿Estás seguro de que deseas eliminar este registro del historial?",
-  "historyDeleteButton": "Eliminar",
-  "historyCancelButton": "Cancelar",
-  "historyDeleteSuccess": "Registro eliminado",
-  "historyDeleteTooltip": "Eliminar {mealType}",
-  "@historyDeleteTooltip": {
-    "placeholders": {
-      "mealType": {
-        "type": "String"
-      }
-    }
-  },
-  "historyEditButton": "Editar",
-  "historyEditTitle": "Editar entrada",
-  "historyEditSave": "Guardar cambios",
-  "historyEditSuccess": "Entrada actualizada",
-  "historyEditGramsLabel": "Gramos a editar",
-  "historyNoData7Days": "No hay datos en los últimos 7 días.",
-  "historyLast7Days": "Últimos 7 días",
-  "historyChartTooltip": "{day}\n{carbs}g HC",
-  "@historyChartTooltip": {
-    "placeholders": {
-      "day": {
-        "type": "String"
-      },
-      "carbs": {
-        "type": "String"
-      }
-    }
-  },
-  "historyExportEmpty": "No hay datos para exportar.",
-  "historyCsvHeader": "Fecha,Hora,Tipo de comida,Alimento,Gramos,Raciones,Carbohidratos (g)",
-  "historyShareSubject": "Historial Libreta Dulce",
-  "historyExportError": "Error al exportar: {error}",
-  "@historyExportError": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "historyGramsFood": "{grams}g de {name}",
-  "@historyGramsFood": {
-    "placeholders": {
-      "grams": {
-        "type": "String"
-      },
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "historyRacShort": "{rac}Rac.",
-  "@historyRacShort": {
-    "placeholders": {
-      "rac": {
-        "type": "String"
-      }
-    }
-  },
-
-  "profileNotLoggedIn": "Sesión no iniciada",
-  "profilePhotoAccessibility": "Foto de perfil de {name}",
-  "@profilePhotoAccessibility": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "profileDefaultName": "Usuario",
-  "profileAboutTitle": "Sobre Libreta Dulce",
-  "profileAboutSubtitle": "Hecho con cariño por y para diabéticos",
-  "profileAboutDialogTitle": "Libreta Dulce",
-  "profileAboutDialogText": "Hola, soy un desarrollador independiente y he creado esta app para ayudar a gestionar los carbohidratos y raciones en el día a día. Si tienes sugerencias o encuentras errores, por favor compártelos.",
-  "profileAboutDialogClose": "Cerrar",
-  "profileInsulinSettings": "Ajustes de Insulina",
-  "profileInsulinSettingsDesc": "Ratio, factor de corrección y glucemia objetivo",
-  "profileLogout": "Cerrar Sesión",
-  "profileLogoutConfirm": "¿Estás seguro de que quieres salir?",
-  "profileLogoutCancel": "Cancelar",
-  "profileLogoutButton": "Salir",
-  "profileLogoutDialogTitle": "Cerrar sesión",
-
-  "adminTitle": "Panel Peticiones & Global",
-  "adminTabRequests": "Nuevas Peticiones",
-  "adminTabGlobal": "Datos Globales",
-  "adminApproved": "Alimento aprobado y publicado",
-  "adminRejected": "Petición rechazada",
-  "adminDeleted": "Alimento eliminado globalmente",
-  "adminEditTitle": "Editar Alimento Global",
-  "adminNameLabel": "Nombre",
-  "adminCarbsLabel": "Hidratos por 100g",
-  "adminCancelButton": "Cancelar",
-  "adminSaveButton": "Guardar",
-  "adminUpdated": "Alimento actualizado",
-  "adminNoRequests": "¡Todo al día! No hay nuevas peticiones de alimentos pendientes.",
-  "adminNoName": "Sin nombre",
-  "adminCarbsInfo": "Hidratos: {carbs}g / 100g",
-  "@adminCarbsInfo": {
-    "placeholders": {
-      "carbs": {
-        "type": "String"
-      }
-    }
-  },
-  "adminUrlInfo": "Enlace/Info extra: {url}",
-  "@adminUrlInfo": {
-    "placeholders": {
-      "url": {
-        "type": "String"
-      }
-    }
-  },
-  "adminRejectButton": "Rechazar",
-  "adminApproveButton": "Aprobar",
-  "adminEmptyGlobal": "La base global está vacía.",
-  "adminGlobalFood": "Alimento global",
-  "adminEditGlobal": "Editar global",
-  "adminDeleteGlobal": "Eliminar alimento global",
-  "adminDeleteConfirm": "¿Eliminar alimento?",
-  "adminDeleteWarning": "Esto lo borrará de la base pública. Los usuarios no podrán buscarlo más.",
-  "adminDeleteButton": "Eliminar",
-  "adminLoadingRequests": "Cargando peticiones",
-
-  "globalSearch": "Buscar en base global...",
-  "globalLoading": "Cargando alimentos globales",
-  "globalNoResults": "No hay alimentos o no se encontraron.",
-  "globalGlobalFood": "Alimento global",
-  "globalCopyToMyFoods": "Copiar a Mis Alimentos",
-  "globalSuggestProduct": "Sugerir Producto",
-  "globalScanning": "Buscando en OpenFoodFacts...",
-  "globalFound": "¡Alimento encontrado!",
-  "globalNotFound": "Producto no encontrado",
-  "globalRequestTitle": "Nuevo alimento",
-  "globalRequestDesc": "Tu petición será revisada por un humano antes de añadirse a la base global.",
-  "globalRequestName": "Nombre del producto",
-  "globalRequestBrand": "Marca o Descripción",
-  "globalRequestCarbs": "Hidratos por 100g",
-  "globalRequestUrl": "Enlace al producto (Opcional)",
-  "globalRequestCancel": "Cancelar",
-  "globalRequestSent": "¡Petición enviada. Gracias!",
-  "globalRequestSend": "Enviar Petición",
-  "globalAddedToMyFoods": "{name} añadido a tus alimentos",
-  "@globalAddedToMyFoods": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "globalScanTooltip": "Escanear código",
-  "globalNotFoundDB": "Producto no encontrado en la base de datos",
-  "globalConnectionError": "Error de conexión",
-  "globalErrorFirebase": "Error de Firebase: {error}",
-  "@globalErrorFirebase": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-
-  "foodsAddTitle": "Añadir alimento",
-  "foodsScanTooltip": "Escanear código",
-  "foodsNameLabel": "Nombre (ej. Manzana)",
-  "foodsBrandLabel": "Marca o Descr. (Opcional)",
-  "foodsCarbsLabel": "Carbohidratos por 100g *",
-  "foodsCarbsSuffix": "g",
-  "foodsKcalLabel": "Kcal",
-  "foodsProteinLabel": "Prot.",
-  "foodsFatLabel": "Grasas",
-  "foodsCancel": "Cancelar",
-  "foodsSave": "Guardar",
-  "foodsNameRequired": "El nombre del alimento es obligatorio.",
-  "foodsCarbsRequired": "Los carbohidratos por 100g son obligatorios.",
-  "foodsCarbsInvalid": "El valor de carbohidratos no es un número válido.",
-  "foodsSearch": "Buscar alimento...",
-  "foodsMustLogin": "Debes iniciar sesión",
-  "foodsLoadingError": "Error al cargar la base de datos.",
-  "foodsEmpty": "Aún no tienes alimentos guardados.\n¡Añade el primero!",
-  "foodsDeleteConfirm": "¿Seguro que quieres eliminar \"{name}\"?",
-  "@foodsDeleteConfirm": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "foodsAddToFavorites": "Marcar como favorito",
-  "foodsRemoveFromFavorites": "Quitar de favoritos",
-  "foodsDeleteTooltip": "Eliminar {name}",
-  "@foodsDeleteTooltip": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "foodsDetailTitle": "Valores por cada 100g:",
-  "foodsDetailCarbs": "Carbohidratos: {value}g",
-  "@foodsDetailCarbs": {
-    "placeholders": {
-      "value": {
-        "type": "String"
-      }
-    }
-  },
-  "foodsDetailCalories": "Calorías: {value}kcal",
-  "@foodsDetailCalories": {
-    "placeholders": {
-      "value": {
-        "type": "String"
-      }
-    }
-  },
-  "foodsDetailProtein": "Proteínas: {value}g",
-  "@foodsDetailProtein": {
-    "placeholders": {
-      "value": {
-        "type": "String"
-      }
-    }
-  },
-  "foodsDetailFat": "Grasas: {value}g",
-  "@foodsDetailFat": {
-    "placeholders": {
-      "value": {
-        "type": "String"
-      }
-    }
-  },
-  "foodsDetailClose": "Cerrar",
-  "foodsNewFood": "Nuevo Alimento",
-  "foodsFavoriteAccessibility": "Favorito",
-  "foodsFoodAccessibility": "Alimento",
-  "foodsSearchAccessibility": "Alimento global",
-
-  "insulinTitle": "Ajustes de Insulina",
-  "insulinDesc": "Estos valores son personales y privados. Configurarlos permite a la app calcular el bolo de insulina recomendado.",
-  "insulinRatioTitle": "Ratio de insulina (unidades por ración)",
-  "insulinRatioBase": "Ratio base *",
-  "insulinRatioHint": "Ej: 1.5",
-  "insulinRatioSuffix": "uds / ración",
-  "insulinRatioRequired": "El ratio base es obligatorio",
-  "insulinInvalidNumber": "Introduce un número válido",
-  "insulinMealRatios": "Ratios específicos por comida (opcional)",
-  "insulinFactorTitle": "Factor de corrección",
-  "insulinFactorLabel": "Factor de corrección *",
-  "insulinFactorHint": "Ej: 40",
-  "insulinFactorSuffix": "mg/dL por ud",
-  "insulinFactorRequired": "El factor de corrección es obligatorio",
-  "insulinMustBePositive": "Debe ser mayor que 0",
-  "insulinGlucoseTargetTitle": "Glucemia objetivo *",
-  "insulinGlucoseTargetLabel": "Glucemia objetivo *",
-  "insulinGlucoseTargetHint": "Ej: 100",
-  "insulinGlucoseTargetSuffix": "mg/dL",
-  "insulinGlucoseTargetRequired": "La glucemia objetivo es obligatoria",
-  "insulinHalfUnits": "Pluma con medias unidades",
-  "insulinHalfUnitsDesc": "Permite dosis de 0.5 en 0.5 unidades",
-  "insulinRoundDown": "Redondear bolo hacia abajo",
-  "insulinRoundDownDesc": "Trunca el bolo en lugar de redondear al más cercano. Útil si dosificas por rangos (ej: 1 ud por cada 50 mg/dL)",
-  "insulinSaving": "Guardando...",
-  "insulinSave": "Guardar Ajustes",
-  "insulinSaved": "Ajustes de insulina guardados",
-  "insulinOptionalHint": "Si no pones nada, usa el ratio base",
-
-  "foodSearchTitle": "Buscar Alimento",
-  "foodSearchClose": "Cerrar búsqueda",
-  "foodSearchHint": "Ej. Manzana, pan, arroz...",
-  "foodSearchEmptyList": "Aún no tienes alimentos en tu lista.",
-  "foodSearchNoResults": "No hay resultados para \"{query}\"",
-  "@foodSearchNoResults": {
-    "placeholders": {
-      "query": {
-        "type": "String"
-      }
-    }
-  },
-
-  "barcodeTitle": "Escanea el código de barras",
-  "barcodeScannedFood": "Alimento escaneado",
-
-  "confirmDeleteTitle": "Confirmar eliminación",
-  "confirmDeleteCancel": "Cancelar",
-  "confirmDeleteButton": "Eliminar",
-
-  "updateAvailable": "Actualización disponible",
-  "@updateAvailable": {
-    "description": "Title for the update available dialog"
-  },
-  "updateVersion": "Versión {version}",
-  "@updateVersion": {
-    "placeholders": {
-      "version": {
-        "type": "String"
-      }
-    }
-  },
-  "updateLater": "Ahora no",
-  "updateDownload": "Descargar",
-  "updateDownloading": "Descargando actualización...",
-  "updateError": "Error al descargar. Visita github.com/PokeSer/libretadulce/releases",
-  "updateWhatIsNew": "Novedades",
-
-  "profileThemeLabel": "Tema de la app",
-  "profileThemeSystem": "Sistema",
-  "profileThemeLight": "Claro",
-  "profileThemeDark": "Oscuro",
-  "profileSettingsSectionApp": "Aplicación",
-  "profileSettingsSectionHealth": "Salud",
-  "profileSettings": "Ajustes",
-
-  "insulinGlucoseUnit": "Unidad de glucemia",
-  "insulinGlucoseUnitDesc": "Alternar entre mg/dL y mmol/L",
-  "insulinGlucoseUnitLabel": "Usar mmol/L en lugar de mg/dL"
+                                                           }
+                                              }
+                         },
+    "calcMustLogin":  "Debes iniciar sesiÃ³n",
+    "calcGramsModeAccessibility":  "Tengo los gramos, calcular raciones",
+    "calcRationsModeAccessibility":  "Quiero comer raciones, calcular gramos",
+    "mealTypeBreakfast":  "Desayuno",
+    "mealTypeMidMorning":  "Media MaÃ±ana",
+    "mealTypeLunch":  "Almuerzo",
+    "mealTypeAfternoonSnack":  "Merienda",
+    "mealTypeDinner":  "Cena",
+    "mealTypeSnack":  "Snack / Otro",
+    "historyDaily":  "Diario",
+    "historyWeekly":  "Semanal",
+    "historyExportButton":  "Exportar",
+    "historyExportAccessibility":  "Exportar historial a CSV",
+    "historyPrevDay":  "DÃ­a anterior",
+    "historyNextDay":  "DÃ­a siguiente",
+    "historyToday":  "HOY",
+    "historyDailyAccessibility":  "Vista diaria",
+    "historyWeeklyAccessibility":  "Vista semanal",
+    "historyLoading":  "Cargando historial",
+    "historyErrorLoading":  "Error: {error}",
+    "@historyErrorLoading":  {
+                                 "placeholders":  {
+                                                      "error":  {
+                                                                    "type":  "String"
+                                                                }
+                                                  }
+                             },
+    "historyNoRecords":  "No hay registros este dÃ­a.",
+    "historyMustLogin":  "Debes iniciar sesiÃ³n",
+    "historyTotalRations":  "Total Raciones",
+    "historyTotalCarbs":  "Total Carbohidratos",
+    "historySubtotal":  "SUBTOTAL:",
+    "historyRationsCarbs":  "{rac}Raciones ({carbs}g HC)",
+    "@historyRationsCarbs":  {
+                                 "placeholders":  {
+                                                      "rac":  {
+                                                                  "type":  "String"
+                                                              },
+                                                      "carbs":  {
+                                                                    "type":  "String"
+                                                                }
+                                                  }
+                             },
+    "historyBolus":  "BOLO:",
+    "historyBolusUnits":  "{bolus}uds insulina",
+    "@historyBolusUnits":  {
+                               "placeholders":  {
+                                                    "bolus":  {
+                                                                  "type":  "String"
+                                                              }
+                                                }
+                           },
+    "historyDeleteTitle":  "Eliminar Comida",
+    "historyDeleteConfirm":  "Â¿EstÃ¡s seguro de que deseas eliminar este registro del historial?",
+    "historyDeleteButton":  "Eliminar",
+    "historyCancelButton":  "Cancelar",
+    "historyDeleteSuccess":  "Registro eliminado",
+    "historyDeleteTooltip":  "Eliminar {mealType}",
+    "@historyDeleteTooltip":  {
+                                  "placeholders":  {
+                                                       "mealType":  {
+                                                                        "type":  "String"
+                                                                    }
+                                                   }
+                              },
+    "historyEditButton":  "Editar",
+    "historyEditTitle":  "Editar entrada",
+    "historyEditSave":  "Guardar cambios",
+    "historyEditSuccess":  "Entrada actualizada",
+    "historyEditGramsLabel":  "Gramos a editar",
+    "historyNoData7Days":  "No hay datos en los Ãºltimos 7 dÃ­as.",
+    "historyLast7Days":  "Ãšltimos 7 dÃ­as",
+    "historyChartTooltip":  "{day}\n{carbs}g HC",
+    "@historyChartTooltip":  {
+                                 "placeholders":  {
+                                                      "day":  {
+                                                                  "type":  "String"
+                                                              },
+                                                      "carbs":  {
+                                                                    "type":  "String"
+                                                                }
+                                                  }
+                             },
+    "historyExportEmpty":  "No hay datos para exportar.",
+    "historyCsvHeader":  "Fecha,Hora,Tipo de comida,Alimento,Gramos,Raciones,Carbohidratos (g)",
+    "historyShareSubject":  "Historial Libreta Dulce",
+    "historyExportError":  "Error al exportar: {error}",
+    "@historyExportError":  {
+                                "placeholders":  {
+                                                     "error":  {
+                                                                   "type":  "String"
+                                                               }
+                                                 }
+                            },
+    "historyGramsFood":  "{grams}g de {name}",
+    "@historyGramsFood":  {
+                              "placeholders":  {
+                                                   "grams":  {
+                                                                 "type":  "String"
+                                                             },
+                                                   "name":  {
+                                                                "type":  "String"
+                                                            }
+                                               }
+                          },
+    "historyRacShort":  "{rac}Rac.",
+    "@historyRacShort":  {
+                             "placeholders":  {
+                                                  "rac":  {
+                                                              "type":  "String"
+                                                          }
+                                              }
+                         },
+    "profileNotLoggedIn":  "SesiÃ³n no iniciada",
+    "profilePhotoAccessibility":  "Foto de perfil de {name}",
+    "@profilePhotoAccessibility":  {
+                                       "placeholders":  {
+                                                            "name":  {
+                                                                         "type":  "String"
+                                                                     }
+                                                        }
+                                   },
+    "profileDefaultName":  "Usuario",
+    "profileAboutTitle":  "Sobre Libreta Dulce",
+    "profileAboutSubtitle":  "Hecho con cariÃ±o por y para diabÃ©ticos",
+    "profileAboutDialogTitle":  "Libreta Dulce",
+    "profileAboutDialogText":  "Hola, soy un desarrollador independiente y he creado esta app para ayudar a gestionar los carbohidratos y raciones en el dÃ­a a dÃ­a. Si tienes sugerencias o encuentras errores, por favor compÃ¡rtelos.",
+    "profileAboutDialogClose":  "Cerrar",
+    "profileInsulinSettings":  "Ajustes de Insulina",
+    "profileInsulinSettingsDesc":  "Ratio, factor de correcciÃ³n y glucemia objetivo",
+    "profileLogout":  "Cerrar SesiÃ³n",
+    "profileLogoutConfirm":  "Â¿EstÃ¡s seguro de que quieres salir?",
+    "profileLogoutCancel":  "Cancelar",
+    "profileLogoutButton":  "Salir",
+    "profileLogoutDialogTitle":  "Cerrar sesiÃ³n",
+    "adminTitle":  "Panel Peticiones \u0026 Global",
+    "adminTabRequests":  "Nuevas Peticiones",
+    "adminTabGlobal":  "Datos Globales",
+    "adminApproved":  "Alimento aprobado y publicado",
+    "adminRejected":  "PeticiÃ³n rechazada",
+    "adminDeleted":  "Alimento eliminado globalmente",
+    "adminEditTitle":  "Editar Alimento Global",
+    "adminNameLabel":  "Nombre",
+    "adminCarbsLabel":  "Hidratos por 100g",
+    "adminCancelButton":  "Cancelar",
+    "adminSaveButton":  "Guardar",
+    "adminUpdated":  "Alimento actualizado",
+    "adminNoRequests":  "Â¡Todo al dÃ­a! No hay nuevas peticiones de alimentos pendientes.",
+    "adminNoName":  "Sin nombre",
+    "adminCarbsInfo":  "Hidratos: {carbs}g / 100g",
+    "@adminCarbsInfo":  {
+                            "placeholders":  {
+                                                 "carbs":  {
+                                                               "type":  "String"
+                                                           }
+                                             }
+                        },
+    "adminUrlInfo":  "Enlace/Info extra: {url}",
+    "@adminUrlInfo":  {
+                          "placeholders":  {
+                                               "url":  {
+                                                           "type":  "String"
+                                                       }
+                                           }
+                      },
+    "adminRejectButton":  "Rechazar",
+    "adminApproveButton":  "Aprobar",
+    "adminEmptyGlobal":  "La base global estÃ¡ vacÃ­a.",
+    "adminGlobalFood":  "Alimento global",
+    "adminEditGlobal":  "Editar global",
+    "adminDeleteGlobal":  "Eliminar alimento global",
+    "adminDeleteConfirm":  "Â¿Eliminar alimento?",
+    "adminDeleteWarning":  "Esto lo borrarÃ¡ de la base pÃºblica. Los usuarios no podrÃ¡n buscarlo mÃ¡s.",
+    "adminDeleteButton":  "Eliminar",
+    "adminLoadingRequests":  "Cargando peticiones",
+    "globalSearch":  "Buscar en base global...",
+    "globalLoading":  "Cargando alimentos globales",
+    "globalNoResults":  "No hay alimentos o no se encontraron.",
+    "globalGlobalFood":  "Alimento global",
+    "globalCopyToMyFoods":  "Copiar a Mis Alimentos",
+    "globalSuggestProduct":  "Sugerir Producto",
+    "globalScanning":  "Buscando en OpenFoodFacts...",
+    "globalFound":  "Â¡Alimento encontrado!",
+    "globalNotFound":  "Producto no encontrado",
+    "globalRequestTitle":  "Nuevo alimento",
+    "globalRequestDesc":  "Tu peticiÃ³n serÃ¡ revisada por un humano antes de aÃ±adirse a la base global.",
+    "globalRequestName":  "Nombre del producto",
+    "globalRequestBrand":  "Marca o DescripciÃ³n",
+    "globalRequestCarbs":  "Hidratos por 100g",
+    "globalRequestUrl":  "Enlace al producto (Opcional)",
+    "globalRequestCancel":  "Cancelar",
+    "globalRequestSent":  "Â¡PeticiÃ³n enviada. Gracias!",
+    "globalRequestSend":  "Enviar PeticiÃ³n",
+    "globalAddedToMyFoods":  "{name} aÃ±adido a tus alimentos",
+    "@globalAddedToMyFoods":  {
+                                  "placeholders":  {
+                                                       "name":  {
+                                                                    "type":  "String"
+                                                                }
+                                                   }
+                              },
+    "globalScanTooltip":  "Escanear cÃ³digo",
+    "globalNotFoundDB":  "Producto no encontrado en la base de datos",
+    "globalConnectionError":  "Error de conexiÃ³n",
+    "globalErrorFirebase":  "Error de Firebase: {error}",
+    "@globalErrorFirebase":  {
+                                 "placeholders":  {
+                                                      "error":  {
+                                                                    "type":  "String"
+                                                                }
+                                                  }
+                             },
+    "foodsAddTitle":  "AÃ±adir alimento",
+    "foodsScanTooltip":  "Escanear cÃ³digo",
+    "foodsNameLabel":  "Nombre (ej. Manzana)",
+    "foodsBrandLabel":  "Marca o Descr. (Opcional)",
+    "foodsCarbsLabel":  "Carbohidratos por 100g *",
+    "foodsCarbsSuffix":  "g",
+    "foodsKcalLabel":  "Kcal",
+    "foodsProteinLabel":  "Prot.",
+    "foodsFatLabel":  "Grasas",
+    "foodsCancel":  "Cancelar",
+    "foodsSave":  "Guardar",
+    "foodsNameRequired":  "El nombre del alimento es obligatorio.",
+    "foodsCarbsRequired":  "Los carbohidratos por 100g son obligatorios.",
+    "foodsCarbsInvalid":  "El valor de carbohidratos no es un nÃºmero vÃ¡lido.",
+    "foodsSearch":  "Buscar alimento...",
+    "foodsMustLogin":  "Debes iniciar sesiÃ³n",
+    "foodsLoadingError":  "Error al cargar la base de datos.",
+    "foodsEmpty":  "AÃºn no tienes alimentos guardados.\nÂ¡AÃ±ade el primero!",
+    "foodsDeleteConfirm":  "Â¿Seguro que quieres eliminar \"{name}\"?",
+    "@foodsDeleteConfirm":  {
+                                "placeholders":  {
+                                                     "name":  {
+                                                                  "type":  "String"
+                                                              }
+                                                 }
+                            },
+    "foodsAddToFavorites":  "Marcar como favorito",
+    "foodsRemoveFromFavorites":  "Quitar de favoritos",
+    "foodsDeleteTooltip":  "Eliminar {name}",
+    "@foodsDeleteTooltip":  {
+                                "placeholders":  {
+                                                     "name":  {
+                                                                  "type":  "String"
+                                                              }
+                                                 }
+                            },
+    "foodsDetailTitle":  "Valores por cada 100g:",
+    "foodsDetailCarbs":  "Carbohidratos: {value}g",
+    "@foodsDetailCarbs":  {
+                              "placeholders":  {
+                                                   "value":  {
+                                                                 "type":  "String"
+                                                             }
+                                               }
+                          },
+    "foodsDetailCalories":  "CalorÃ­as: {value}kcal",
+    "@foodsDetailCalories":  {
+                                 "placeholders":  {
+                                                      "value":  {
+                                                                    "type":  "String"
+                                                                }
+                                                  }
+                             },
+    "foodsDetailProtein":  "ProteÃ­nas: {value}g",
+    "@foodsDetailProtein":  {
+                                "placeholders":  {
+                                                     "value":  {
+                                                                   "type":  "String"
+                                                               }
+                                                 }
+                            },
+    "foodsDetailFat":  "Grasas: {value}g",
+    "@foodsDetailFat":  {
+                            "placeholders":  {
+                                                 "value":  {
+                                                               "type":  "String"
+                                                           }
+                                             }
+                        },
+    "foodsDetailClose":  "Cerrar",
+    "foodsNewFood":  "Nuevo Alimento",
+    "foodsFavoriteAccessibility":  "Favorito",
+    "foodsFoodAccessibility":  "Alimento",
+    "foodsSearchAccessibility":  "Alimento global",
+    "insulinTitle":  "Ajustes de Insulina",
+    "insulinDesc":  "Estos valores son personales y privados. Configurarlos permite a la app calcular el bolo de insulina recomendado.",
+    "insulinRatioTitle":  "Ratio de insulina (unidades por raciÃ³n)",
+    "insulinRatioBase":  "Ratio base *",
+    "insulinRatioHint":  "Ej: 1.5",
+    "insulinRatioSuffix":  "uds / raciÃ³n",
+    "insulinRatioRequired":  "El ratio base es obligatorio",
+    "insulinInvalidNumber":  "Introduce un nÃºmero vÃ¡lido",
+    "insulinMealRatios":  "Ratios especÃ­ficos por comida (opcional)",
+    "insulinFactorTitle":  "Factor de correcciÃ³n",
+    "insulinFactorLabel":  "Factor de correcciÃ³n *",
+    "insulinFactorHint":  "Ej: 40",
+    "insulinFactorSuffix":  "mg/dL por ud",
+    "insulinFactorRequired":  "El factor de correcciÃ³n es obligatorio",
+    "insulinMustBePositive":  "Debe ser mayor que 0",
+    "insulinGlucoseTargetTitle":  "Glucemia objetivo *",
+    "insulinGlucoseTargetLabel":  "Glucemia objetivo *",
+    "insulinGlucoseTargetHint":  "Ej: 100",
+    "insulinGlucoseTargetSuffix":  "mg/dL",
+    "insulinGlucoseTargetRequired":  "La glucemia objetivo es obligatoria",
+    "insulinHalfUnits":  "Pluma con medias unidades",
+    "insulinHalfUnitsDesc":  "Permite dosis de 0.5 en 0.5 unidades",
+    "insulinRoundDown":  "Redondear bolo hacia abajo",
+    "insulinRoundDownDesc":  "Trunca el bolo en lugar de redondear al mÃ¡s cercano. Ãštil si dosificas por rangos (ej: 1 ud por cada 50 mg/dL)",
+    "insulinSaving":  "Guardando...",
+    "insulinSave":  "Guardar Ajustes",
+    "insulinSaved":  "Ajustes de insulina guardados",
+    "insulinOptionalHint":  "Si no pones nada, usa el ratio base",
+    "foodSearchTitle":  "Buscar Alimento",
+    "foodSearchClose":  "Cerrar bÃºsqueda",
+    "foodSearchHint":  "Ej. Manzana, pan, arroz...",
+    "foodSearchEmptyList":  "AÃºn no tienes alimentos en tu lista.",
+    "foodSearchNoResults":  "No hay resultados para \"{query}\"",
+    "@foodSearchNoResults":  {
+                                 "placeholders":  {
+                                                      "query":  {
+                                                                    "type":  "String"
+                                                                }
+                                                  }
+                             },
+    "barcodeTitle":  "Escanea el cÃ³digo de barras",
+    "barcodeScannedFood":  "Alimento escaneado",
+    "confirmDeleteTitle":  "Confirmar eliminaciÃ³n",
+    "confirmDeleteCancel":  "Cancelar",
+    "confirmDeleteButton":  "Eliminar",
+    "updateAvailable":  "ActualizaciÃ³n disponible",
+    "@updateAvailable":  {
+                             "description":  "Title for the update available dialog"
+                         },
+    "updateVersion":  "VersiÃ³n {version}",
+    "@updateVersion":  {
+                           "placeholders":  {
+                                                "version":  {
+                                                                "type":  "String"
+                                                            }
+                                            }
+                       },
+    "updateLater":  "Ahora no",
+    "updateDownload":  "Descargar",
+    "updateDownloading":  "Descargando actualizaciÃ³n...",
+    "updateError":  "Error al descargar. Visita github.com/PokeSer/libretadulce/releases",
+    "updateWhatIsNew":  "Novedades",
+    "profileThemeLabel":  "Tema de la app",
+    "profileThemeSystem":  "Sistema",
+    "profileThemeLight":  "Claro",
+    "profileThemeDark":  "Oscuro",
+    "profileSettingsSectionApp":  "AplicaciÃ³n",
+    "profileSettingsSectionHealth":  "Salud",
+    "profileSettings":  "Ajustes",
+    "insulinGlucoseUnit":  "Unidad de glucemia",
+    "insulinGlucoseUnitDesc":  "Alternar entre mg/dL y mmol/L",
+    "insulinGlucoseUnitLabel":  "Usar mmol/L en lugar de mg/dL",
+    "calcTabGrams":  "Gramos",
+    "calcTabRations":  "Raciones"
 }

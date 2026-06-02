@@ -29,7 +29,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get loginPrivacyText =>
-      'Vos données de santé sont protégées\net liées uniquement à votre compte personnel.';
+      'Vos donnÃ©es de santÃ© sont protÃ©gÃ©es\net liÃ©es uniquement Ã  votre compte personnel.';
 
   @override
   String get navCalculator => 'Calculateur';
@@ -69,7 +69,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String calcSelectedFood(String foodName) {
-    return 'Aliment sélectionné : $foodName. Appuyez pour changer.';
+    return 'Aliment sÃ©lectionnÃ© : $foodName. Appuyez pour changer.';
   }
 
   @override
@@ -81,10 +81,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calcFavoritesTitle => 'Favoris Rapides';
 
   @override
-  String get calcInputGramsLabel => 'Quantité en grammes';
+  String get calcInputGramsLabel => 'QuantitÃ© en grammes';
 
   @override
-  String get calcInputRationsLabel => 'Rations à consommer';
+  String get calcInputRationsLabel => 'Rations Ã  consommer';
 
   @override
   String get calcInputGramsSuffix => 'grammes';
@@ -93,7 +93,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calcInputRationsSuffix => 'rations';
 
   @override
-  String get calcResultTitle => 'RÉSULTAT';
+  String get calcResultTitle => 'RÃ‰SULTAT';
 
   @override
   String get calcResultInverseTitle => 'VOUS DEVEZ PESER';
@@ -110,7 +110,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get calcAddToPlate => 'Ajouter à l\'assiette';
+  String get calcAddToPlate => 'Ajouter Ã  l\'assiette';
 
   @override
   String get calcMyPlate => 'Mon Assiette Actuelle';
@@ -120,7 +120,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String calcGramsConsumed(String grams) {
-    return '${grams}g consommés';
+    return '${grams}g consommÃ©s';
   }
 
   @override
@@ -162,7 +162,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calcBolusTitle => 'Bolus d\'Insuline';
 
   @override
-  String get calcGlucoseLabel => 'Glycémie actuelle (optionnel)';
+  String get calcGlucoseLabel => 'GlycÃ©mie actuelle (optionnel)';
 
   @override
   String get calcGlucoseHint => 'Ex. : 145';
@@ -180,22 +180,22 @@ class AppLocalizationsFr extends AppLocalizations {
   String get calcBolusTotal => 'Total';
 
   @override
-  String get calcBolusUnitSuffix => 'unités';
+  String get calcBolusUnitSuffix => 'unitÃ©s';
 
   @override
   String get calcNoFoodsMessage =>
-      'Ajoutez des aliments à l\'assiette pour voir le bolus.';
+      'Ajoutez des aliments Ã  l\'assiette pour voir le bolus.';
 
   @override
   String get calcNoMealTypeMessage =>
-      'Sélectionnez le type de repas pour calculer le bolus.';
+      'SÃ©lectionnez le type de repas pour calculer le bolus.';
 
   @override
   String get calcCalculating => 'Calcul en cours...';
 
   @override
   String get calcConfigureMessage =>
-      'Configurez vos paramètres d\'insuline pour voir le bolus recommandé.';
+      'Configurez vos paramÃ¨tres d\'insuline pour voir le bolus recommandÃ©.';
 
   @override
   String get calcConfigureButton => 'Configurer';
@@ -208,12 +208,12 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String calcSaveSuccessBolus(String mealType, String bolus) {
-    return 'Enregistré comme $mealType. Bolus : $bolus unités';
+    return 'EnregistrÃ© comme $mealType. Bolus : $bolus unitÃ©s';
   }
 
   @override
   String calcSaveSuccess(String mealType) {
-    return 'Enregistré comme $mealType avec succès';
+    return 'EnregistrÃ© comme $mealType avec succÃ¨s';
   }
 
   @override
@@ -226,7 +226,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String calcItemRemoved(Object name) {
-    return '$name supprimé';
+    return '$name supprimÃ©';
   }
 
   @override
@@ -241,19 +241,19 @@ class AppLocalizationsFr extends AppLocalizations {
       'Je veux manger des rations, calculer les grammes';
 
   @override
-  String get mealTypeBreakfast => 'Petit-déjeuner';
+  String get mealTypeBreakfast => 'Petit-dÃ©jeuner';
 
   @override
   String get mealTypeMidMorning => 'Collation du matin';
 
   @override
-  String get mealTypeLunch => 'Déjeuner';
+  String get mealTypeLunch => 'DÃ©jeuner';
 
   @override
-  String get mealTypeAfternoonSnack => 'Goûter';
+  String get mealTypeAfternoonSnack => 'GoÃ»ter';
 
   @override
-  String get mealTypeDinner => 'Dîner';
+  String get mealTypeDinner => 'DÃ®ner';
 
   @override
   String get mealTypeSnack => 'Collation / Autre';
@@ -271,7 +271,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get historyExportAccessibility => 'Exporter l\'historique en CSV';
 
   @override
-  String get historyPrevDay => 'Jour précédent';
+  String get historyPrevDay => 'Jour prÃ©cÃ©dent';
 
   @override
   String get historyNextDay => 'Jour suivant';
@@ -318,7 +318,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String historyBolusUnits(String bolus) {
-    return '$bolus unités d\'insuline';
+    return '$bolus unitÃ©s d\'insuline';
   }
 
   @override
@@ -326,7 +326,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get historyDeleteConfirm =>
-      'Êtes-vous sûr de vouloir supprimer cet enregistrement de l\'historique ?';
+      'ÃŠtes-vous sÃ»r de vouloir supprimer cet enregistrement de l\'historique ?';
 
   @override
   String get historyDeleteButton => 'Supprimer';
@@ -335,7 +335,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get historyCancelButton => 'Annuler';
 
   @override
-  String get historyDeleteSuccess => 'Enregistrement supprimé';
+  String get historyDeleteSuccess => 'Enregistrement supprimÃ©';
 
   @override
   String historyDeleteTooltip(String mealType) {
@@ -346,19 +346,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get historyEditButton => 'Modifier';
 
   @override
-  String get historyEditTitle => 'Modifier l\'entrée';
+  String get historyEditTitle => 'Modifier l\'entrÃ©e';
 
   @override
   String get historyEditSave => 'Enregistrer';
 
   @override
-  String get historyEditSuccess => 'Entrée mise à jour';
+  String get historyEditSuccess => 'EntrÃ©e mise Ã  jour';
 
   @override
   String get historyEditGramsLabel => 'Grammes';
 
   @override
-  String get historyNoData7Days => 'Aucune donnée dans les 7 derniers jours.';
+  String get historyNoData7Days => 'Aucune donnÃ©e dans les 7 derniers jours.';
 
   @override
   String get historyLast7Days => '7 derniers jours';
@@ -369,7 +369,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get historyExportEmpty => 'Aucune donnée à exporter.';
+  String get historyExportEmpty => 'Aucune donnÃ©e Ã  exporter.';
 
   @override
   String get historyCsvHeader =>
@@ -394,7 +394,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get profileNotLoggedIn => 'Non connecté';
+  String get profileNotLoggedIn => 'Non connectÃ©';
 
   @override
   String profilePhotoAccessibility(String name) {
@@ -405,44 +405,44 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileDefaultName => 'Utilisateur';
 
   @override
-  String get profileAboutTitle => 'À propos de Libreta Dulce';
+  String get profileAboutTitle => 'Ã€ propos de Libreta Dulce';
 
   @override
   String get profileAboutSubtitle =>
-      'Fait avec amour par et pour les diabétiques';
+      'Fait avec amour par et pour les diabÃ©tiques';
 
   @override
   String get profileAboutDialogTitle => 'Libreta Dulce';
 
   @override
   String get profileAboutDialogText =>
-      'Bonjour, je suis un développeur indépendant et j\'ai créé cette appli pour aider à gérer les glucides et les rations au quotidien. Si vous avez des suggestions ou trouvez des bugs, n\'hésitez pas à les partager.';
+      'Bonjour, je suis un dÃ©veloppeur indÃ©pendant et j\'ai crÃ©Ã© cette appli pour aider Ã  gÃ©rer les glucides et les rations au quotidien. Si vous avez des suggestions ou trouvez des bugs, n\'hÃ©sitez pas Ã  les partager.';
 
   @override
   String get profileAboutDialogClose => 'Fermer';
 
   @override
-  String get profileInsulinSettings => 'Paramètres d\'Insuline';
+  String get profileInsulinSettings => 'ParamÃ¨tres d\'Insuline';
 
   @override
   String get profileInsulinSettingsDesc =>
-      'Ratio, facteur de correction et glycémie cible';
+      'Ratio, facteur de correction et glycÃ©mie cible';
 
   @override
-  String get profileLogout => 'Déconnexion';
+  String get profileLogout => 'DÃ©connexion';
 
   @override
   String get profileLogoutConfirm =>
-      'Êtes-vous sûr de vouloir vous déconnecter ?';
+      'ÃŠtes-vous sÃ»r de vouloir vous dÃ©connecter ?';
 
   @override
   String get profileLogoutCancel => 'Annuler';
 
   @override
-  String get profileLogoutButton => 'Se déconnecter';
+  String get profileLogoutButton => 'Se dÃ©connecter';
 
   @override
-  String get profileLogoutDialogTitle => 'Déconnexion';
+  String get profileLogoutDialogTitle => 'DÃ©connexion';
 
   @override
   String get adminTitle => 'Demandes et Panneau Global';
@@ -451,16 +451,16 @@ class AppLocalizationsFr extends AppLocalizations {
   String get adminTabRequests => 'Nouvelles Demandes';
 
   @override
-  String get adminTabGlobal => 'Données Globales';
+  String get adminTabGlobal => 'DonnÃ©es Globales';
 
   @override
-  String get adminApproved => 'Aliment approuvé et publié';
+  String get adminApproved => 'Aliment approuvÃ© et publiÃ©';
 
   @override
-  String get adminRejected => 'Demande rejetée';
+  String get adminRejected => 'Demande rejetÃ©e';
 
   @override
-  String get adminDeleted => 'Aliment supprimé globalement';
+  String get adminDeleted => 'Aliment supprimÃ© globalement';
 
   @override
   String get adminEditTitle => 'Modifier l\'Aliment Global';
@@ -478,7 +478,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get adminSaveButton => 'Enregistrer';
 
   @override
-  String get adminUpdated => 'Aliment mis à jour';
+  String get adminUpdated => 'Aliment mis Ã  jour';
 
   @override
   String get adminNoRequests =>
@@ -504,7 +504,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get adminApproveButton => 'Approuver';
 
   @override
-  String get adminEmptyGlobal => 'La base de données globale est vide.';
+  String get adminEmptyGlobal => 'La base de donnÃ©es globale est vide.';
 
   @override
   String get adminGlobalFood => 'Aliment global';
@@ -520,7 +520,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get adminDeleteWarning =>
-      'Cela le retirera de la base de données publique. Les utilisateurs ne pourront plus le rechercher.';
+      'Cela le retirera de la base de donnÃ©es publique. Les utilisateurs ne pourront plus le rechercher.';
 
   @override
   String get adminDeleteButton => 'Supprimer';
@@ -535,7 +535,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get globalLoading => 'Chargement des aliments globaux';
 
   @override
-  String get globalNoResults => 'Aucun aliment trouvé.';
+  String get globalNoResults => 'Aucun aliment trouvÃ©.';
 
   @override
   String get globalGlobalFood => 'Aliment global';
@@ -544,13 +544,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get globalCopyToMyFoods => 'Copier dans Mes Aliments';
 
   @override
-  String get globalSuggestProduct => 'Suggérer un Produit';
+  String get globalSuggestProduct => 'SuggÃ©rer un Produit';
 
   @override
   String get globalScanning => 'Recherche OpenFoodFacts...';
 
   @override
-  String get globalFound => 'Produit trouvé !';
+  String get globalFound => 'Produit trouvÃ© !';
 
   @override
   String get globalNotFound => 'Produit introuvable';
@@ -560,7 +560,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get globalRequestDesc =>
-      'Votre demande sera examinée par un humain avant d\'être ajoutée à la base de données globale.';
+      'Votre demande sera examinÃ©e par un humain avant d\'Ãªtre ajoutÃ©e Ã  la base de donnÃ©es globale.';
 
   @override
   String get globalRequestName => 'Nom du produit';
@@ -578,21 +578,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get globalRequestCancel => 'Annuler';
 
   @override
-  String get globalRequestSent => 'Demande envoyée. Merci !';
+  String get globalRequestSent => 'Demande envoyÃ©e. Merci !';
 
   @override
   String get globalRequestSend => 'Envoyer la Demande';
 
   @override
   String globalAddedToMyFoods(String name) {
-    return '$name ajouté à vos aliments';
+    return '$name ajoutÃ© Ã  vos aliments';
   }
 
   @override
   String get globalScanTooltip => 'Scanner le code-barres';
 
   @override
-  String get globalNotFoundDB => 'Produit introuvable dans la base de données';
+  String get globalNotFoundDB => 'Produit introuvable dans la base de donnÃ©es';
 
   @override
   String get globalConnectionError => 'Erreur de connexion';
@@ -624,7 +624,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get foodsKcalLabel => 'Kcal';
 
   @override
-  String get foodsProteinLabel => 'Protéines';
+  String get foodsProteinLabel => 'ProtÃ©ines';
 
   @override
   String get foodsFatLabel => 'Lipides';
@@ -653,15 +653,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get foodsLoadingError =>
-      'Erreur lors du chargement de la base de données.';
+      'Erreur lors du chargement de la base de donnÃ©es.';
 
   @override
   String get foodsEmpty =>
-      'Vous n\'avez pas encore d\'aliments enregistrés.\nAjoutez votre premier !';
+      'Vous n\'avez pas encore d\'aliments enregistrÃ©s.\nAjoutez votre premier !';
 
   @override
   String foodsDeleteConfirm(String name) {
-    return 'Êtes-vous sûr de vouloir supprimer \"$name\" ?';
+    return 'ÃŠtes-vous sÃ»r de vouloir supprimer \"$name\" ?';
   }
 
   @override
@@ -690,7 +690,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String foodsDetailProtein(String value) {
-    return 'Protéines : ${value}g';
+    return 'ProtÃ©ines : ${value}g';
   }
 
   @override
@@ -714,14 +714,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get foodsSearchAccessibility => 'Aliment global';
 
   @override
-  String get insulinTitle => 'Paramètres d\'Insuline';
+  String get insulinTitle => 'ParamÃ¨tres d\'Insuline';
 
   @override
   String get insulinDesc =>
-      'Ces valeurs sont personnelles et privées. Les configurer permet à l\'appli de calculer le bolus d\'insuline recommandé.';
+      'Ces valeurs sont personnelles et privÃ©es. Les configurer permet Ã  l\'appli de calculer le bolus d\'insuline recommandÃ©.';
 
   @override
-  String get insulinRatioTitle => 'Ratio d\'insuline (unités par ration)';
+  String get insulinRatioTitle => 'Ratio d\'insuline (unitÃ©s par ration)';
 
   @override
   String get insulinRatioBase => 'Ratio de base *';
@@ -730,7 +730,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get insulinRatioHint => 'Ex. : 1,5';
 
   @override
-  String get insulinRatioSuffix => 'unités / ration';
+  String get insulinRatioSuffix => 'unitÃ©s / ration';
 
   @override
   String get insulinRatioRequired => 'Le ratio de base est requis';
@@ -739,7 +739,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get insulinInvalidNumber => 'Saisissez un nombre valide';
 
   @override
-  String get insulinMealRatios => 'Ratios spécifiques par repas (optionnel)';
+  String get insulinMealRatios => 'Ratios spÃ©cifiques par repas (optionnel)';
 
   @override
   String get insulinFactorTitle => 'Facteur de correction';
@@ -751,19 +751,19 @@ class AppLocalizationsFr extends AppLocalizations {
   String get insulinFactorHint => 'Ex. : 40';
 
   @override
-  String get insulinFactorSuffix => 'mg/dL par unité';
+  String get insulinFactorSuffix => 'mg/dL par unitÃ©';
 
   @override
   String get insulinFactorRequired => 'Le facteur de correction est requis';
 
   @override
-  String get insulinMustBePositive => 'Doit être supérieur à 0';
+  String get insulinMustBePositive => 'Doit Ãªtre supÃ©rieur Ã  0';
 
   @override
-  String get insulinGlucoseTargetTitle => 'Glycémie cible *';
+  String get insulinGlucoseTargetTitle => 'GlycÃ©mie cible *';
 
   @override
-  String get insulinGlucoseTargetLabel => 'Glycémie cible *';
+  String get insulinGlucoseTargetLabel => 'GlycÃ©mie cible *';
 
   @override
   String get insulinGlucoseTargetHint => 'Ex. : 100';
@@ -772,30 +772,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get insulinGlucoseTargetSuffix => 'mg/dL';
 
   @override
-  String get insulinGlucoseTargetRequired => 'La glycémie cible est requise';
+  String get insulinGlucoseTargetRequired => 'La glycÃ©mie cible est requise';
 
   @override
-  String get insulinHalfUnits => 'Stylo demi-unités';
+  String get insulinHalfUnits => 'Stylo demi-unitÃ©s';
 
   @override
   String get insulinHalfUnitsDesc =>
-      'Permet des doses par incréments de 0,5 unité';
+      'Permet des doses par incrÃ©ments de 0,5 unitÃ©';
 
   @override
-  String get insulinRoundDown => 'Arrondir le bolus à l\'inférieur';
+  String get insulinRoundDown => 'Arrondir le bolus Ã  l\'infÃ©rieur';
 
   @override
   String get insulinRoundDownDesc =>
-      'Tronque le bolus au lieu d\'arrondir au plus proche. Utile si vous dosez par paliers (ex. : 1 unité par 50 mg/dL)';
+      'Tronque le bolus au lieu d\'arrondir au plus proche. Utile si vous dosez par paliers (ex. : 1 unitÃ© par 50 mg/dL)';
 
   @override
   String get insulinSaving => 'Enregistrement...';
 
   @override
-  String get insulinSave => 'Enregistrer les Paramètres';
+  String get insulinSave => 'Enregistrer les ParamÃ¨tres';
 
   @override
-  String get insulinSaved => 'Paramètres d\'insuline enregistrés';
+  String get insulinSaved => 'ParamÃ¨tres d\'insuline enregistrÃ©s';
 
   @override
   String get insulinOptionalHint =>
@@ -816,14 +816,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String foodSearchNoResults(String query) {
-    return 'Aucun résultat pour \"$query\"';
+    return 'Aucun rÃ©sultat pour \"$query\"';
   }
 
   @override
   String get barcodeTitle => 'Scanner le code-barres';
 
   @override
-  String get barcodeScannedFood => 'Aliment scanné';
+  String get barcodeScannedFood => 'Aliment scannÃ©';
 
   @override
   String get confirmDeleteTitle => 'Confirmer la suppression';
@@ -835,7 +835,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirmDeleteButton => 'Supprimer';
 
   @override
-  String get updateAvailable => 'Mise à jour disponible';
+  String get updateAvailable => 'Mise Ã  jour disponible';
 
   @override
   String updateVersion(String version) {
@@ -846,23 +846,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateLater => 'Plus tard';
 
   @override
-  String get updateDownload => 'Télécharger';
+  String get updateDownload => 'TÃ©lÃ©charger';
 
   @override
-  String get updateDownloading => 'Téléchargement de la mise à jour...';
+  String get updateDownloading => 'TÃ©lÃ©chargement de la mise Ã  jour...';
 
   @override
   String get updateError =>
-      'Échec du téléchargement. Visitez github.com/PokeSer/libretadulce/releases';
+      'Ã‰chec du tÃ©lÃ©chargement. Visitez github.com/PokeSer/libretadulce/releases';
 
   @override
-  String get updateWhatIsNew => 'Nouveautés';
+  String get updateWhatIsNew => 'NouveautÃ©s';
 
   @override
-  String get profileThemeLabel => 'Thème de l\'app';
+  String get profileThemeLabel => 'ThÃ¨me de l\'app';
 
   @override
-  String get profileThemeSystem => 'Système';
+  String get profileThemeSystem => 'SystÃ¨me';
 
   @override
   String get profileThemeLight => 'Clair';
@@ -874,17 +874,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get profileSettingsSectionApp => 'Application';
 
   @override
-  String get profileSettingsSectionHealth => 'Santé';
+  String get profileSettingsSectionHealth => 'SantÃ©';
 
   @override
-  String get profileSettings => 'Paramètres';
+  String get profileSettings => 'ParamÃ¨tres';
 
   @override
-  String get insulinGlucoseUnit => 'Unité de glycémie';
+  String get insulinGlucoseUnit => 'UnitÃ© de glycÃ©mie';
 
   @override
   String get insulinGlucoseUnitDesc => 'Basculer entre mg/dL et mmol/L';
 
   @override
   String get insulinGlucoseUnitLabel => 'Utiliser mmol/L au lieu de mg/dL';
+
+  @override
+  String get calcTabGrams => 'Grammes';
+
+  @override
+  String get calcTabRations => 'Rations';
 }

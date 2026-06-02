@@ -879,4 +879,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insulinGlucoseUnitLabel => 'Use mmol/L instead of mg/dL';
+
+  @override
+  String get calcTabGrams => 'Grams';
+
+  @override
+  String get calcTabRations => 'Rations';
 }

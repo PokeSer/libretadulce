@@ -26,9 +26,10 @@ class CalculatorPage extends StatefulWidget {
   State<CalculatorPage> createState() => _CalculatorPageState();
 }
 
-class _CalculatorPageState extends State<CalculatorPage> {
+class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStateMixin {
   final User? user = FirebaseAuth.instance.currentUser;
 
+  late final TabController _tabController;
   bool _isInverseMode = false;
 
   String? _selectedFoodName;
@@ -304,6 +305,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() {
+      if (!_tabController.indexIsChanging) {
+        setState(() {
+          _isInverseMode = _tabController.index == 1;
+          _calculateMacros();
+        });
+      }
+    });
     _loadInsulinSettings();
     _loadLastMealType();
   }
@@ -443,6 +453,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   @override
   void dispose() {
+    _tabController.dispose();
     _inputController.dispose();
     _glucosaController.dispose();
     super.dispose();
@@ -451,107 +462,29 @@ class _CalculatorPageState extends State<CalculatorPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-
-    if (user == null) return Center(child: Text(l10n.calcMustLogin));
     final isDark = context.isDarkMode;
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: AppDimens.screenPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              l10n.calcTitle,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.teal,
-              ),
-            ),
-            const SizedBox(height: 16),
+    if (user == null) return Center(child: Text(l10n.calcMustLogin));
 
-            Container(
-              decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.teal.withValues(alpha: 0.1)
-                    : Colors.teal.shade50,
-                borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-              ),
-              child: Row(
+    return Column(
+      children: [
+        TabBar(
+          controller: _tabController,
+          labelColor: AppColors.primary(context),
+          unselectedLabelColor: AppColors.textSecondary(context),
+          indicatorColor: AppColors.primary(context),
+          tabs: [
+            Tab(icon: const Icon(Icons.scale), text: l10n.calcTabGrams),
+            Tab(icon: const Icon(Icons.restaurant_menu), text: l10n.calcTabRations),
+          ],
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: AppDimens.screenPadding,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: Semantics(
-                      button: true,
-                      label: l10n.calcGramsModeAccessibility,
-                      checked: !_isInverseMode,
-                      child: InkWell(
-                        onTap: () => setState(() {
-                          _isInverseMode = false;
-                          _calculateMacros();
-                        }),
-                        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: !_isInverseMode
-                                ? Colors.teal
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                          ),
-                          child: Text(
-                            l10n.calcGramsMode,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: !_isInverseMode
-                                  ? Colors.white
-                                  : Colors.teal.shade700,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Semantics(
-                      button: true,
-                      label: l10n.calcRationsModeAccessibility,
-                      checked: _isInverseMode,
-                      child: InkWell(
-                        onTap: () => setState(() {
-                          _isInverseMode = true;
-                          _calculateMacros();
-                        }),
-                        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: _isInverseMode
-                                ? Colors.amber.shade600
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                          ),
-                          child: Text(
-                            l10n.calcRationsMode,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: _isInverseMode
-                                  ? Colors.white
-                                  : Colors.teal.shade700,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
 
             StreamBuilder<List<Food>>(
               stream: FoodRepository.watchFavoriteFoods(user!.uid),
@@ -1263,10 +1196,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 ),
               ),
               const SizedBox(height: 32),
-            ],
-          ],
-        ),
-      ),
-    );
+            ],  // spread if _mealItems.isNotEmpty
+            ],  // inner Column children
+          ),  // Column
+        ),  // Padding
+      ),  // SingleChildScrollView
+    ),  // Expanded
+    ],  // outer Column children
+    );  // Column
   }
 }
