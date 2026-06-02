@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
 import '../core/utils/meal_type_localizer.dart';
@@ -139,7 +140,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
         body: Center(
           child: Semantics(
             label: l10n.insulinTitle,
-            child: const CircularProgressIndicator(color: Colors.teal),
+            child: CircularProgressIndicator(color: AppColors.primary(context)),
           ),
         ),
       );
@@ -158,7 +159,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
             children: [
               Text(
                 l10n.insulinDesc,
-                style: TextStyle(fontSize: 13, color: Colors.grey.shade600, height: 1.5),
+                style: TextStyle(fontSize: 13, color: AppColors.textSecondary(context), height: 1.5),
               ),
               const SizedBox(height: 24),
 
@@ -167,7 +168,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.teal.shade800,
+                  color: AppColors.primaryDark(context),
                 ),
               ),
               const SizedBox(height: 8),
@@ -200,17 +201,17 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                       ExcludeSemantics(
                         child: Icon(
                           _showMealRatios ? Icons.expand_less : Icons.expand_more,
-                          color: Colors.teal,
+                          color: AppColors.primary(context),
                         ),
                       ),
-                    const SizedBox(width: 8),
-                    Text(
-                      l10n.insulinMealRatios,
-                      style: TextStyle(color: Colors.teal.shade700, fontWeight: FontWeight.w500),
-                    ),
-                  ],
+                      const SizedBox(width: 8),
+                      Text(
+                        l10n.insulinMealRatios,
+                        style: TextStyle(color: AppColors.primaryDark(context), fontWeight: FontWeight.w500),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
               ),
               if (_showMealRatios) ...[
                 const SizedBox(height: 12),
@@ -258,7 +259,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.teal.shade800,
+                  color: AppColors.primaryDark(context),
                 ),
               ),
               const SizedBox(height: 8),
@@ -306,8 +307,8 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 title: Text(l10n.insulinHalfUnits),
                 subtitle: Text(l10n.insulinHalfUnitsDesc),
                 value: _supportsHalfUnits,
-                activeTrackColor: Colors.teal.shade200,
-                activeThumbColor: Colors.teal,
+                activeTrackColor: AppColors.primaryLight(context),
+                activeThumbColor: AppColors.primary(context),
                 onChanged: (v) => setState(() => _supportsHalfUnits = v),
               ),
 
@@ -316,8 +317,8 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 title: Text(l10n.insulinRoundDown),
                 subtitle: Text(l10n.insulinRoundDownDesc),
                 value: _roundBolusDown,
-                activeTrackColor: Colors.teal.shade200,
-                activeThumbColor: Colors.teal,
+                activeTrackColor: AppColors.primaryLight(context),
+                activeThumbColor: AppColors.primary(context),
                 onChanged: (v) => setState(() => _roundBolusDown = v),
               ),
 
@@ -328,7 +329,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.teal.shade800,
+                  color: AppColors.primaryDark(context),
                 ),
               ),
               const SizedBox(height: 8),
@@ -336,8 +337,8 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 title: Text(l10n.insulinGlucoseUnitDesc),
                 subtitle: Text(l10n.insulinGlucoseUnitLabel),
                 value: _usesMmolL,
-                activeTrackColor: Colors.teal.shade200,
-                activeThumbColor: Colors.teal,
+                activeTrackColor: AppColors.primaryLight(context),
+                activeThumbColor: AppColors.primary(context),
                 onChanged: (v) => setState(() => _usesMmolL = v),
               ),
 
@@ -347,10 +348,10 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 child: FilledButton.icon(
                   onPressed: _isSaving ? null : _save,
                   icon: _isSaving
-                      ? const SizedBox(
+                      ? SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.onPrimary(context)),
                         )
                       : const Icon(Icons.save),
                   label: Text(
@@ -358,7 +359,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                     style: AppTextStyles.sectionTitle,
                   ),
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.teal,
+                    backgroundColor: AppColors.primary(context),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
                   ),
                 ),

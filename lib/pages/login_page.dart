@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../l10n/app_localizations.dart';
 import '../services/auth_service.dart';
@@ -24,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.message),
-            backgroundColor: Colors.red.shade700,
+            backgroundColor: AppColors.error(context),
             duration: const Duration(seconds: 8),
           ),
         );
@@ -39,6 +40,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final primary = AppColors.primary(context);
 
     return Scaffold(
       body: SafeArea(
@@ -53,13 +55,13 @@ class _LoginPageState extends State<LoginPage> {
                   margin: const EdgeInsets.only(bottom: 40),
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
-                    color: Colors.teal.shade50,
+                    color: AppColors.primaryLight(context),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.favorite_rounded,
                     size: 100,
-                    color: Colors.teal.shade600,
+                    color: primary,
                   ),
                 ),
               ),
@@ -71,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
                   letterSpacing: -1,
-                  color: Colors.teal.shade900,
+                  color: AppColors.primaryDark(context),
                 ),
               ),
 
@@ -83,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(
                   fontSize: 16,
                   height: 1.5,
-                  color: Colors.grey.shade600,
+                  color: AppColors.textSecondary(context),
                 ),
               ),
 
@@ -93,20 +95,19 @@ class _LoginPageState extends State<LoginPage> {
                   ? Center(
                       child: Semantics(
                         label: l10n.loginIniciandoSesion,
-                        child: const CircularProgressIndicator(
-                          color: Colors.teal,
-                        ),
+                        child: CircularProgressIndicator(color: primary),
                       ),
                     )
                   : ElevatedButton.icon(
                       onPressed: _handleGoogleSignIn,
                       icon: Container(
                         padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                            color: Colors.white, shape: BoxShape.circle),
-                        child: const Icon(
+                        decoration: BoxDecoration(
+                            color: AppColors.onPrimary(context),
+                            shape: BoxShape.circle),
+                        child: Icon(
                           Icons.person,
-                          color: Colors.teal,
+                          color: primary,
                           size: 24,
                         ),
                       ),
@@ -118,8 +119,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal.shade600,
-                        foregroundColor: Colors.white,
+                        backgroundColor: primary,
+                        foregroundColor: AppColors.onPrimary(context),
                         padding: const EdgeInsets.symmetric(
                             vertical: 16, horizontal: 24),
                         shape: RoundedRectangleBorder(
@@ -137,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(
                   fontSize: 12,
                   height: 1.5,
-                  color: Colors.grey.shade500,
+                  color: AppColors.textMuted(context),
                 ),
               ),
             ],

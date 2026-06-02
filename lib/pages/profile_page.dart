@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
@@ -36,8 +35,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
     final AuthService authService = AuthService();
-    final isDark = context.isDarkMode;
     final l10n = AppLocalizations.of(context);
+    final primary = AppColors.primary(context);
 
     if (user == null) {
       return Center(child: Text(l10n.profileNotLoggedIn));
@@ -55,10 +54,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   label: l10n.profilePhotoAccessibility(user.displayName ?? l10n.profileDefaultName),
                   child: CircleAvatar(
                     radius: 55,
-                    backgroundColor: isDark ? Colors.teal.withValues(alpha: 0.1) : Colors.teal.shade100,
+                    backgroundColor: AppColors.primaryLight(context),
                     backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
                     child: user.photoURL == null
-                        ? const Icon(Icons.person, size: 55, color: Colors.teal)
+                        ? Icon(Icons.person, size: 55, color: primary)
                         : null,
                   ),
                 ),
@@ -74,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 4),
                 Text(
                   user.email ?? '',
-                  style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
+                  style: TextStyle(fontSize: 14, color: AppColors.textSecondary(context)),
                 ),
               ],
             ),
@@ -84,16 +83,16 @@ class _ProfilePageState extends State<ProfilePage> {
             borderRadius: AppDimens.radiusDialog,
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              leading: const Icon(Icons.favorite, color: Colors.redAccent, semanticLabel: ''),
+              leading: Icon(Icons.favorite, color: AppColors.error(context), semanticLabel: ''),
               title: Text(
                 l10n.profileAboutTitle,
                 style: AppTextStyles.cardTitle,
               ),
               subtitle: Text(
                 l10n.profileAboutSubtitle,
-                style: AppTextStyles.cardSubtitle,
+                style: AppTextStyles.cardSubtitle(context),
               ),
-              trailing: Icon(Icons.chevron_right, color: Colors.grey.shade400, semanticLabel: ''),
+              trailing: Icon(Icons.chevron_right, color: AppColors.textMuted(context), semanticLabel: ''),
               onTap: () {
                 showDialog(
                   context: context,
@@ -102,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusDialog)),
                     title: Row(
                       children: [
-                        const ExcludeSemantics(child: Icon(Icons.favorite, color: Colors.redAccent)),
+                        ExcludeSemantics(child: Icon(Icons.favorite, color: AppColors.error(context))),
                         const SizedBox(width: 8),
                         Text(l10n.profileAboutDialogTitle),
                       ],
@@ -118,7 +117,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
-                        child: Text(l10n.profileAboutDialogClose, style: const TextStyle(color: Colors.teal)),
+                        child: Text(l10n.profileAboutDialogClose, style: TextStyle(color: primary)),
                       ),
                     ],
                   ),
@@ -139,15 +138,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
-                        child: Text(l10n.profileLogoutCancel, style: const TextStyle(color: Colors.teal)),
+                        child: Text(l10n.profileLogoutCancel, style: TextStyle(color: primary)),
                       ),
                       ElevatedButton(
                         onPressed: () async {
                           Navigator.pop(ctx);
                           await authService.signOut();
                         },
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
-                        child: Text(l10n.profileLogoutButton, style: const TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(backgroundColor: AppColors.error(context)),
+                        child: Text(l10n.profileLogoutButton, style: TextStyle(color: AppColors.onError(context))),
                       ),
                     ],
                   ),
@@ -156,8 +155,8 @@ class _ProfilePageState extends State<ProfilePage> {
               icon: const Icon(Icons.logout),
               label: Text(l10n.profileLogout, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
               style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.redAccent,
-                side: const BorderSide(color: Colors.redAccent),
+                foregroundColor: AppColors.error(context),
+                side: BorderSide(color: AppColors.error(context)),
                 padding: AppDimens.buttonPaddingV,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
               ),
@@ -179,7 +178,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 if (_appVersion.isNotEmpty)
                   Text(
                     _appVersion,
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                    style: TextStyle(fontSize: 12, color: AppColors.textMuted(context)),
                   ),
               ],
             ),

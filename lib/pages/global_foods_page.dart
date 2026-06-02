@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
 import '../core/utils/formatters.dart';
@@ -73,7 +74,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
             children: [
               Expanded(child: Text(l10n.globalRequestTitle)),
               IconButton(
-                icon: const Icon(Icons.qr_code_scanner, color: Colors.teal),
+                icon: Icon(Icons.qr_code_scanner, color: AppColors.primary(context)),
                 tooltip: l10n.globalScanTooltip,
                 onPressed: () => _scanBarcode(nameController, brandController, carbsController),
               ),
@@ -85,7 +86,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
               children: [
                 Text(
                   l10n.globalRequestDesc,
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: AppColors.textMuted(context)),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -248,8 +249,8 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
                       ),
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: Colors.teal,
-                          child: Icon(Icons.public, color: Colors.white, semanticLabel: l10n.globalGlobalFood),
+                          backgroundColor: AppColors.primary(context),
+                          child: Icon(Icons.public, color: AppColors.onPrimary(context), semanticLabel: l10n.globalGlobalFood),
                         ),
                         title: Text(
                           food.displayName,
@@ -257,9 +258,9 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
                         ),
                         subtitle: Text(l10n.calcCarbsPer100g('${food.carbsPer100g}')),
                         trailing: IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.add_circle,
-                            color: Colors.teal,
+                            color: AppColors.primary(context),
                           ),
                           tooltip: l10n.globalCopyToMyFoods,
                           onPressed: () => _copyToMyFoods(food),
@@ -277,7 +278,7 @@ class _GlobalFoodsPageState extends State<GlobalFoodsPage> {
         onPressed: _showRequestFoodDialog,
         icon: const Icon(Icons.outbox),
         label: Text(l10n.globalSuggestProduct),
-        backgroundColor: Colors.teal,
+        backgroundColor: AppColors.primary(context),
       ),
     );
   }

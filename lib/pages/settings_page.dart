@@ -70,6 +70,7 @@ class SettingsPage extends StatelessWidget {
 
   Widget _buildThemeCard(BuildContext context, AppLocalizations l10n) {
     final currentTheme = appSettings.themeMode;
+    final primary = AppColors.primary(context);
 
     return AppCard(
       borderRadius: 14,
@@ -82,7 +83,7 @@ class SettingsPage extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               leading: Icon(
                 _themeIcon(currentTheme),
-                color: Colors.teal,
+                color: primary,
                 semanticLabel: '',
               ),
               title: Text(
@@ -91,15 +92,15 @@ class SettingsPage extends StatelessWidget {
               ),
               subtitle: Text(
                 _themeLabel(currentTheme, l10n),
-                style: AppTextStyles.cardSubtitle,
+                style: AppTextStyles.cardSubtitle(context),
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: SegmentedButton<ThemeMode>(
                 style: SegmentedButton.styleFrom(
-                  selectedBackgroundColor: Colors.teal.withValues(alpha: 0.15),
-                  selectedForegroundColor: Colors.teal,
+                  selectedBackgroundColor: AppColors.primaryLight(context),
+                  selectedForegroundColor: primary,
                 ),
                 segments: [
                   ButtonSegment<ThemeMode>(
@@ -131,20 +132,21 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildHealthCard(BuildContext context, AppLocalizations l10n) {
+    final primary = AppColors.primary(context);
     return AppCard(
       borderRadius: 14,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: const Icon(Icons.water_drop, color: Colors.teal, semanticLabel: ''),
+        leading: Icon(Icons.water_drop, color: primary, semanticLabel: ''),
         title: Text(
           l10n.profileInsulinSettings,
           style: AppTextStyles.cardTitle,
         ),
         subtitle: Text(
           l10n.profileInsulinSettingsDesc,
-          style: AppTextStyles.cardSubtitle,
+          style: AppTextStyles.cardSubtitle(context),
         ),
-        trailing: Icon(Icons.chevron_right, color: Colors.grey.shade400, semanticLabel: ''),
+        trailing: Icon(Icons.chevron_right, color: AppColors.textMuted(context), semanticLabel: ''),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCardLg)),
         onTap: () {
           Navigator.push(

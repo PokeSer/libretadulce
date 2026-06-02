@@ -725,7 +725,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
               decoration: BoxDecoration(
                 color: !_isInverseMode
                     ? Theme.of(context).colorScheme.primary
-                    : AppColors.insulinGreen,
+                    : AppColors.insulinGreen(context),
                 borderRadius: BorderRadius.circular(AppDimens.radiusXxl),
               ),
               child: Column(

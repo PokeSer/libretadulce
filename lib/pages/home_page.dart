@@ -38,15 +38,13 @@ class _HomePageState extends State<HomePage> {
     if (user != null) {
       final userDoc = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
       
-      // Si el usuario no tiene documento aún, se lo creamos por defecto como "user" (no admin)
       if (!userDoc.exists) {
         await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
           'email': user!.email,
-          'role': 'user', // user o admin
+          'role': 'user',
           'createdAt': FieldValue.serverTimestamp(),
         });
       } else {
-        // Leemos su rol de Firestore
         if (userDoc.data()?['role'] == 'admin') {
           if (mounted) setState(() => _isAdmin = true);
         }
@@ -64,6 +62,7 @@ class _HomePageState extends State<HomePage> {
   void _showUpdateDialog(UpdateInfo update) {
     final l10n = AppLocalizations.of(context);
     final isDark = context.isDarkMode;
+    final primary = AppColors.primary(context);
     final tag = 'v${update.version}';
 
     showDialog(
@@ -79,12 +78,12 @@ class _HomePageState extends State<HomePage> {
               Container(
                 padding: AppDimens.cardPadding,
                 decoration: BoxDecoration(
-                  color: Colors.teal.withValues(alpha: isDark ? 0.15 : 0.1),
+                  color: primary.withValues(alpha: isDark ? 0.15 : 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: ExcludeSemantics(
-                  child: const Icon(Icons.system_update_rounded,
-                      color: Colors.teal, size: 40),
+                  child: Icon(Icons.system_update_rounded,
+                      color: primary, size: 40),
                 ),
               ),
               const SizedBox(height: 16),
@@ -95,18 +94,17 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Container(
-                padding:
-                    AppDimens.cardMargin,
+                padding: AppDimens.cardMargin,
                 decoration: BoxDecoration(
-                  color: Colors.teal.withValues(alpha: isDark ? 0.2 : 0.1),
+                  color: primary.withValues(alpha: isDark ? 0.2 : 0.1),
                   borderRadius: BorderRadius.circular(AppDimens.radiusPill),
                 ),
                 child: Text(
                   l10n.updateVersion(tag),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Colors.teal,
+                    color: primary,
                     fontFamily: 'monospace',
                   ),
                 ),
@@ -126,9 +124,7 @@ class _HomePageState extends State<HomePage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? Colors.grey.shade900
-                        : Colors.grey.shade100,
+                    color: AppColors.surfaceAlt(context),
                     borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                   ),
                   constraints: const BoxConstraints(maxHeight: 120),
@@ -138,8 +134,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                         fontSize: 13,
                         height: 1.4,
-                        color:
-                            AppColors.textMuted(context),
+                        color: AppColors.textMuted(context),
                       ),
                     ),
                   ),
@@ -169,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                       icon: const Icon(Icons.download, size: 18),
                       label: Text(l10n.updateDownload),
                       style: FilledButton.styleFrom(
-                        backgroundColor: Colors.teal,
+                        backgroundColor: primary,
                         padding: AppDimens.buttonPaddingV,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
@@ -187,11 +182,11 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _downloadUpdate(UpdateInfo update) async {
     final l10n = AppLocalizations.of(context);
+    final primary = AppColors.primary(context);
     double progress = 0;
 
     if (!mounted) return;
 
-    // Show progress dialog
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -200,7 +195,7 @@ class _HomePageState extends State<HomePage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.download_rounded, color: Colors.teal, size: 40),
+              Icon(Icons.download_rounded, color: primary, size: 40),
               const SizedBox(height: 16),
               Text(
                 l10n.updateDownloading,
@@ -209,8 +204,8 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 16),
               LinearProgressIndicator(
                 value: progress > 0 ? progress : null,
-                backgroundColor: Colors.grey.shade300,
-                color: Colors.teal,
+                backgroundColor: AppColors.textMuted(context),
+                color: primary,
                 borderRadius: BorderRadius.circular(4),
               ),
               const SizedBox(height: 8),
@@ -218,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                 progress > 0
                     ? '${(progress * 100).toStringAsFixed(0)}%'
                     : l10n.updateDownloading,
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                style: TextStyle(fontSize: 12, color: AppColors.textSecondary(context)),
               ),
             ],
           ),
@@ -231,14 +226,13 @@ class _HomePageState extends State<HomePage> {
       onProgress: (p) {
         progress = p;
         if (mounted) {
-          // Rebuild dialog with new progress
           (context as Element).markNeedsBuild();
         }
       },
     );
 
     if (mounted) {
-      Navigator.of(context, rootNavigator: true).pop(); // Close progress dialog
+      Navigator.of(context, rootNavigator: true).pop();
       if (!success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.updateError)),
@@ -259,14 +253,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    // Por si al cambiar de modo el índice se queda fuera de rango
     final int safeIndex = _currentIndex >= _pages.length ? 0 : _currentIndex;
 
     return Scaffold(
       appBar: AppBar(
         title: Row(
           children: [
-            // Icono en el header
             ExcludeSemantics(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppDimens.radiusInput),
@@ -297,12 +289,11 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-          // Botón de Admin en la barra superior (solo si el rol en BD es admin)
           if (_isAdmin)
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.admin_panel_settings,
-                color: Colors.amberAccent,
+                color: AppColors.accentFavorite(context),
               ),
               tooltip: l10n.navAdminTooltip,
               onPressed: () {

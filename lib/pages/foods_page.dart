@@ -115,9 +115,9 @@ class _FoodsPageState extends State<FoodsPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(l10n.foodsAddTitle, style: const TextStyle(color: Colors.teal)),
+              Text(l10n.foodsAddTitle, style: TextStyle(color: AppColors.primary(context))),
               IconButton(
-                icon: const Icon(Icons.qr_code_scanner, color: Colors.teal),
+                icon: Icon(Icons.qr_code_scanner, color: AppColors.primary(context)),
                 tooltip: l10n.foodsScanTooltip,
                 onPressed: _scanBarcode,
               ),
@@ -207,7 +207,7 @@ class _FoodsPageState extends State<FoodsPage> {
                 _fatsController.clear();
                 Navigator.pop(context);
               },
-              child: Text(l10n.foodsCancel, style: const TextStyle(color: Colors.grey)),
+              child: Text(l10n.foodsCancel, style: TextStyle(color: AppColors.textMuted(context))),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -257,8 +257,8 @@ class _FoodsPageState extends State<FoodsPage> {
                 _fatsController.clear();
                 Navigator.pop(context);
               },
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
-              child: Text(l10n.foodsSave, style: const TextStyle(color: Colors.white)),
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary(context)),
+              child: Text(l10n.foodsSave, style: TextStyle(color: AppColors.onPrimary(context))),
             ),
           ],
         );
@@ -336,7 +336,7 @@ class _FoodsPageState extends State<FoodsPage> {
                   return Center(
                     child: Semantics(
                       label: l10n.foodSearchTitle,
-                      child: const CircularProgressIndicator(color: Colors.teal),
+                      child: CircularProgressIndicator(color: AppColors.primary(context)),
                     ),
                   );
                 }
@@ -348,7 +348,7 @@ class _FoodsPageState extends State<FoodsPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ExcludeSemantics(child: Icon(Icons.kitchen, size: 80, color: Colors.teal.shade100)),
+                        ExcludeSemantics(child: Icon(Icons.kitchen, size: 80, color: AppColors.primaryLight(context))),
                         const SizedBox(height: 16),
                         Text(
                           l10n.foodsEmpty,
@@ -391,12 +391,12 @@ class _FoodsPageState extends State<FoodsPage> {
                       background: Container(
                         margin: AppDimens.cardMargin,
                         decoration: BoxDecoration(
-                          color: Colors.redAccent,
+                          color: AppColors.error(context),
                           borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                         ),
                         alignment: Alignment.centerRight,
                         padding: const EdgeInsets.only(right: 20),
-                        child: const Icon(Icons.delete, color: Colors.white, size: 30),
+                        child: Icon(Icons.delete, color: AppColors.onError(context), size: 30),
                       ),
                       confirmDismiss: (direction) async {
                         return await showConfirmDeleteDialog(
@@ -413,13 +413,13 @@ class _FoodsPageState extends State<FoodsPage> {
                             IconButton(
                               icon: Icon(
                                 food.isFavorite ? Icons.star : Icons.star_border,
-                                color: food.isFavorite ? Colors.amber.shade600 : Colors.grey.shade400,
+                                color: food.isFavorite ? AppColors.accentFavorite(context) : AppColors.textMuted(context),
                               ),
                               tooltip: food.isFavorite ? l10n.foodsRemoveFromFavorites : l10n.foodsAddToFavorites,
                               onPressed: () => _toggleFavorite(food.id, food.isFavorite),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                              icon: Icon(Icons.delete_outline, color: AppColors.error(context)),
                               tooltip: l10n.foodsDeleteTooltip(food.name),
                               onPressed: () async {
                                 final confirmed = await showConfirmDeleteDialog(
@@ -485,8 +485,8 @@ class _FoodsPageState extends State<FoodsPage> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddFoodDialog,
-        backgroundColor: Colors.teal.shade600,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.primary(context),
+        foregroundColor: AppColors.onPrimary(context),
         icon: const Icon(Icons.add),
         label: Text(l10n.foodsNewFood),
       ),

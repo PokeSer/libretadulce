@@ -217,7 +217,7 @@ class _AdminPageState extends State<AdminPage> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 l10n.globalErrorFirebase('${snapshot.error}'),
-                style: const TextStyle(color: Colors.red),
+                style: TextStyle(color: AppColors.error(context)),
               ),
             ),
           );
@@ -331,13 +331,13 @@ class _AdminPageState extends State<AdminPage> {
                       children: [
                         TextButton.icon(
                           onPressed: () => _rejectRequest(request.id),
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.close,
-                            color: Colors.redAccent,
+                            color: AppColors.error(context),
                           ),
                           label: Text(
                             l10n.adminRejectButton,
-                            style: const TextStyle(color: Colors.redAccent),
+                            style: TextStyle(color: AppColors.error(context)),
                           ),
                         ),
                         FilledButton.icon(
@@ -350,7 +350,7 @@ class _AdminPageState extends State<AdminPage> {
                           icon: const Icon(Icons.check),
                           label: Text(l10n.adminApproveButton),
                           style: FilledButton.styleFrom(
-                            backgroundColor: Colors.teal.shade600,
+                            backgroundColor: AppColors.primary(context),
                           ),
                         ),
                       ],
@@ -464,11 +464,11 @@ class _AdminPageState extends State<AdminPage> {
                                   _deleteGlobalFood(food.id);
                                 },
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
+                                  backgroundColor: AppColors.error(context),
                                 ),
                                 child: Text(
                                   l10n.adminDeleteButton,
-                                  style: const TextStyle(color: Colors.white),
+                                  style: TextStyle(color: AppColors.onError(context)),
                                 ),
                               ),
                             ],

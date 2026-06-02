@@ -71,8 +71,7 @@ class _HistoryPageState extends State<HistoryPage> {
               IconButton(
                 icon: const Icon(Icons.chevron_left, size: 32),
                 onPressed: () => _changeDate(-1),
-                color: Colors.teal,
-                tooltip: l10n.historyPrevDay,
+                color: AppColors.primary(context),
               ),
               Column(
                 children: [

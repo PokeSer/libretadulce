@@ -13,7 +13,7 @@ class AppLoadingIndicator extends StatelessWidget {
     return Center(
       child: Semantics(
         label: label,
-        child: const CircularProgressIndicator(color: Colors.teal),
+        child: CircularProgressIndicator(color: AppColors.primary(context)),
       ),
     );
   }
@@ -104,3 +104,4 @@ class StatCard extends StatelessWidget {
     );
   }
 }
+
