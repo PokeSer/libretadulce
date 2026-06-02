@@ -7,7 +7,6 @@ import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
 import 'calculator_page.dart';
 import 'foods_page.dart';
-import 'global_foods_page.dart';
 import 'profile_page.dart';
 import 'settings_page.dart';
 import 'admin_page.dart';
@@ -244,7 +243,6 @@ class _HomePageState extends State<HomePage> {
   List<Widget> get _pages => const [
     CalculatorPage(),
     FoodsPage(),
-    GlobalFoodsPage(),
     HistoryPage(),
     ProfilePage(),
   ];
@@ -278,7 +276,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         actions: [
-          if (safeIndex == 4)
+          if (safeIndex == 3)
             IconButton(
               icon: const Icon(Icons.settings),
               tooltip: l10n.profileSettings,
@@ -326,11 +324,6 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.fastfood_outlined),
             selectedIcon: const Icon(Icons.fastfood),
             label: l10n.navFoods,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.public_outlined),
-            selectedIcon: const Icon(Icons.public),
-            label: l10n.navGlobal,
           ),
           NavigationDestination(
             icon: const Icon(Icons.history_outlined),
