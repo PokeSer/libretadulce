@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -5,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:open_filex/open_filex.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+
+typedef ProgressCallback = void Function(double progress);
 
 class UpdateService {
   static const _owner = 'PokeSer';
@@ -89,22 +92,73 @@ class UpdateService {
     return text.trim();
   }
 
-  static Future<bool> downloadAndInstall(String url) async {
+  static Future<bool> downloadAndInstall(
+    String url, {
+    ProgressCallback? onProgress,
+  }) async {
     if (!kIsWeb && Platform.isIOS) return false;
     try {
       final dir = await getTemporaryDirectory();
       final file = File('${dir.path}/libretadulce_update.apk');
 
-      final response = await http.get(Uri.parse(url)).timeout(const Duration(seconds: 60));
-      if (response.statusCode != 200) return false;
+      // Use a client that follows redirects manually for better control
+      final client = http.Client();
+      try {
+        final request = http.Request('GET', Uri.parse(url));
+        final response = await client.send(request).timeout(
+          const Duration(seconds: 10),
+          onTimeout: () => throw TimeoutException('Connection timeout'),
+        );
 
-      await file.writeAsBytes(response.bodyBytes);
+        if (response.statusCode != 200) {
+          debugPrint('Download failed: HTTP ${response.statusCode}');
+          return false;
+        }
 
-      final result = await OpenFilex.open(file.path,
-          type: 'application/vnd.android.package-archive');
+        final contentLength = response.contentLength ?? 0;
+        final sink = file.openWrite();
+        int downloaded = 0;
+
+        await for (final chunk in response.stream) {
+          sink.add(chunk);
+          downloaded += chunk.length;
+          if (contentLength > 0 && onProgress != null) {
+            onProgress(downloaded / contentLength);
+          }
+        }
+
+        await sink.flush();
+        await sink.close();
+      } finally {
+        client.close();
+      }
+
+      if (!await file.exists()) {
+        debugPrint('APK file not found after download');
+        return false;
+      }
+
+      final fileSize = await file.length();
+      if (fileSize < 1000) {
+        debugPrint('APK file too small ($fileSize bytes), likely not a valid APK');
+        return false;
+      }
+
+      debugPrint('APK downloaded: ${file.path} ($fileSize bytes)');
+
+      final result = await OpenFilex.open(
+        file.path,
+        type: 'application/vnd.android.package-archive',
+      );
+
+      debugPrint('OpenFilex result: ${result.type} - ${result.message}');
       return result.type == ResultType.done;
-    } catch (e) {
+    } on TimeoutException {
+      debugPrint('Download timed out');
+      return false;
+    } catch (e, stack) {
       debugPrint('Download/install failed: $e');
+      debugPrint('Stack: $stack');
       return false;
     }
   }

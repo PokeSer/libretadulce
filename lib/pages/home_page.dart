@@ -187,17 +187,58 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _downloadUpdate(UpdateInfo update) async {
     final l10n = AppLocalizations.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(l10n.updateDownloading),
-        duration: const Duration(seconds: 60),
+    double progress = 0;
+
+    if (!mounted) return;
+
+    // Show progress dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.download_rounded, color: Colors.teal, size: 40),
+              const SizedBox(height: 16),
+              Text(
+                l10n.updateDownloading,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              LinearProgressIndicator(
+                value: progress > 0 ? progress : null,
+                backgroundColor: Colors.grey.shade300,
+                color: Colors.teal,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                progress > 0
+                    ? '${(progress * 100).toStringAsFixed(0)}%'
+                    : l10n.updateDownloading,
+                style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+              ),
+            ],
+          ),
+        ),
       ),
     );
 
-    final success = await UpdateService.downloadAndInstall(update.downloadUrl);
+    final success = await UpdateService.downloadAndInstall(
+      update.downloadUrl,
+      onProgress: (p) {
+        progress = p;
+        if (mounted) {
+          // Rebuild dialog with new progress
+          (context as Element).markNeedsBuild();
+        }
+      },
+    );
 
     if (mounted) {
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      Navigator.of(context, rootNavigator: true).pop(); // Close progress dialog
       if (!success) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.updateError)),
