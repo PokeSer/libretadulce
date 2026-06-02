@@ -45,6 +45,13 @@ class _HistoryPageState extends State<HistoryPage> {
     });
   }
 
+  bool _isToday(DateTime date) {
+    final now = DateTime.now();
+    return date.year == now.year &&
+        date.month == now.month &&
+        date.day == now.day;
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -79,7 +86,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
               IconButton(
                 icon: const Icon(Icons.chevron_right, size: 32),
-                onPressed: () => _changeDate(1),
+                onPressed: _isToday(_selectedDate) ? null : () => _changeDate(1),
                 color: Colors.teal,
                 tooltip: l10n.historyNextDay,
               ),
@@ -689,7 +696,7 @@ class _HistoryPageState extends State<HistoryPage> {
     final List<Map<String, dynamic>> editableItems = entry.items.map((i) => {
       'name': i.name,
       'grams': i.grams,
-      'carbsPer100g': (i.carbs / i.grams * 100),
+      'carbsPer100g': i.grams > 0 ? (i.carbs / i.grams * 100) : 0.0,
     }).toList();
     final List<TextEditingController> gramsControllers = editableItems
         .map((i) => TextEditingController(text: (i['grams'] as double).toStringAsFixed(0)))

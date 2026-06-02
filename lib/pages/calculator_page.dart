@@ -40,6 +40,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
   double _totalRaciones = 0.0;
 
   final List<Map<String, dynamic>> _mealItems = [];
+  int _mealItemCounter = 0;
   MealType? _selectedMealType;
   DateTime _selectedTime = DateTime.now();
 
@@ -134,6 +135,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
       HapticFeedback.lightImpact();
       setState(() {
         _mealItems.add({
+          'id': 'meal_${_mealItemCounter++}',
           'name': _selectedFoodName,
           'grams': _calculatedGrams,
           'carbs': _totalCarbs,
@@ -870,7 +872,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 itemBuilder: (context, index) {
                   final item = _mealItems[index];
                   return Dismissible(
-                    key: ValueKey('meal_item_$index-${item['name']}'),
+                    key: ValueKey(item['id']),
                     direction: DismissDirection.endToStart,
                     dismissThresholds:
                         const {DismissDirection.endToStart: 0.2},

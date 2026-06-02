@@ -72,6 +72,7 @@ class Food {
     bool clearFats = false,
     bool? isFavorite,
     String? productUrl,
+    bool clearProductUrl = false,
   }) {
     return Food(
       id: id ?? this.id,
@@ -83,7 +84,8 @@ class Food {
           clearProteins ? null : (proteinsPer100g ?? this.proteinsPer100g),
       fatsPer100g: clearFats ? null : (fatsPer100g ?? this.fatsPer100g),
       isFavorite: isFavorite ?? this.isFavorite,
-      productUrl: productUrl ?? this.productUrl,
+      productUrl:
+          clearProductUrl ? null : (productUrl ?? this.productUrl),
     );
   }
 }

@@ -187,6 +187,7 @@ class _AdminPageState extends State<AdminPage> {
                     fatsPer100g: fat,
                     clearFats: fat == null,
                     productUrl: url.isNotEmpty ? url : null,
+                    clearProductUrl: url.isEmpty,
                   );
                   await FoodRepository.updateGlobalFood(food.id, updated);
                   if (dialogContext.mounted) {
