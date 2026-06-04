@@ -80,7 +80,9 @@ class StatCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: Semantics(
+        label: '$title: $value',
+        child: Column(
         children: [
           Text(
             title,
@@ -100,6 +102,7 @@ class StatCard extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }
