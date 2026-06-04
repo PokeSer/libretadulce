@@ -339,7 +339,12 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
 
     final unitSuffix = l10n.calcBolusUnitSuffix;
 
-    return Row(
+    return Semantics(
+      liveRegion: true,
+      label: '${l10n.calcBolusMeal}: ${_insulinSettings!.formatBolus(bolusRounded)} $unitSuffix, '
+          '${l10n.calcBolusCorrection}: ${correctionRounded != null ? _insulinSettings!.formatBolus(correctionRounded) : '--'} $unitSuffix, '
+          '${l10n.calcBolusTotal}: ${_insulinSettings!.formatBolus(total)} $unitSuffix',
+      child: Row(
       children: [
         Expanded(
           child: _bolusItem(
@@ -373,6 +378,7 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
           ),
         ),
       ],
+    ),
     );
   }
 
@@ -437,8 +443,8 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
           unselectedLabelColor: AppColors.textSecondary(context),
           indicatorColor: AppColors.primary(context),
           tabs: [
-            Tab(icon: const Icon(Icons.scale), text: l10n.calcTabGrams),
-            Tab(icon: const Icon(Icons.restaurant_menu), text: l10n.calcTabRations),
+            Tab(icon: const ExcludeSemantics(child: Icon(Icons.scale)), text: l10n.calcTabGrams),
+            Tab(icon: const ExcludeSemantics(child: Icon(Icons.restaurant_menu)), text: l10n.calcTabRations),
           ],
         ),
         Expanded(
@@ -624,7 +630,12 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
                     : AppColors.insulinGreen(context),
                 borderRadius: BorderRadius.circular(AppDimens.radiusXxl),
               ),
-              child: Column(
+              child: Semantics(
+                liveRegion: true,
+                label: !_isInverseMode
+                    ? '${l10n.calcGramsHC}: ${_totalCarbs.toStringAsFixed(1)}, ${l10n.calcRations}: ${_totalRaciones.toStringAsFixed(1)}'
+                    : '${l10n.calcOfFood(_selectedFoodName ?? 'alimento')}: ${_calculatedGrams.toStringAsFixed(0)}g',
+                child: Column(
                 children: [
                   Text(
                     !_isInverseMode
@@ -708,6 +719,7 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
                   ),
                 ],
               ),
+              ),
             ),
 
             const SizedBox(height: 24),
@@ -780,8 +792,8 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
                       ),
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(right: 20),
-                      child: const Icon(Icons.delete,
-                          color: Colors.white, size: 28),
+                      child: const ExcludeSemantics(child: Icon(Icons.delete,
+                          color: Colors.white, size: 28)),
                     ),
                     confirmDismiss: (direction) => showConfirmDeleteDialog(
                       context,
