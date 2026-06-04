@@ -83,7 +83,9 @@ class _ProfilePageState extends State<ProfilePage> {
             borderRadius: AppDimens.radiusDialog,
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              leading: Icon(Icons.favorite, color: AppColors.error(context), semanticLabel: ''),
+              leading: ExcludeSemantics(
+                child: Icon(Icons.favorite, color: AppColors.error(context)),
+              ),
               title: Text(
                 l10n.profileAboutTitle,
                 style: AppTextStyles.cardTitle,
@@ -92,7 +94,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 l10n.profileAboutSubtitle,
                 style: AppTextStyles.cardSubtitle(context),
               ),
-              trailing: Icon(Icons.chevron_right, color: AppColors.textMuted(context), semanticLabel: ''),
+              trailing: ExcludeSemantics(
+                child: Icon(Icons.chevron_right, color: AppColors.textMuted(context)),
+              ),
               onTap: () {
                 showDialog(
                   context: context,
