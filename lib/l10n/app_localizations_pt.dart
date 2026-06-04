@@ -600,6 +600,9 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get serviceError => 'Ocorreu um erro. Tente novamente.';
+
+  @override
   String get foodsAddTitle => 'Adicionar alimento';
 
   @override

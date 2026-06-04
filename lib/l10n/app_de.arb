@@ -191,6 +191,7 @@
   "globalNotFoundDB": "Produkt nicht in der Datenbank gefunden",
   "globalConnectionError": "Verbindungsfehler",
   "globalErrorFirebase": "Firebase-Fehler: {error}",
+  "serviceError": "Ein Fehler ist aufgetreten. Bitte versuche es erneut.",
 
   "foodsAddTitle": "Lebensmittel hinzufügen",
   "foodsScanTooltip": "Barcode scannen",

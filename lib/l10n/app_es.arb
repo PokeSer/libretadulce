@@ -378,6 +378,7 @@
       }
     }
   },
+  "serviceError": "Ha ocurrido un error. Inténtalo de nuevo.",
 
   "foodsAddTitle": "Añadir alimento",
   "foodsScanTooltip": "Escanear código",

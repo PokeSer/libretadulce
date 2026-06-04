@@ -1166,6 +1166,12 @@ abstract class AppLocalizations {
   /// **'Error de Firebase: {error}'**
   String globalErrorFirebase(String error);
 
+  /// No description provided for @serviceError.
+  ///
+  /// In es, this message translates to:
+  /// **'Ha ocurrido un error. Inténtalo de nuevo.'**
+  String get serviceError;
+
   /// No description provided for @foodsAddTitle.
   ///
   /// In es, this message translates to:

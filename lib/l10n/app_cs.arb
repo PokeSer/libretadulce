@@ -191,6 +191,7 @@
   "globalNotFoundDB": "Produkt nenalezen v databázi",
   "globalConnectionError": "Chyba připojení",
   "globalErrorFirebase": "Chyba Firebase: {error}",
+  "serviceError": "Došlo k chybě. Zkuste to prosím znovu.",
 
   "foodsAddTitle": "Přidat potravinu",
   "foodsScanTooltip": "Naskenovat čárový kód",

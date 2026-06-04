@@ -598,6 +598,9 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get serviceError => 'Došlo k chybě. Zkuste to prosím znovu.';
+
+  @override
   String get foodsAddTitle => 'Přidat potravinu';
 
   @override

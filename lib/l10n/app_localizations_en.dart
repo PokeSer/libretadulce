@@ -599,6 +599,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get serviceError => 'An error occurred. Please try again.';
+
+  @override
   String get foodsAddTitle => 'Add food';
 
   @override

@@ -603,6 +603,9 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get serviceError => 'Une erreur est survenue. Veuillez réessayer.';
+
+  @override
   String get foodsAddTitle => 'Ajouter un aliment';
 
   @override

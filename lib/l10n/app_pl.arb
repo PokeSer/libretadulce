@@ -191,6 +191,7 @@
   "globalNotFoundDB": "Produkt nie znaleziony w bazie",
   "globalConnectionError": "Błąd połączenia",
   "globalErrorFirebase": "Błąd Firebase: {error}",
+  "serviceError": "Wystąpił błąd. Spróbuj ponownie.",
 
   "foodsAddTitle": "Dodaj produkt",
   "foodsScanTooltip": "Skanuj kod kreskowy",

@@ -600,6 +600,9 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get serviceError => 'Si è verificato un errore. Riprova.';
+
+  @override
   String get foodsAddTitle => 'Aggiungi alimento';
 
   @override
