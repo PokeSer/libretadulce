@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
@@ -14,7 +13,11 @@ import '../services/food_repository.dart';
 import '../services/meal_history_service.dart';
 import '../services/insulin_settings_service.dart';
 import '../models/insulin_settings.dart';
+import '../widgets/confirm_delete_dialog.dart';
+import '../widgets/date_time_picker_tile.dart';
 import '../widgets/food_search_sheet.dart';
+import '../widgets/glucose_input_field.dart';
+import '../widgets/meal_type_chip_selector.dart';
 import 'insulin_settings_page.dart';
 import '../l10n/app_localizations.dart';
 import '../core/utils/meal_type_localizer.dart';
@@ -63,46 +66,6 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
   Future<void> _saveLastMealType(MealType type) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefsLastMealTypeKey, type.rawValue);
-  }
-
-  Future<void> _pickDate() async {
-    final now = DateTime.now();
-    final date = await showDatePicker(
-      context: context,
-      initialDate: _selectedTime,
-      firstDate: DateTime(2020),
-      lastDate: now,
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context),
-        child: child!,
-      ),
-    );
-    if (date != null) {
-      setState(() => _selectedTime = DateTime(
-        date.year, date.month, date.day,
-        _selectedTime.hour, _selectedTime.minute,
-      ));
-    }
-  }
-
-  Future<void> _pickTime() async {
-    final now = DateTime.now();
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay(hour: _selectedTime.hour, minute: _selectedTime.minute),
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context),
-        child: child!,
-      ),
-    );
-    if (time != null) {
-      final chosen = DateTime(
-        _selectedTime.year, _selectedTime.month, _selectedTime.day,
-        time.hour, time.minute,
-      );
-      final constrained = chosen.isAfter(now) ? now : chosen;
-      setState(() => _selectedTime = constrained);
-    }
   }
 
   void _calculateMacros() {
@@ -820,27 +783,11 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
                       child: const Icon(Icons.delete,
                           color: Colors.white, size: 28),
                     ),
-                    confirmDismiss: (direction) async {
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder: (ctx) => AlertDialog(
-                          title: Text(l10n.calcDeleteFromPlate),
-                          content: Text(l10n.historyDeleteConfirm),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.of(ctx).pop(false),
-                              child: Text(l10n.historyCancelButton),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(ctx).pop(true),
-                              child: Text(l10n.historyDeleteButton,
-                                  style: const TextStyle(color: Colors.redAccent)),
-                            ),
-                          ],
-                        ),
-                      );
-                      return confirm ?? false;
-                    },
+                    confirmDismiss: (direction) => showConfirmDeleteDialog(
+                      context,
+                      title: l10n.calcDeleteFromPlate,
+                      content: l10n.historyDeleteConfirm,
+                    ),
                     onDismissed: (direction) => _removeMealItem(index),
                     child: Card(
                       margin: const EdgeInsets.only(bottom: 8),
@@ -959,136 +906,28 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
               ),
               const SizedBox(height: 16),
 
-              Text(
-                l10n.calcMealTypeLabel,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color:
-                      AppColors.textSecondary(context),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 6,
-                children: MealType.mealList.map((type) {
-                  final isSelected = _selectedMealType == type;
-                  return Semantics(
-                    checked: isSelected,
-                    label: mealTypeLocalizedLabel(type, l10n),
-                    child: ChoiceChip(
-                      label: Text(mealTypeLocalizedLabel(type, l10n),
-                          style: const TextStyle(fontSize: 12)),
-                      selected: isSelected,
-                      selectedColor: Colors.teal.withValues(alpha: 0.3),
-                      checkmarkColor: Colors.teal,
-                      onSelected: (_) {
-                        setState(() => _selectedMealType = type);
-                        _saveLastMealType(type);
-                      },
-                    ),
-                  );
-                }).toList(),
+              MealTypeChipSelector(
+                selected: _selectedMealType,
+                onChanged: (type) {
+                  setState(() => _selectedMealType = type);
+                  _saveLastMealType(type);
+                },
+                l10n: l10n,
               ),
 
               const SizedBox(height: 12),
-              Semantics(
-                button: true,
+              DateTimePickerTile(
+                selectedTime: _selectedTime,
+                onChanged: (dt) => setState(() => _selectedTime = dt),
+                mode: PickerMode.date,
                 label: l10n.calcDateLabel,
-                child: InkWell(
-                  onTap: _pickDate,
-                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isDark
-                            ? Colors.grey.shade700
-                            : Colors.grey.shade400,
-                      ),
-                      borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                    ),
-                    child: Row(
-                      children: [
-                        ExcludeSemantics(child: Icon(Icons.calendar_today,
-                            color: Theme.of(context).colorScheme.primary)),
-                        const SizedBox(width: 12),
-                        Text(
-                          l10n.calcDateLabel,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: isDark
-                                ? Colors.grey.shade400
-                                : Colors.grey.shade600,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          DateFormat.yMMMd().format(_selectedTime),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const ExcludeSemantics(child: Icon(Icons.arrow_drop_down, color: Colors.grey)),
-                      ],
-                    ),
-                  ),
-                ),
               ),
               const SizedBox(height: 8),
-              Semantics(
-                button: true,
+              DateTimePickerTile(
+                selectedTime: _selectedTime,
+                onChanged: (dt) => setState(() => _selectedTime = dt),
+                mode: PickerMode.time,
                 label: l10n.calcTimeLabel,
-                child: InkWell(
-                  onTap: _pickTime,
-                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: isDark
-                            ? Colors.grey.shade700
-                            : Colors.grey.shade400,
-                      ),
-                      borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                    ),
-                    child: Row(
-                      children: [
-                        ExcludeSemantics(child: Icon(Icons.access_time,
-                            color: Theme.of(context).colorScheme.primary)),
-                        const SizedBox(width: 12),
-                        Text(
-                          l10n.calcTimeLabel,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: isDark
-                                ? Colors.grey.shade400
-                                : Colors.grey.shade600,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          DateFormat.Hm().format(_selectedTime),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                        const ExcludeSemantics(child: Icon(Icons.arrow_drop_down, color: Colors.grey)),
-                      ],
-                    ),
-                  ),
-                ),
               ),
 
               if (_settingsLoaded && _insulinSettings != null) ...[
@@ -1121,20 +960,10 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
                         ],
                       ),
                       const SizedBox(height: 16),
-                      TextField(
+                      GlucoseInputField(
                         controller: _glucosaController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            decimal: true),
-                        decoration: InputDecoration(
-                          labelText: l10n.calcGlucoseLabel,
-                          hintText: l10n.calcGlucoseHint,
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
-                          prefixIcon: const Icon(Icons.monitor_heart),
-                          suffixText: _insulinSettings?.glucoseLabel() ?? l10n.calcGlucoseSuffix,
-                          filled: true,
-                          fillColor: AppColors.surfaceBg(context),
-                        ),
+                        settings: _insulinSettings,
+                        l10n: l10n,
                         onChanged: (_) => setState(() {}),
                       ),
                       const SizedBox(height: 16),

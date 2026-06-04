@@ -19,7 +19,11 @@ import '../models/insulin_settings.dart';
 import '../services/meal_history_service.dart';
 import '../services/insulin_settings_service.dart';
 import '../widgets/app_common_widgets.dart';
+import '../widgets/confirm_delete_dialog.dart';
+import '../widgets/date_time_picker_tile.dart';
 import '../widgets/food_search_sheet.dart';
+import '../widgets/glucose_input_field.dart';
+import '../widgets/meal_type_chip_selector.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -239,22 +243,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                 _showEditDialog(entry);
                                 return false;
                               }
-                              return await showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: Text(l10n.historyDeleteTitle),
-                                  content: Text(l10n.historyDeleteConfirm),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(false),
-                                      child: Text(l10n.historyCancelButton),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(true),
-                                      child: Text(l10n.historyDeleteButton, style: const TextStyle(color: Colors.redAccent)),
-                                    ),
-                                  ],
-                                ),
+                              return showConfirmDeleteDialog(
+                                context,
+                                title: l10n.historyDeleteTitle,
+                                content: l10n.historyDeleteConfirm,
                               );
                             },
                             onDismissed: (direction) {
@@ -319,26 +311,10 @@ class _HistoryPageState extends State<HistoryPage> {
                                               tooltip: l10n.historyDeleteTooltip(mealTypeLocalizedLabel(entry.mealType, l10n)),
                                               onPressed: () async {
                                                 final messenger = ScaffoldMessenger.of(context);
-                                                final confirmed = await showDialog<bool>(
-                                                  context: context,
-                                                  builder: (ctx) => AlertDialog(
-                                                    title: Text(l10n.historyDeleteTitle),
-                                                    content: Text(l10n.historyDeleteConfirm),
-                                                    actions: [
-                                                      TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.of(ctx).pop(false),
-                                                        child: Text(l10n.historyCancelButton),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.of(ctx).pop(true),
-                                                        child: Text(l10n.historyDeleteButton,
-                                                            style: const TextStyle(
-                                                                color: Colors.redAccent)),
-                                                      ),
-                                                    ],
-                                                  ),
+                                                final confirmed = await showConfirmDeleteDialog(
+                                                  context,
+                                                  title: l10n.historyDeleteTitle,
+                                                  content: l10n.historyDeleteConfirm,
                                                 );
                                                 if (confirmed == true && mounted) {
                                                   final deletedEntry = entry;
@@ -785,119 +761,26 @@ class _HistoryPageState extends State<HistoryPage> {
                       ),
                       const SizedBox(height: 20),
 
-                      Text(l10n.calcMealTypeLabel,
-                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
-                              color: AppColors.textSecondary(context))),
-                      const SizedBox(height: 8),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 6,
-                        children: MealType.mealList.map((type) {
-                          final isSelected = mealType == type;
-                          return Semantics(
-                            checked: isSelected,
-                            label: mealTypeLocalizedLabel(type, l10n),
-                            child: ChoiceChip(
-                              label: Text(mealTypeLocalizedLabel(type, l10n), style: const TextStyle(fontSize: 12)),
-                              selected: isSelected,
-                              selectedColor: Colors.teal.withValues(alpha: 0.3),
-                              checkmarkColor: Colors.teal,
-                              onSelected: (_) => setDialogState(() => mealType = type),
-                            ),
-                          );
-                        }).toList(),
+                      MealTypeChipSelector(
+                        selected: mealType,
+                        onChanged: (type) => setDialogState(() => mealType = type),
+                        l10n: l10n,
                       ),
                       const SizedBox(height: 16),
 
-                      Semantics(
-                        button: true,
+                      DateTimePickerTile(
+                        selectedTime: selectedTime,
+                        onChanged: (dt) => setDialogState(() => selectedTime = dt),
+                        mode: PickerMode.date,
                         label: l10n.calcDateLabel,
-                        child: InkWell(
-                          onTap: () async {
-                            final date = await showDatePicker(
-                              context: ctx,
-                              initialDate: selectedTime,
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime.now(),
-                              builder: (context, child) => MediaQuery(
-                                data: MediaQuery.of(context),
-                                child: child!,
-                              ),
-                            );
-                            if (date != null) {
-                              setDialogState(() => selectedTime = DateTime(
-                                date.year, date.month, date.day,
-                                selectedTime.hour, selectedTime.minute,
-                              ));
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.borderSecondary(context)),
-                              borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                            ),
-                            child: Row(
-                              children: [
-                                ExcludeSemantics(child: Icon(Icons.calendar_today, color: Theme.of(ctx).colorScheme.primary)),
-                                const SizedBox(width: 12),
-                                Text(l10n.calcDateLabel,
-                                     style: TextStyle(fontSize: 14, color: AppColors.textSecondary(context))),
-                                const Spacer(),
-                                Text(DateFormat.yMMMd().format(selectedTime),
-                                    style: AppTextStyles.sectionTitle),
-                                const Icon(Icons.arrow_drop_down, color: Colors.grey),
-                              ],
-                            ),
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 8),
 
-                      Semantics(
-                        button: true,
+                      DateTimePickerTile(
+                        selectedTime: selectedTime,
+                        onChanged: (dt) => setDialogState(() => selectedTime = dt),
+                        mode: PickerMode.time,
                         label: l10n.calcTimeLabel,
-                        child: InkWell(
-                          onTap: () async {
-                            final now = DateTime.now();
-                            final time = await showTimePicker(
-                              context: ctx,
-                              initialTime: TimeOfDay(hour: selectedTime.hour, minute: selectedTime.minute),
-                              builder: (context, child) => MediaQuery(
-                                data: MediaQuery.of(context),
-                                child: child!,
-                              ),
-                            );
-                            if (time != null) {
-                              final chosen = DateTime(
-                                selectedTime.year, selectedTime.month, selectedTime.day,
-                                time.hour, time.minute,
-                              );
-                              setDialogState(() => selectedTime = chosen.isAfter(now) ? now : chosen);
-                            }
-                          },
-                          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.borderSecondary(context)),
-                              borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                            ),
-                            child: Row(
-                              children: [
-                                ExcludeSemantics(child: Icon(Icons.access_time, color: Theme.of(ctx).colorScheme.primary)),
-                                const SizedBox(width: 12),
-                                Text(l10n.calcTimeLabel,
-                                     style: TextStyle(fontSize: 14, color: AppColors.textSecondary(context))),
-                                const Spacer(),
-                                Text(DateFormat.Hm().format(selectedTime),
-                                    style: AppTextStyles.sectionTitle),
-                                const Icon(Icons.arrow_drop_down, color: Colors.grey),
-                              ],
-                            ),
-                          ),
-                        ),
                       ),
                       const SizedBox(height: 20),
 
@@ -996,18 +879,10 @@ class _HistoryPageState extends State<HistoryPage> {
 
                       const SizedBox(height: 16),
 
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: l10n.calcGlucoseLabel,
-                          hintText: l10n.calcGlucoseHint,
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
-                          prefixIcon: const Icon(Icons.monitor_heart),
-                          suffixText: settings?.glucoseLabel() ?? l10n.calcGlucoseSuffix,
-                          filled: true,
-                          fillColor: AppColors.surfaceBg(context),
-                        ),
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      GlucoseInputField(
                         controller: glucoseController,
+                        settings: settings,
+                        l10n: l10n,
                         onChanged: (v) {
                           final val = double.tryParse(v);
                           if (val != null) {
