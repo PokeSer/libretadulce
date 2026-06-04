@@ -81,10 +81,11 @@ class SettingsPage extends StatelessWidget {
           children: [
             ListTile(
               contentPadding: EdgeInsets.zero,
-              leading: Icon(
-                _themeIcon(currentTheme),
-                color: primary,
-                semanticLabel: '',
+              leading: ExcludeSemantics(
+                child: Icon(
+                  _themeIcon(currentTheme),
+                  color: primary,
+                ),
               ),
               title: Text(
                 l10n.profileThemeLabel,
@@ -137,7 +138,9 @@ class SettingsPage extends StatelessWidget {
       borderRadius: 14,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        leading: Icon(Icons.water_drop, color: primary, semanticLabel: ''),
+        leading: ExcludeSemantics(
+          child: Icon(Icons.water_drop, color: primary),
+        ),
         title: Text(
           l10n.profileInsulinSettings,
           style: AppTextStyles.cardTitle,
@@ -146,7 +149,9 @@ class SettingsPage extends StatelessWidget {
           l10n.profileInsulinSettingsDesc,
           style: AppTextStyles.cardSubtitle(context),
         ),
-        trailing: Icon(Icons.chevron_right, color: AppColors.textMuted(context), semanticLabel: ''),
+        trailing: ExcludeSemantics(
+          child: Icon(Icons.chevron_right, color: AppColors.textMuted(context)),
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCardLg)),
         onTap: () {
           Navigator.push(
