@@ -198,7 +198,9 @@ class _HomePageState extends State<HomePage> {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.download_rounded, color: primary, size: 40),
+              ExcludeSemantics(
+                child: Icon(Icons.download_rounded, color: primary, size: 40),
+              ),
               const SizedBox(height: 16),
               Text(
                 l10n.updateDownloading,
