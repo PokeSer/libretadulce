@@ -76,6 +76,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 icon: const Icon(Icons.chevron_left, size: 32),
                 onPressed: () => _changeDate(-1),
                 color: AppColors.primary(context),
+                tooltip: l10n.historyPrevDay,
               ),
               Column(
                 children: [
@@ -102,6 +103,7 @@ class _HistoryPageState extends State<HistoryPage> {
           child: Row(
             children: [
               Semantics(
+                checked: _viewMode == 0,
                 label: l10n.historyDailyAccessibility,
                 child: ChoiceChip(
                   label: Text(l10n.historyDaily),
@@ -113,6 +115,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
               const SizedBox(width: 8),
               Semantics(
+                checked: _viewMode == 1,
                 label: l10n.historyWeeklyAccessibility,
                 child: ChoiceChip(
                   label: Text(l10n.historyWeekly),
@@ -226,7 +229,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               ),
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 20),
-                              child: const Icon(Icons.edit, color: Colors.white, size: 30),
+                              child: const ExcludeSemantics(child: Icon(Icons.edit, color: Colors.white, size: 30)),
                             ),
                             secondaryBackground: Container(
                               margin: const EdgeInsets.only(bottom: 16),
@@ -236,7 +239,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               ),
                               alignment: Alignment.centerRight,
                               padding: const EdgeInsets.only(right: 20),
-                              child: const Icon(Icons.delete, color: Colors.white, size: 30),
+                              child: const ExcludeSemantics(child: Icon(Icons.delete, color: Colors.white, size: 30)),
                             ),
                             confirmDismiss: (direction) async {
                               if (direction == DismissDirection.startToEnd) {
