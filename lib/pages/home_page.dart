@@ -35,18 +35,22 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkAdminStatus() async {
     if (user != null) {
-      final userDoc = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
-      
-      if (!userDoc.exists) {
-        await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
-          'email': user!.email,
-          'role': 'user',
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-      } else {
-        if (userDoc.data()?['role'] == 'admin') {
-          if (mounted) setState(() => _isAdmin = true);
+      try {
+        final userDoc = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
+
+        if (!userDoc.exists) {
+          await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
+            'email': user!.email,
+            'role': 'user',
+            'createdAt': FieldValue.serverTimestamp(),
+          });
+        } else {
+          if (userDoc.data()?['role'] == 'admin') {
+            if (mounted) setState(() => _isAdmin = true);
+          }
         }
+      } catch (e) {
+        debugPrint('[HomePage._checkAdminStatus] Error: $e');
       }
     }
   }

@@ -30,6 +30,16 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       }
+    } catch (e) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(l10n.serviceError),
+            backgroundColor: AppColors.error(context),
+          ),
+        );
+      }
     }
 
     if (mounted) {

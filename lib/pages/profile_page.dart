@@ -143,7 +143,15 @@ class _ProfilePageState extends State<ProfilePage> {
                       ElevatedButton(
                         onPressed: () async {
                           Navigator.pop(ctx);
-                          await authService.signOut();
+                          try {
+                            await authService.signOut();
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(l10n.serviceError)),
+                              );
+                            }
+                          }
                         },
                         style: ElevatedButton.styleFrom(backgroundColor: AppColors.error(context)),
                         child: Text(l10n.profileLogoutButton, style: TextStyle(color: AppColors.onError(context))),

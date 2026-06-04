@@ -413,22 +413,30 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
                 final url = urlController.text.trim();
 
                 if (name.isNotEmpty && carbs != null && user != null) {
-                  await FirebaseFirestore.instance
-                      .collection('food_requests')
-                      .add({
-                    'name': name,
-                    'brand': brand,
-                    'carbsPer100g': carbs,
-                    'productUrl': url,
-                    'status': 'pending',
-                    'userId': user!.uid,
-                    'timestamp': FieldValue.serverTimestamp(),
-                  });
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(l10n.globalRequestSent)),
-                    );
+                  try {
+                    await FirebaseFirestore.instance
+                        .collection('food_requests')
+                        .add({
+                      'name': name,
+                      'brand': brand,
+                      'carbsPer100g': carbs,
+                      'productUrl': url,
+                      'status': 'pending',
+                      'userId': user!.uid,
+                      'timestamp': FieldValue.serverTimestamp(),
+                    });
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l10n.globalRequestSent)),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(l10n.serviceError)),
+                      );
+                    }
                   }
                 }
               },

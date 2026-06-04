@@ -22,33 +22,59 @@ class _AdminPageState extends State<AdminPage> {
     String requestId,
     Map<String, dynamic> data,
   ) async {
-    await AdminService.approveRequest(requestId, data);
-
-    if (mounted) {
-      final l10n = AppLocalizations.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.adminApproved)),
-      );
+    try {
+      await AdminService.approveRequest(requestId, data);
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.adminApproved)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.serviceError)),
+        );
+      }
     }
   }
 
   Future<void> _rejectRequest(String requestId) async {
-    await AdminService.rejectRequest(requestId);
-    if (mounted) {
-      final l10n = AppLocalizations.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.adminRejected)),
-      );
+    try {
+      await AdminService.rejectRequest(requestId);
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.adminRejected)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.serviceError)),
+        );
+      }
     }
   }
 
   Future<void> _deleteGlobalFood(String docId) async {
-    await FoodRepository.deleteGlobalFood(docId);
-    if (mounted) {
-      final l10n = AppLocalizations.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.adminDeleted)),
-      );
+    try {
+      await FoodRepository.deleteGlobalFood(docId);
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.adminDeleted)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.serviceError)),
+        );
+      }
     }
   }
 
@@ -189,12 +215,20 @@ class _AdminPageState extends State<AdminPage> {
                     productUrl: url.isNotEmpty ? url : null,
                     clearProductUrl: url.isEmpty,
                   );
-                  await FoodRepository.updateGlobalFood(food.id, updated);
-                  if (dialogContext.mounted) {
-                    Navigator.pop(dialogContext);
-                    ScaffoldMessenger.of(dialogContext).showSnackBar(
-                      SnackBar(content: Text(l10n.adminUpdated)),
-                    );
+                  try {
+                    await FoodRepository.updateGlobalFood(food.id, updated);
+                    if (dialogContext.mounted) {
+                      Navigator.pop(dialogContext);
+                      ScaffoldMessenger.of(dialogContext).showSnackBar(
+                        SnackBar(content: Text(l10n.adminUpdated)),
+                      );
+                    }
+                  } catch (e) {
+                    if (dialogContext.mounted) {
+                      ScaffoldMessenger.of(dialogContext).showSnackBar(
+                        SnackBar(content: Text(l10n.serviceError)),
+                      );
+                    }
                   }
                 }
               },

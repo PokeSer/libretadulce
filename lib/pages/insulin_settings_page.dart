@@ -99,15 +99,25 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
       usesMmolL: _usesMmolL,
     );
 
-    await InsulinSettingsService.saveSettings(_user.uid, settings);
+    try {
+      await InsulinSettingsService.saveSettings(_user.uid, settings);
 
-    if (mounted) {
-      final l10n = AppLocalizations.of(context);
-      setState(() => _isSaving = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.insulinSaved)),
-      );
-      Navigator.pop(context);
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.insulinSaved)),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        final l10n = AppLocalizations.of(context);
+        setState(() => _isSaving = false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.serviceError)),
+        );
+      }
     }
   }
 
