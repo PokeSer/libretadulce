@@ -13,4 +13,7 @@ abstract final class FirestorePaths {
 
   static CollectionReference<Map<String, dynamic>> userHistory(String uid) =>
       userDoc(uid).collection('history');
+
+  static DocumentReference<Map<String, dynamic>> userInsulinSettings(String uid) =>
+      userDoc(uid).collection('settings').doc('insulin');
 }

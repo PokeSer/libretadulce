@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../core/constants/app_paths.dart';
+import '../core/exceptions/app_exception.dart';
 import '../models/food.dart';
 
 class AdminService {
@@ -22,35 +23,49 @@ class AdminService {
           .map((doc) =>
               FoodRequest.fromFirestore(doc.id, doc.data()))
           .toList();
+    }).handleError((error, stack) {
+      handleStreamError('AdminService.watchPendingRequests', error, stack);
     });
   }
 
+  /// Aprueba una solicitud de alimento usando un WriteBatch para
+  /// garantizar atomicidad (add a globalFoods + update del request).
   static Future<void> approveRequest(
       String requestId, Map<String, dynamic> data) async {
-    final foodData = <String, dynamic>{
-      'name': data['name'],
-      'carbsPer100g': data['carbsPer100g'],
-      'approvedAt': FieldValue.serverTimestamp(),
-    };
-    if ((data['brand'] as String?)?.isNotEmpty == true) {
-      foodData['brand'] = data['brand'];
-    }
-    if (data['productUrl'] != null && (data['productUrl'] as String).isNotEmpty) {
-      foodData['productUrl'] = data['productUrl'];
-    }
-    await FirebaseFirestore.instance
-        .collection(FirestorePaths.globalFoods)
-        .add(foodData);
-    await _requests.doc(requestId).update({
-      'status': 'approved',
-      'resolvedAt': FieldValue.serverTimestamp(),
+    await wrapServiceCall('AdminService.approveRequest', () async {
+      final batch = FirebaseFirestore.instance.batch();
+
+      final foodRef = FirebaseFirestore.instance
+          .collection(FirestorePaths.globalFoods)
+          .doc();
+      final foodData = <String, dynamic>{
+        'name': data['name'],
+        'carbsPer100g': data['carbsPer100g'],
+        'approvedAt': FieldValue.serverTimestamp(),
+      };
+      if ((data['brand'] as String?)?.isNotEmpty == true) {
+        foodData['brand'] = data['brand'];
+      }
+      if (data['productUrl'] != null && (data['productUrl'] as String).isNotEmpty) {
+        foodData['productUrl'] = data['productUrl'];
+      }
+      batch.set(foodRef, foodData);
+
+      batch.update(_requests.doc(requestId), {
+        'status': 'approved',
+        'resolvedAt': FieldValue.serverTimestamp(),
+      });
+
+      await batch.commit();
     });
   }
 
   static Future<void> rejectRequest(String requestId) async {
-    await _requests.doc(requestId).update({
-      'status': 'rejected',
-      'resolvedAt': FieldValue.serverTimestamp(),
+    await wrapServiceCall('AdminService.rejectRequest', () async {
+      await _requests.doc(requestId).update({
+        'status': 'rejected',
+        'resolvedAt': FieldValue.serverTimestamp(),
+      });
     });
   }
 }

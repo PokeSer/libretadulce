@@ -8,17 +8,26 @@ class AppSettings extends ChangeNotifier {
   ThemeMode get themeMode => _themeMode;
 
   Future<void> init() async {
-    final prefs = await SharedPreferences.getInstance();
-    final raw = prefs.getString(_themeKey) ?? 'system';
-    _themeMode = _fromString(raw);
-    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final raw = prefs.getString(_themeKey) ?? 'system';
+      _themeMode = _fromString(raw);
+      notifyListeners();
+    } catch (e) {
+      debugPrint('[AppSettings.init] Error loading theme: $e');
+      _themeMode = ThemeMode.system;
+    }
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
     _themeMode = mode;
     notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_themeKey, _toString(mode));
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_themeKey, _toString(mode));
+    } catch (e) {
+      debugPrint('[AppSettings.setThemeMode] Error saving theme: $e');
+    }
   }
 
   static ThemeMode _fromString(String value) {

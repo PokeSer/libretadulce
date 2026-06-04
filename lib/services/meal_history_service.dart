@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../core/constants/app_paths.dart';
+import '../core/exceptions/app_exception.dart';
 import '../models/food.dart';
 
 class MealHistoryService {
@@ -15,19 +16,23 @@ class MealHistoryService {
     double? glucose,
     DateTime? timestamp,
   }) async {
-    await _history(uid).add({
-      'timestamp': timestamp != null ? Timestamp.fromDate(timestamp) : FieldValue.serverTimestamp(),
-      'mealType': mealType,
-      'totalCarbs': totalCarbs,
-      'totalRations': totalRations,
-      'items': items,
-      'totalBolus': totalBolus,
-      'glucose': glucose,
+    await wrapServiceCall('MealHistoryService.saveEntry', () async {
+      await _history(uid).add({
+        'timestamp': timestamp != null ? Timestamp.fromDate(timestamp) : FieldValue.serverTimestamp(),
+        'mealType': mealType,
+        'totalCarbs': totalCarbs,
+        'totalRations': totalRations,
+        'items': items,
+        'totalBolus': totalBolus,
+        'glucose': glucose,
+      });
     });
   }
 
   static Future<void> deleteEntry(String uid, String entryId) async {
-    await _history(uid).doc(entryId).delete();
+    await wrapServiceCall('MealHistoryService.deleteEntry', () async {
+      await _history(uid).doc(entryId).delete();
+    });
   }
 
   static Future<void> updateEntry(String uid, String entryId, {
@@ -39,31 +44,35 @@ class MealHistoryService {
     double? glucose,
     DateTime? timestamp,
   }) async {
-    await _history(uid).doc(entryId).update({
-      'mealType': mealType,
-      'totalCarbs': totalCarbs,
-      'totalRations': totalRations,
-      'items': items,
-      'totalBolus': totalBolus,
-      'glucose': glucose,
-      if (timestamp != null) 'timestamp': Timestamp.fromDate(timestamp),
+    await wrapServiceCall('MealHistoryService.updateEntry', () async {
+      await _history(uid).doc(entryId).update({
+        'mealType': mealType,
+        'totalCarbs': totalCarbs,
+        'totalRations': totalRations,
+        'items': items,
+        'totalBolus': totalBolus,
+        'glucose': glucose,
+        if (timestamp != null) 'timestamp': Timestamp.fromDate(timestamp),
+      });
     });
   }
 
   static Future<void> restoreEntry(String uid, MealEntry entry) async {
-    await _history(uid).add({
-      'timestamp': Timestamp.fromDate(entry.timestamp),
-      'mealType': entry.mealType.rawValue,
-      'totalCarbs': entry.totalCarbs,
-      'totalRations': entry.totalRations,
-      'items': entry.items.map((i) => {
-        'name': i.name,
-        'grams': i.grams,
-        'carbs': i.carbs,
-        'raciones': i.raciones,
-      }).toList(),
-      'totalBolus': entry.totalBolus,
-      'glucose': entry.glucose,
+    await wrapServiceCall('MealHistoryService.restoreEntry', () async {
+      await _history(uid).add({
+        'timestamp': Timestamp.fromDate(entry.timestamp),
+        'mealType': entry.mealType.rawValue,
+        'totalCarbs': entry.totalCarbs,
+        'totalRations': entry.totalRations,
+        'items': entry.items.map((i) => {
+          'name': i.name,
+          'grams': i.grams,
+          'carbs': i.carbs,
+          'raciones': i.raciones,
+        }).toList(),
+        'totalBolus': entry.totalBolus,
+        'glucose': entry.glucose,
+      });
     });
   }
 
@@ -80,6 +89,8 @@ class MealHistoryService {
       return snapshot.docs
           .map((doc) => MealEntry.fromFirestore(doc.id, doc.data()))
           .toList();
+    }).handleError((error, stack) {
+      handleStreamError('MealHistoryService.watchDaily', error, stack);
     });
   }
 
@@ -94,14 +105,18 @@ class MealHistoryService {
       return snapshot.docs
           .map((doc) => MealEntry.fromFirestore(doc.id, doc.data()))
           .toList();
+    }).handleError((error, stack) {
+      handleStreamError('MealHistoryService.watchRange', error, stack);
     });
   }
 
   static Future<List<MealEntry>> fetchAll(String uid) async {
-    final snapshot =
-        await _history(uid).orderBy('timestamp', descending: false).get();
-    return snapshot.docs
-        .map((doc) => MealEntry.fromFirestore(doc.id, doc.data()))
-        .toList();
+    return wrapServiceCall('MealHistoryService.fetchAll', () async {
+      final snapshot =
+          await _history(uid).orderBy('timestamp', descending: false).get();
+      return snapshot.docs
+          .map((doc) => MealEntry.fromFirestore(doc.id, doc.data()))
+          .toList();
+    });
   }
 }
