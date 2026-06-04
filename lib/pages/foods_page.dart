@@ -478,8 +478,8 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
         unselectedLabelColor: AppColors.textSecondary(context),
         indicatorColor: AppColors.primary(context),
         tabs: [
-          Tab(icon: const Icon(Icons.fastfood), text: l10n.navFoods),
-          Tab(icon: const Icon(Icons.book), text: 'Libreta Dulce'),
+          Tab(icon: const ExcludeSemantics(child: Icon(Icons.fastfood)), text: l10n.navFoods),
+          Tab(icon: const ExcludeSemantics(child: Icon(Icons.book)), text: 'Libreta Dulce'),
         ],
       ),
       body: TabBarView(
@@ -614,8 +614,10 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
                       ),
                       alignment: Alignment.centerRight,
                       padding: const EdgeInsets.only(right: 20),
-                      child: Icon(Icons.delete,
-                          color: AppColors.onError(context), size: 30),
+                      child: ExcludeSemantics(
+                        child: Icon(Icons.delete,
+                            color: AppColors.onError(context), size: 30),
+                      ),
                     ),
                     confirmDismiss: (direction) async {
                       return await showConfirmDeleteDialog(
