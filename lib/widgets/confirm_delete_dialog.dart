@@ -14,6 +14,7 @@ Future<bool> showConfirmDeleteDialog(
       content: Text(content),
       actions: [
         TextButton(
+          autofocus: true,
           onPressed: () => Navigator.of(ctx).pop(false),
           child: Text(l10n.confirmDeleteCancel),
         ),
