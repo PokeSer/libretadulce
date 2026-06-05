@@ -521,7 +521,7 @@ abstract class AppLocalizations {
   /// No description provided for @calcRepeatLastMealTooltip.
   ///
   /// In es, this message translates to:
-  /// **'Rellenar rápido con la última comida'**
+  /// **'Repetir comida'**
   String get calcRepeatLastMealTooltip;
 
   /// No description provided for @calcSaveAsTemplate.

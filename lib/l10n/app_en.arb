@@ -84,7 +84,7 @@
       "mealType": { "type": "String" }
     }
   },
-  "calcRepeatLastMealTooltip": "Quick fill with last meal",
+  "calcRepeatLastMealTooltip": "Repeat last meal",
   "calcSaveAsTemplate": "Save as template",
   "calcTemplateNameHint": "E.g.: My usual breakfast",
   "calcTemplateNameRequired": "Please enter a name for the template",

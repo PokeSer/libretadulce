@@ -79,7 +79,7 @@
   "calcRationsModeAccessibility": "Voglio mangiare razioni, calcola i grammi",
 
   "calcRepeatLastMeal": "Ripeti ultimo {mealType}",
-  "calcRepeatLastMealTooltip": "Riempi rapidamente con l'ultimo pasto",
+  "calcRepeatLastMealTooltip": "Ripeti pasto",
   "calcSaveAsTemplate": "Salva come modello",
   "calcTemplateNameHint": "Es: La mia colazione abituale",
   "calcTemplateNameRequired": "Inserisci un nome per il modello",

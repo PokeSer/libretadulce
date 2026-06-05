@@ -246,8 +246,7 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get calcRepeatLastMealTooltip =>
-      'Remplir rapidement avec le dernier repas';
+  String get calcRepeatLastMealTooltip => 'Recommencer repas';
 
   @override
   String get calcSaveAsTemplate => 'Enregistrer comme modèle';

@@ -243,7 +243,7 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
-  String get calcRepeatLastMealTooltip => 'Rychle vyplnit posledním jídlem';
+  String get calcRepeatLastMealTooltip => 'Opakovat jídlo';
 
   @override
   String get calcSaveAsTemplate => 'Uložit jako šablonu';

@@ -79,7 +79,7 @@
   "calcRationsModeAccessibility": "Chcę zjeść wymienniki, oblicz gramy",
 
   "calcRepeatLastMeal": "Powtórz ostatni {mealType}",
-  "calcRepeatLastMealTooltip": "Szybko wypełnij ostatnim posiłkiem",
+  "calcRepeatLastMealTooltip": "Powtórz posiłek",
   "calcSaveAsTemplate": "Zapisz jako szablon",
   "calcTemplateNameHint": "Np: Moje zwykłe śniadanie",
   "calcTemplateNameRequired": "Wprowadź nazwę szablonu",

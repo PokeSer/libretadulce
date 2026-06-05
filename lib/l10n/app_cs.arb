@@ -79,7 +79,7 @@
   "calcRationsModeAccessibility": "Chci sníst VJ, spočítej gramy",
 
   "calcRepeatLastMeal": "Opakovat poslední {mealType}",
-  "calcRepeatLastMealTooltip": "Rychle vyplnit posledním jídlem",
+  "calcRepeatLastMealTooltip": "Opakovat jídlo",
   "calcSaveAsTemplate": "Uložit jako šablonu",
   "calcTemplateNameHint": "Např: Moje obvyklá snídaně",
   "calcTemplateNameRequired": "Zadejte název šablony",
