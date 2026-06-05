@@ -29,7 +29,8 @@ class CalculatorPage extends StatefulWidget {
   State<CalculatorPage> createState() => _CalculatorPageState();
 }
 
-class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStateMixin {
+class _CalculatorPageState extends State<CalculatorPage>
+    with TickerProviderStateMixin {
   final User? user = FirebaseAuth.instance.currentUser;
 
   late final TabController _tabController;
@@ -38,6 +39,7 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
   String? _selectedFoodName;
   double _selectedCarbsPer100g = 0.0;
   final TextEditingController _inputController = TextEditingController();
+  final FocusNode _inputFocusNode = FocusNode();
 
   double _calculatedGrams = 0.0;
   double _totalCarbs = 0.0;
@@ -96,7 +98,10 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
 
   void _addToMeal() {
     if (_selectedFoodName != null && _calculatedGrams > 0) {
-      HapticFeedback.lightImpact();
+      if (!MediaQuery.of(context).disableAnimations) {
+        HapticFeedback.lightImpact();
+      }
+      _inputFocusNode.unfocus();
       setState(() {
         _mealItems.add({
           'id': 'meal_${_mealItemCounter++}',
@@ -115,6 +120,7 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
     final l10n = AppLocalizations.of(context);
     final savedItems = List<Map<String, dynamic>>.from(_mealItems);
     final savedMealType = _selectedMealType;
+    _inputFocusNode.unfocus();
     setState(() {
       _mealItems.clear();
       _selectedMealType = null;
@@ -218,8 +224,10 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
         double? totalBolus;
         double? glucoseMgdl;
         if (_insulinSettings != null) {
-          final mealBolus = _insulinSettings!.calculateMealBolus(_mealTotalCarbs,
-              mealType: mealTypeEnum);
+          final mealBolus = _insulinSettings!.calculateMealBolus(
+            _mealTotalCarbs,
+            mealType: mealTypeEnum,
+          );
           final glucText = _glucosaController.text.trim();
           double correction = 0;
           if (glucText.isNotEmpty) {
@@ -244,15 +252,26 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
         );
 
         if (mounted) {
-          HapticFeedback.mediumImpact();
-          final localizedType =
-              mealTypeLocalizedLabel(MealType.fromString(selectedMealType!), l10n);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(totalBolus != null
-                ? l10n.calcSaveSuccessBolus(
-                    localizedType, _insulinSettings!.formatBolus(totalBolus))
-                : l10n.calcSaveSuccess(localizedType))),
+          if (!MediaQuery.of(context).disableAnimations) {
+            HapticFeedback.mediumImpact();
+          }
+          final localizedType = mealTypeLocalizedLabel(
+            MealType.fromString(selectedMealType!),
+            l10n,
           );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                totalBolus != null
+                    ? l10n.calcSaveSuccessBolus(
+                        localizedType,
+                        _insulinSettings!.formatBolus(totalBolus),
+                      )
+                    : l10n.calcSaveSuccess(localizedType),
+              ),
+            ),
+          );
+          _inputFocusNode.unfocus();
           _clearMeal();
         }
       } catch (e) {
@@ -294,8 +313,10 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
 
   double? _calculateMealBolus() {
     if (_insulinSettings == null || _mealTotalCarbs <= 0) return null;
-    return _insulinSettings!.calculateMealBolus(_mealTotalCarbs,
-        mealType: _selectedMealType);
+    return _insulinSettings!.calculateMealBolus(
+      _mealTotalCarbs,
+      mealType: _selectedMealType,
+    );
   }
 
   double? _calculateCorrection() {
@@ -334,56 +355,63 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
 
     final total = _insulinSettings!.roundBolus(bolus + (correction ?? 0));
     final bolusRounded = _insulinSettings!.roundBolus(bolus);
-    final correctionRounded =
-        correction != null ? _insulinSettings!.roundBolus(correction) : null;
+    final correctionRounded = correction != null
+        ? _insulinSettings!.roundBolus(correction)
+        : null;
 
     final unitSuffix = l10n.calcBolusUnitSuffix;
 
     return Semantics(
       liveRegion: true,
-      label: '${l10n.calcBolusMeal}: ${_insulinSettings!.formatBolus(bolusRounded)} $unitSuffix, '
+      label:
+          '${l10n.calcBolusMeal}: ${_insulinSettings!.formatBolus(bolusRounded)} $unitSuffix, '
           '${l10n.calcBolusCorrection}: ${correctionRounded != null ? _insulinSettings!.formatBolus(correctionRounded) : '--'} $unitSuffix, '
           '${l10n.calcBolusTotal}: ${_insulinSettings!.formatBolus(total)} $unitSuffix',
       child: Row(
-      children: [
-        Expanded(
-          child: _bolusItem(
-            l10n.calcBolusMeal,
-            _insulinSettings!.formatBolus(bolusRounded),
-            unitSuffix,
-            Colors.teal,
-            isDark,
+        children: [
+          Expanded(
+            child: _bolusItem(
+              l10n.calcBolusMeal,
+              _insulinSettings!.formatBolus(bolusRounded),
+              unitSuffix,
+              Colors.teal,
+              isDark,
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _bolusItem(
-            l10n.calcBolusCorrection,
-            correctionRounded != null
-                ? _insulinSettings!.formatBolus(correctionRounded)
-                : '--',
-            unitSuffix,
-            Colors.orange,
-            isDark,
+          const SizedBox(width: 8),
+          Expanded(
+            child: _bolusItem(
+              l10n.calcBolusCorrection,
+              correctionRounded != null
+                  ? _insulinSettings!.formatBolus(correctionRounded)
+                  : '--',
+              unitSuffix,
+              Colors.orange,
+              isDark,
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: _bolusItem(
-            l10n.calcBolusTotal,
-            _insulinSettings!.formatBolus(total),
-            unitSuffix,
-            Colors.redAccent,
-            isDark,
+          const SizedBox(width: 8),
+          Expanded(
+            child: _bolusItem(
+              l10n.calcBolusTotal,
+              _insulinSettings!.formatBolus(total),
+              unitSuffix,
+              Colors.redAccent,
+              isDark,
+            ),
           ),
-        ),
-      ],
-    ),
+        ],
+      ),
     );
   }
 
   Widget _bolusItem(
-      String label, String value, String unit, Color color, bool isDark) {
+    String label,
+    String value,
+    String unit,
+    Color color,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
@@ -396,7 +424,10 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
           Text(
             label,
             style: TextStyle(
-                fontSize: 11, color: color, fontWeight: FontWeight.w500),
+              fontSize: 11,
+              color: color,
+              fontWeight: FontWeight.w500,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 4),
@@ -411,8 +442,7 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
           ),
           Text(
             unit,
-            style:
-                TextStyle(fontSize: 10, color: color.withValues(alpha: 0.7)),
+            style: TextStyle(fontSize: 10, color: color.withValues(alpha: 0.7)),
             textAlign: TextAlign.center,
           ),
         ],
@@ -424,6 +454,7 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
   void dispose() {
     _tabController.dispose();
     _inputController.dispose();
+    _inputFocusNode.dispose();
     _glucosaController.dispose();
     super.dispose();
   }
@@ -443,8 +474,14 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
           unselectedLabelColor: AppColors.textSecondary(context),
           indicatorColor: AppColors.primary(context),
           tabs: [
-            Tab(icon: const ExcludeSemantics(child: Icon(Icons.scale)), text: l10n.calcTabGrams),
-            Tab(icon: const ExcludeSemantics(child: Icon(Icons.restaurant_menu)), text: l10n.calcTabRations),
+            Tab(
+              icon: const ExcludeSemantics(child: Icon(Icons.scale)),
+              text: l10n.calcTabGrams,
+            ),
+            Tab(
+              icon: const ExcludeSemantics(child: Icon(Icons.restaurant_menu)),
+              text: l10n.calcTabRations,
+            ),
           ],
         ),
         Expanded(
@@ -454,596 +491,679 @@ class _CalculatorPageState extends State<CalculatorPage> with TickerProviderStat
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-
-            StreamBuilder<List<Food>>(
-              stream: FoodRepository.watchFavoriteFoods(user!.uid),
-              builder: (context, snapshot) {
-                final favFoods = snapshot.data ?? [];
-                if (favFoods.isEmpty) return const ExcludeSemantics(child: SizedBox.shrink());
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.calcFavoritesTitle,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color:
-                             AppColors.textSecondary(context),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      height: 42,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: favFoods.length,
-                        itemBuilder: (context, index) {
-                          final food = favFoods[index];
-                          final bool isSelected =
-                              _selectedFoodName == food.displayName;
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: Semantics(
-                              checked: isSelected,
-                              label: food.displayName,
-                              child: FilterChip(
-                                label: Text(
-                                  food.displayName,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+                  StreamBuilder<List<Food>>(
+                    stream: FoodRepository.watchFavoriteFoods(user!.uid),
+                    builder: (context, snapshot) {
+                      final favFoods = snapshot.data ?? [];
+                      if (favFoods.isEmpty)
+                        return const ExcludeSemantics(child: SizedBox.shrink());
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.calcFavoritesTitle,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textSecondary(context),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            height: 48,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: favFoods.length,
+                              itemBuilder: (context, index) {
+                                final food = favFoods[index];
+                                final bool isSelected =
+                                    _selectedFoodName == food.displayName;
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 8),
+                                  child: Semantics(
+                                    checked: isSelected,
+                                    label: food.displayName,
+                                    child: FilterChip(
+                                      label: Text(
+                                        food.displayName,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                        ),
+                                      ),
+                                      selected: isSelected,
+                                      visualDensity: VisualDensity.standard,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 8,
+                                      ),
+                                      onSelected: (_) {
+                                        setState(() {
+                                          _selectedFoodName = food.displayName;
+                                          _selectedCarbsPer100g =
+                                              food.carbsPer100g;
+                                          _calculateMacros();
+                                        });
+                                      },
+                                      backgroundColor: AppColors.surfaceAlt(
+                                        context,
+                                      ),
+                                      selectedColor: Colors.teal.withValues(
+                                        alpha: 0.25,
+                                      ),
+                                      checkmarkColor: Colors.teal,
+                                      side: BorderSide(
+                                        color: isSelected
+                                            ? Colors.teal
+                                            : Colors.transparent,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                selected: isSelected,
-                                onSelected: (_) {
-                                  setState(() {
-                                    _selectedFoodName = food.displayName;
-                                    _selectedCarbsPer100g = food.carbsPer100g;
-                                    _calculateMacros();
-                                  });
-                                },
-                                backgroundColor: AppColors.surfaceAlt(context),
-                                selectedColor:
-                                    Colors.teal.withValues(alpha: 0.25),
-                                checkmarkColor: Colors.teal,
-                                side: BorderSide(
-                                  color: isSelected
-                                      ? Colors.teal
-                                      : Colors.transparent,
-                                ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                      );
+                    },
+                  ),
+
+                  Semantics(
+                    button: true,
+                    label: _selectedFoodName != null
+                        ? l10n.calcSelectedFood(_selectedFoodName!)
+                        : l10n.calcSearchFoodAccessibility,
+                    child: InkWell(
+                      onTap: _openFoodSearchSheet,
+                      borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: AppColors.borderSecondary(context),
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppDimens.radiusCard,
+                          ),
+                          color: AppColors.surfaceBg(context),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.restaurant,
+                              color: Theme.of(context).colorScheme.primary,
+                              semanticLabel: l10n.calcFoodAccessibility,
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _selectedFoodName ?? l10n.calcSearchFood,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: _selectedFoodName != null
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: _selectedFoodName != null
+                                          ? AppColors.textHeading(context)
+                                          : Colors.grey.shade600,
+                                    ),
+                                  ),
+                                  if (_selectedFoodName != null) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      l10n.calcCarbsPer100g(
+                                        _selectedCarbsPer100g.toString(),
+                                      ),
+                                      style: TextStyle(
+                                        color: isDark
+                                            ? Colors.grey.shade400
+                                            : Colors.grey.shade600,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
                             ),
-                          );
-                        },
+                            const ExcludeSemantics(
+                              child: Icon(Icons.search, color: Colors.grey),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                  ],
-                );
-              },
-            ),
+                  ),
 
-            Semantics(
-              button: true,
-              label: _selectedFoodName != null
-                  ? l10n.calcSelectedFood(_selectedFoodName!)
-                  : l10n.calcSearchFoodAccessibility,
-              child: InkWell(
-                onTap: _openFoodSearchSheet,
-                borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
+                  const SizedBox(height: 24),
+
+                  TextField(
+                    controller: _inputController,
+                    focusNode: _inputFocusNode,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    onChanged: (value) => _calculateMacros(),
+                    enabled: _selectedFoodName != null,
+                    decoration: InputDecoration(
+                      labelText: !_isInverseMode
+                          ? l10n.calcInputGramsLabel
+                          : l10n.calcInputRationsLabel,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppDimens.radiusCard,
+                        ),
+                      ),
+                      prefixIcon: Icon(
+                        !_isInverseMode ? Icons.scale : Icons.restaurant_menu,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      suffixText: !_isInverseMode
+                          ? l10n.calcInputGramsSuffix
+                          : l10n.calcInputRationsSuffix,
+                      filled: true,
+                      fillColor: _selectedFoodName == null
+                          ? AppColors.surfaceAlt(context)
+                          : (AppColors.surfaceBg(context)),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: AppColors.borderSecondary(context)),
-                    borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                    color: AppColors.surfaceBg(context),
+
+                  const SizedBox(height: 48),
+
+                  Container(
+                    padding: AppDimens.screenPadding,
+                    decoration: BoxDecoration(
+                      color: !_isInverseMode
+                          ? Theme.of(context).colorScheme.primary
+                          : AppColors.insulinGreen(context),
+                      borderRadius: BorderRadius.circular(AppDimens.radiusXxl),
+                    ),
+                    child: Semantics(
+                      liveRegion: true,
+                      label: !_isInverseMode
+                          ? '${l10n.calcGramsHC}: ${_totalCarbs.toStringAsFixed(1)}, ${l10n.calcRations}: ${_totalRaciones.toStringAsFixed(1)}'
+                          : '${l10n.calcOfFood(_selectedFoodName ?? 'alimento')}: ${_calculatedGrams.toStringAsFixed(0)}g',
+                      child: Column(
+                        children: [
+                          Text(
+                            !_isInverseMode
+                                ? l10n.calcResultTitle
+                                : l10n.calcResultInverseTitle,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              if (!_isInverseMode) ...[
+                                Column(
+                                  children: [
+                                    Text(
+                                      _totalCarbs.toStringAsFixed(1),
+                                      style: const TextStyle(
+                                        fontSize: 48,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      l10n.calcGramsHC,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Container(
+                                  height: 60,
+                                  width: 2,
+                                  color: Colors.white30,
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      _totalRaciones.toStringAsFixed(1),
+                                      style: const TextStyle(
+                                        fontSize: 48,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.amberAccent,
+                                      ),
+                                    ),
+                                    Text(
+                                      l10n.calcRations,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ] else ...[
+                                Column(
+                                  children: [
+                                    Text(
+                                      '${_calculatedGrams.toStringAsFixed(0)} g',
+                                      style: const TextStyle(
+                                        fontSize: 54,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      l10n.calcOfFood(
+                                        _selectedFoodName ?? 'alimento',
+                                      ),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.restaurant,
-                          color: Theme.of(context).colorScheme.primary,
-                          semanticLabel: l10n.calcFoodAccessibility),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _selectedFoodName ?? l10n.calcSearchFood,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: _selectedFoodName != null
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: _selectedFoodName != null
-                                    ? AppColors.textHeading(context)
-                                    : Colors.grey.shade600,
+
+                  const SizedBox(height: 24),
+
+                  ElevatedButton.icon(
+                    onPressed:
+                        (_selectedFoodName != null && _calculatedGrams > 0)
+                        ? _addToMeal
+                        : null,
+                    icon: const Icon(Icons.add_circle_outline),
+                    label: Text(
+                      l10n.calcAddToPlate,
+                      style: AppTextStyles.sectionTitle,
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.teal.shade600,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                          AppDimens.radiusCard,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  if (_mealItems.isNotEmpty) ...[
+                    const SizedBox(height: 32),
+                    const Divider(thickness: 2),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          l10n.calcMyPlate,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
+                        TextButton.icon(
+                          onPressed: _clearMeal,
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.redAccent,
+                          ),
+                          label: Text(
+                            l10n.calcClear,
+                            style: const TextStyle(color: Colors.redAccent),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: _mealItems.length,
+                      itemBuilder: (context, index) {
+                        final item = _mealItems[index];
+                        return Dismissible(
+                          key: ValueKey(item['id']),
+                          direction: DismissDirection.endToStart,
+                          dismissThresholds: const {
+                            DismissDirection.endToStart: 0.2,
+                          },
+                          background: Container(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(
+                                AppDimens.radiusCard,
                               ),
                             ),
-                            if (_selectedFoodName != null) ...[
-                              const SizedBox(height: 4),
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20),
+                            child: const ExcludeSemantics(
+                              child: Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                          confirmDismiss: (direction) =>
+                              showConfirmDeleteDialog(
+                                context,
+                                title: l10n.calcDeleteFromPlate,
+                                content: l10n.historyDeleteConfirm,
+                              ),
+                          onDismissed: (direction) => _removeMealItem(index),
+                          child: Card(
+                            margin: const EdgeInsets.only(bottom: 8),
+                            child: ListTile(
+                              leading: ExcludeSemantics(
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                              title: Text(
+                                item['name'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              subtitle: Text(
+                                l10n.calcGramsConsumed(
+                                  item['grams'].toStringAsFixed(0),
+                                ),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          l10n.calcRacShort(
+                                            item['raciones'].toStringAsFixed(1),
+                                          ),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.primary,
+                                            fontSize: 16,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Flexible(
+                                        child: Text(
+                                          l10n.calcHC(
+                                            item['carbs'].toStringAsFixed(1),
+                                          ),
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 13,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 8),
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.redAccent,
+                                      size: 22,
+                                    ),
+                                    tooltip: l10n.calcDeleteFromPlate,
+                                    onPressed: () => _removeMealItem(index),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    Container(
+                      padding: AppDimens.cardPadding,
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? Colors.teal.withValues(alpha: 0.1)
+                            : Colors.teal.shade50,
+                        borderRadius: BorderRadius.circular(
+                          AppDimens.radiusCard,
+                        ),
+                        border: Border.all(
+                          color: isDark
+                              ? Colors.teal.shade800
+                              : Colors.teal.shade200,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              l10n.calcTotalPlate,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                                color: Colors.teal,
+                                fontSize: 16,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
                               Text(
-                                l10n.calcCarbsPer100g(
-                                    _selectedCarbsPer100g.toString()),
+                                l10n.calcTotalRac(
+                                  _mealTotalRaciones.toStringAsFixed(1),
+                                ),
                                 style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w900,
                                   color: isDark
-                                      ? Colors.grey.shade400
-                                      : Colors.grey.shade600,
-                                  fontSize: 13,
+                                      ? Colors.teal.shade200
+                                      : Colors.teal.shade800,
+                                ),
+                              ),
+                              Text(
+                                l10n.calcTotalHC(
+                                  _mealTotalCarbs.toStringAsFixed(1),
+                                ),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: isDark
+                                      ? Colors.teal.shade300
+                                      : Colors.teal.shade800,
                                 ),
                               ),
                             ],
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const ExcludeSemantics(child: Icon(Icons.search, color: Colors.grey)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            TextField(
-              controller: _inputController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
-              onChanged: (value) => _calculateMacros(),
-              enabled: _selectedFoodName != null,
-              decoration: InputDecoration(
-                labelText: !_isInverseMode
-                    ? l10n.calcInputGramsLabel
-                    : l10n.calcInputRationsLabel,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                ),
-                prefixIcon: Icon(
-                  !_isInverseMode ? Icons.scale : Icons.restaurant_menu,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                suffixText: !_isInverseMode
-                    ? l10n.calcInputGramsSuffix
-                    : l10n.calcInputRationsSuffix,
-                filled: true,
-                fillColor: _selectedFoodName == null
-                    ? AppColors.surfaceAlt(context)
-                    : (AppColors.surfaceBg(context)),
-              ),
-            ),
-
-            const SizedBox(height: 48),
-
-            Container(
-              padding: AppDimens.screenPadding,
-              decoration: BoxDecoration(
-                color: !_isInverseMode
-                    ? Theme.of(context).colorScheme.primary
-                    : AppColors.insulinGreen(context),
-                borderRadius: BorderRadius.circular(AppDimens.radiusXxl),
-              ),
-              child: Semantics(
-                liveRegion: true,
-                label: !_isInverseMode
-                    ? '${l10n.calcGramsHC}: ${_totalCarbs.toStringAsFixed(1)}, ${l10n.calcRations}: ${_totalRaciones.toStringAsFixed(1)}'
-                    : '${l10n.calcOfFood(_selectedFoodName ?? 'alimento')}: ${_calculatedGrams.toStringAsFixed(0)}g',
-                child: Column(
-                children: [
-                  Text(
-                    !_isInverseMode
-                        ? l10n.calcResultTitle
-                        : l10n.calcResultInverseTitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      if (!_isInverseMode) ...[
-                        Column(
-                          children: [
-                            Text(
-                              _totalCarbs.toStringAsFixed(1),
-                              style: const TextStyle(
-                                fontSize: 48,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              l10n.calcGramsHC,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                            height: 60, width: 2, color: Colors.white30),
-                        Column(
-                          children: [
-                            Text(
-                              _totalRaciones.toStringAsFixed(1),
-                              style: const TextStyle(
-                                fontSize: 48,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.amberAccent,
-                              ),
-                            ),
-                            Text(
-                              l10n.calcRations,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ] else ...[
-                        Column(
-                          children: [
-                            Text(
-                              '${_calculatedGrams.toStringAsFixed(0)} g',
-                              style: const TextStyle(
-                                fontSize: 54,
-                                fontWeight: FontWeight.w900,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              l10n.calcOfFood(
-                                  _selectedFoodName ?? 'alimento'),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ],
-                  ),
-                ],
-              ),
-              ),
-            ),
+                    const SizedBox(height: 16),
 
-            const SizedBox(height: 24),
+                    MealTypeChipSelector(
+                      selected: _selectedMealType,
+                      onChanged: (type) {
+                        setState(() => _selectedMealType = type);
+                        _saveLastMealType(type);
+                      },
+                      l10n: l10n,
+                    ),
 
-            ElevatedButton.icon(
-              onPressed: (_selectedFoodName != null && _calculatedGrams > 0)
-                  ? _addToMeal
-                  : null,
-              icon: const Icon(Icons.add_circle_outline),
-              label: Text(
-                l10n.calcAddToPlate,
-                style: AppTextStyles.sectionTitle,
-              ),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                backgroundColor: Colors.teal.shade600,
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                ),
-              ),
-            ),
+                    const SizedBox(height: 12),
+                    DateTimePickerTile(
+                      selectedTime: _selectedTime,
+                      onChanged: (dt) {
+                        setState(() => _selectedTime = dt);
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      mode: PickerMode.date,
+                      label: l10n.calcDateLabel,
+                    ),
+                    const SizedBox(height: 8),
+                    DateTimePickerTile(
+                      selectedTime: _selectedTime,
+                      onChanged: (dt) {
+                        setState(() => _selectedTime = dt);
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      mode: PickerMode.time,
+                      label: l10n.calcTimeLabel,
+                    ),
 
-            if (_mealItems.isNotEmpty) ...[
-              const SizedBox(height: 32),
-              const Divider(thickness: 2),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    l10n.calcMyPlate,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.teal,
-                    ),
-                  ),
-                  TextButton.icon(
-                    onPressed: _clearMeal,
-                    icon: const Icon(
-                      Icons.delete_outline,
-                      color: Colors.redAccent,
-                    ),
-                    label: Text(
-                      l10n.calcClear,
-                      style: const TextStyle(color: Colors.redAccent),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _mealItems.length,
-                itemBuilder: (context, index) {
-                  final item = _mealItems[index];
-                  return Dismissible(
-                    key: ValueKey(item['id']),
-                    direction: DismissDirection.endToStart,
-                    dismissThresholds:
-                        const {DismissDirection.endToStart: 0.2},
-                    background: Container(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                      ),
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20),
-                      child: const ExcludeSemantics(child: Icon(Icons.delete,
-                          color: Colors.white, size: 28)),
-                    ),
-                    confirmDismiss: (direction) => showConfirmDeleteDialog(
-                      context,
-                      title: l10n.calcDeleteFromPlate,
-                      content: l10n.historyDeleteConfirm,
-                    ),
-                    onDismissed: (direction) => _removeMealItem(index),
-                    child: Card(
-                      margin: const EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        leading: ExcludeSemantics(
-                          child: Icon(
-                            Icons.check_circle,
-                            color: Theme.of(context).colorScheme.primary,
+                    if (_settingsLoaded && _insulinSettings != null) ...[
+                      const SizedBox(height: 24),
+                      Container(
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: AppColors.cardBg(context),
+                          borderRadius: BorderRadius.circular(
+                            AppDimens.radiusDialog,
+                          ),
+                          border: Border.all(
+                            color: Colors.teal.withValues(alpha: 0.3),
                           ),
                         ),
-                        title: Text(
-                          item['name'],
-                          style:
-                              const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          l10n.calcGramsConsumed(
-                              item['grams'].toStringAsFixed(0)),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                            Row(
                               children: [
-                                Text(
-                                  l10n.calcRacShort(
-                                      item['raciones'].toStringAsFixed(1)),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .primary,
-                                    fontSize: 16,
+                                const ExcludeSemantics(
+                                  child: Icon(
+                                    Icons.water_drop,
+                                    color: Colors.teal,
+                                    size: 20,
                                   ),
                                 ),
+                                const SizedBox(width: 8),
                                 Text(
-                                  l10n.calcHC(
-                                      item['carbs'].toStringAsFixed(1)),
+                                  l10n.calcBolusTitle,
                                   style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Colors.teal,
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(width: 8),
-                            IconButton(
-                              icon: const Icon(Icons.delete_outline,
-                                  color: Colors.redAccent, size: 22),
-                              tooltip: l10n.calcDeleteFromPlate,
-                              onPressed: () => _removeMealItem(index),
+                            const SizedBox(height: 16),
+                            GlucoseInputField(
+                              controller: _glucosaController,
+                              settings: _insulinSettings,
+                              l10n: l10n,
+                              onChanged: (_) => setState(() {}),
                             ),
+                            const SizedBox(height: 16),
+                            _buildBolusResult(isDark, l10n),
                           ],
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 8),
-
-              Container(
-                padding: AppDimens.cardPadding,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? Colors.teal.withValues(alpha: 0.1)
-                      : Colors.teal.shade50,
-                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                  border: Border.all(
-                      color: isDark
-                          ? Colors.teal.shade800
-                          : Colors.teal.shade200),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      l10n.calcTotalPlate,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w900,
-                        color: Colors.teal,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          l10n.calcTotalRac(
-                              _mealTotalRaciones.toStringAsFixed(1)),
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w900,
-                            color: isDark
-                                ? Colors.teal.shade200
-                                : Colors.teal.shade800,
-                          ),
-                        ),
-                        Text(
-                          l10n.calcTotalHC(
-                              _mealTotalCarbs.toStringAsFixed(1)),
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: isDark
-                                ? Colors.teal.shade300
-                                : Colors.teal.shade800,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              MealTypeChipSelector(
-                selected: _selectedMealType,
-                onChanged: (type) {
-                  setState(() => _selectedMealType = type);
-                  _saveLastMealType(type);
-                },
-                l10n: l10n,
-              ),
-
-              const SizedBox(height: 12),
-              DateTimePickerTile(
-                selectedTime: _selectedTime,
-                onChanged: (dt) => setState(() => _selectedTime = dt),
-                mode: PickerMode.date,
-                label: l10n.calcDateLabel,
-              ),
-              const SizedBox(height: 8),
-              DateTimePickerTile(
-                selectedTime: _selectedTime,
-                onChanged: (dt) => setState(() => _selectedTime = dt),
-                mode: PickerMode.time,
-                label: l10n.calcTimeLabel,
-              ),
-
-              if (_settingsLoaded && _insulinSettings != null) ...[
-                const SizedBox(height: 24),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color:
-                        AppColors.cardBg(context),
-                    borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
-                    border: Border.all(
-                        color: Colors.teal.withValues(alpha: 0.3)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        children: [
-                          const ExcludeSemantics(child: Icon(Icons.water_drop,
-                              color: Colors.teal, size: 20)),
-                          const SizedBox(width: 8),
-                          Text(
-                            l10n.calcBolusTitle,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.teal,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      GlucoseInputField(
-                        controller: _glucosaController,
-                        settings: _insulinSettings,
-                        l10n: l10n,
-                        onChanged: (_) => setState(() {}),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildBolusResult(isDark, l10n),
                     ],
-                  ),
-                ),
-              ],
-              if (_settingsLoaded && _insulinSettings == null)
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
-                  color: AppColors.surfaceBg(context),
-                  child: Padding(
-                    padding: AppDimens.cardPadding,
-                    child: Row(
-                      children: [
-                        const ExcludeSemantics(child: Icon(Icons.water_drop,
-                            color: Colors.grey, size: 28)),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            l10n.calcConfigureMessage,
-                            style: TextStyle(
-                                color: Colors.grey.shade600, fontSize: 13),
+                    if (_settingsLoaded && _insulinSettings == null)
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            AppDimens.radiusCard,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    const InsulinSettingsPage(),
+                        color: AppColors.surfaceBg(context),
+                        child: Padding(
+                          padding: AppDimens.cardPadding,
+                          child: Row(
+                            children: [
+                              const ExcludeSemantics(
+                                child: Icon(
+                                  Icons.water_drop,
+                                  color: Colors.grey,
+                                  size: 28,
+                                ),
                               ),
-                            ).then((_) => _loadInsulinSettings());
-                          },
-                          child: Text(l10n.calcConfigureButton),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Text(
+                                  l10n.calcConfigureMessage,
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const InsulinSettingsPage(),
+                                    ),
+                                  ).then((_) => _loadInsulinSettings());
+                                },
+                                child: Text(l10n.calcConfigureButton),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
+                    const SizedBox(height: 24),
+                    FilledButton.icon(
+                      onPressed: _saveMealToHistory,
+                      icon: const Icon(Icons.save),
+                      label: Text(
+                        l10n.calcSaveHistory,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: Colors.teal,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            AppDimens.radiusCard,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              const SizedBox(height: 24),
-              FilledButton.icon(
-                onPressed: _saveMealToHistory,
-                icon: const Icon(Icons.save),
-                label: Text(
-                  l10n.calcSaveHistory,
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  backgroundColor: Colors.teal,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
-            ],  // spread if _mealItems.isNotEmpty
-            ],  // inner Column children
-          ),  // Column
-        ),  // Padding
-      ),  // SingleChildScrollView
-    ),  // Expanded
-    ],  // outer Column children
-    );  // Column
+                    const SizedBox(height: 32),
+                  ], // spread if _mealItems.isNotEmpty
+                ], // inner Column children
+              ), // Column
+            ), // Padding
+          ), // SingleChildScrollView
+        ), // Expanded
+      ], // outer Column children
+    ); // Column
   }
 }
