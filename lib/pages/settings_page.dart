@@ -102,6 +102,8 @@ class SettingsPage extends StatelessWidget {
                 style: SegmentedButton.styleFrom(
                   selectedBackgroundColor: AppColors.primaryLight(context),
                   selectedForegroundColor: primary,
+                  visualDensity: VisualDensity.standard,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 ),
                 segments: [
                   ButtonSegment<ThemeMode>(
