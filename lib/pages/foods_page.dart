@@ -320,7 +320,9 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
   }
 
   void _toggleFavorite(String docId, bool currentStatus) async {
-    HapticFeedback.lightImpact();
+    if (!MediaQuery.of(context).disableAnimations) {
+      HapticFeedback.lightImpact();
+    }
     await FoodRepository.toggleFavorite(user!.uid, docId, currentStatus);
   }
 
@@ -629,7 +631,7 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
                     child: FoodListItem(
                       food: food,
                       trailing: Wrap(
-                        spacing: 4,
+                        spacing: 8,
                         children: [
                           IconButton(
                             icon: Icon(
