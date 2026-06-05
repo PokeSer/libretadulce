@@ -63,6 +63,7 @@ class DateTimePickerTile extends StatelessWidget {
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
+                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(width: 4),
               const ExcludeSemantics(
