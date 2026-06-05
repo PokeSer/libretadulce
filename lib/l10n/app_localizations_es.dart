@@ -240,6 +240,47 @@ class AppLocalizationsEs extends AppLocalizations {
       'Quiero comer raciones, calcular gramos';
 
   @override
+  String calcRepeatLastMeal(String mealType) {
+    return 'Repetir último $mealType';
+  }
+
+  @override
+  String get calcRepeatLastMealTooltip =>
+      'Rellenar rápido con la última comida';
+
+  @override
+  String get calcSaveAsTemplate => 'Guardar como plantilla';
+
+  @override
+  String get calcTemplateNameHint => 'Ej: Mi desayuno habitual';
+
+  @override
+  String get calcTemplateNameRequired =>
+      'Introduce un nombre para la plantilla';
+
+  @override
+  String get calcTemplateSaved => 'Plantilla guardada';
+
+  @override
+  String get calcLoadTemplate => 'Cargar plantilla';
+
+  @override
+  String get calcNoTemplates => 'Aún no tienes plantillas guardadas';
+
+  @override
+  String calcTemplateLoaded(String name) {
+    return 'Plantilla \"$name\" cargada';
+  }
+
+  @override
+  String get calcDeleteTemplate => 'Eliminar plantilla';
+
+  @override
+  String calcDeleteTemplateConfirm(String name) {
+    return '¿Eliminar \"$name\"?';
+  }
+
+  @override
   String get mealTypeBreakfast => 'Desayuno';
 
   @override

@@ -78,6 +78,18 @@
   "calcGramsModeAccessibility": "Ich habe die Gramm, berechne Rationen",
   "calcRationsModeAccessibility": "Ich will Rationen essen, berechne Gramm",
 
+  "calcRepeatLastMeal": "Letztes {mealType} wiederholen",
+  "calcRepeatLastMealTooltip": "Schnell mit letzter Mahlzeit füllen",
+  "calcSaveAsTemplate": "Als Vorlage speichern",
+  "calcTemplateNameHint": "z.B.: Mein übliches Frühstück",
+  "calcTemplateNameRequired": "Bitte gib einen Namen für die Vorlage ein",
+  "calcTemplateSaved": "Vorlage gespeichert",
+  "calcLoadTemplate": "Vorlage laden",
+  "calcNoTemplates": "Noch keine gespeicherten Vorlagen",
+  "calcTemplateLoaded": "Vorlage \"{name}\" geladen",
+  "calcDeleteTemplate": "Vorlage löschen",
+  "calcDeleteTemplateConfirm": "\"{name}\" löschen?",
+
   "mealTypeBreakfast": "Frühstück",
   "mealTypeMidMorning": "Zwischenmahlzeit",
   "mealTypeLunch": "Mittagessen",

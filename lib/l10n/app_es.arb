@@ -165,6 +165,33 @@
   "calcGramsModeAccessibility": "Tengo los gramos, calcular raciones",
   "calcRationsModeAccessibility": "Quiero comer raciones, calcular gramos",
 
+  "calcRepeatLastMeal": "Repetir último {mealType}",
+  "@calcRepeatLastMeal": {
+    "placeholders": {
+      "mealType": { "type": "String" }
+    }
+  },
+  "calcRepeatLastMealTooltip": "Rellenar rápido con la última comida",
+  "calcSaveAsTemplate": "Guardar como plantilla",
+  "calcTemplateNameHint": "Ej: Mi desayuno habitual",
+  "calcTemplateNameRequired": "Introduce un nombre para la plantilla",
+  "calcTemplateSaved": "Plantilla guardada",
+  "calcLoadTemplate": "Cargar plantilla",
+  "calcNoTemplates": "Aún no tienes plantillas guardadas",
+  "calcTemplateLoaded": "Plantilla \"{name}\" cargada",
+  "@calcTemplateLoaded": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "calcDeleteTemplate": "Eliminar plantilla",
+  "calcDeleteTemplateConfirm": "¿Eliminar \"{name}\"?",
+  "@calcDeleteTemplateConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
   "mealTypeBreakfast": "Desayuno",
   "mealTypeMidMorning": "Media Mañana",
   "mealTypeLunch": "Almuerzo",

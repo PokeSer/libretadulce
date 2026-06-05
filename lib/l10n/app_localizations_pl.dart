@@ -240,6 +240,45 @@ class AppLocalizationsPl extends AppLocalizations {
       'Chcę zjeść wymienniki, oblicz gramy';
 
   @override
+  String calcRepeatLastMeal(String mealType) {
+    return 'Powtórz ostatni $mealType';
+  }
+
+  @override
+  String get calcRepeatLastMealTooltip => 'Szybko wypełnij ostatnim posiłkiem';
+
+  @override
+  String get calcSaveAsTemplate => 'Zapisz jako szablon';
+
+  @override
+  String get calcTemplateNameHint => 'Np: Moje zwykłe śniadanie';
+
+  @override
+  String get calcTemplateNameRequired => 'Wprowadź nazwę szablonu';
+
+  @override
+  String get calcTemplateSaved => 'Szablon zapisany';
+
+  @override
+  String get calcLoadTemplate => 'Załaduj szablon';
+
+  @override
+  String get calcNoTemplates => 'Brak zapisanych szablonów';
+
+  @override
+  String calcTemplateLoaded(String name) {
+    return 'Szablon \"$name\" załadowany';
+  }
+
+  @override
+  String get calcDeleteTemplate => 'Usuń szablon';
+
+  @override
+  String calcDeleteTemplateConfirm(String name) {
+    return 'Usunąć \"$name\"?';
+  }
+
+  @override
   String get mealTypeBreakfast => 'Śniadanie';
 
   @override

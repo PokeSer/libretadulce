@@ -78,6 +78,18 @@
   "calcGramsModeAccessibility": "Znam gramy, oblicz wymienniki",
   "calcRationsModeAccessibility": "Chcę zjeść wymienniki, oblicz gramy",
 
+  "calcRepeatLastMeal": "Powtórz ostatni {mealType}",
+  "calcRepeatLastMealTooltip": "Szybko wypełnij ostatnim posiłkiem",
+  "calcSaveAsTemplate": "Zapisz jako szablon",
+  "calcTemplateNameHint": "Np: Moje zwykłe śniadanie",
+  "calcTemplateNameRequired": "Wprowadź nazwę szablonu",
+  "calcTemplateSaved": "Szablon zapisany",
+  "calcLoadTemplate": "Załaduj szablon",
+  "calcNoTemplates": "Brak zapisanych szablonów",
+  "calcTemplateLoaded": "Szablon \"{name}\" załadowany",
+  "calcDeleteTemplate": "Usuń szablon",
+  "calcDeleteTemplateConfirm": "Usunąć \"{name}\"?",
+
   "mealTypeBreakfast": "Śniadanie",
   "mealTypeMidMorning": "Drugie śniadanie",
   "mealTypeLunch": "Obiad",

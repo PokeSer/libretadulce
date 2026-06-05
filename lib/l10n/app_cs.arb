@@ -78,6 +78,18 @@
   "calcGramsModeAccessibility": "Znám gramy, spočítej VJ",
   "calcRationsModeAccessibility": "Chci sníst VJ, spočítej gramy",
 
+  "calcRepeatLastMeal": "Opakovat poslední {mealType}",
+  "calcRepeatLastMealTooltip": "Rychle vyplnit posledním jídlem",
+  "calcSaveAsTemplate": "Uložit jako šablonu",
+  "calcTemplateNameHint": "Např: Moje obvyklá snídaně",
+  "calcTemplateNameRequired": "Zadejte název šablony",
+  "calcTemplateSaved": "Šablona uložena",
+  "calcLoadTemplate": "Načíst šablonu",
+  "calcNoTemplates": "Žádné uložené šablony",
+  "calcTemplateLoaded": "Šablona \"{name}\" načtena",
+  "calcDeleteTemplate": "Smazat šablonu",
+  "calcDeleteTemplateConfirm": "Smazat \"{name}\"?",
+
   "mealTypeBreakfast": "Snídaně",
   "mealTypeMidMorning": "Dopolední svačina",
   "mealTypeLunch": "Oběd",

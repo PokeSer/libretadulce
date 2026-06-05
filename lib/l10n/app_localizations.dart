@@ -512,6 +512,72 @@ abstract class AppLocalizations {
   /// **'Quiero comer raciones, calcular gramos'**
   String get calcRationsModeAccessibility;
 
+  /// No description provided for @calcRepeatLastMeal.
+  ///
+  /// In es, this message translates to:
+  /// **'Repetir último {mealType}'**
+  String calcRepeatLastMeal(String mealType);
+
+  /// No description provided for @calcRepeatLastMealTooltip.
+  ///
+  /// In es, this message translates to:
+  /// **'Rellenar rápido con la última comida'**
+  String get calcRepeatLastMealTooltip;
+
+  /// No description provided for @calcSaveAsTemplate.
+  ///
+  /// In es, this message translates to:
+  /// **'Guardar como plantilla'**
+  String get calcSaveAsTemplate;
+
+  /// No description provided for @calcTemplateNameHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ej: Mi desayuno habitual'**
+  String get calcTemplateNameHint;
+
+  /// No description provided for @calcTemplateNameRequired.
+  ///
+  /// In es, this message translates to:
+  /// **'Introduce un nombre para la plantilla'**
+  String get calcTemplateNameRequired;
+
+  /// No description provided for @calcTemplateSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Plantilla guardada'**
+  String get calcTemplateSaved;
+
+  /// No description provided for @calcLoadTemplate.
+  ///
+  /// In es, this message translates to:
+  /// **'Cargar plantilla'**
+  String get calcLoadTemplate;
+
+  /// No description provided for @calcNoTemplates.
+  ///
+  /// In es, this message translates to:
+  /// **'Aún no tienes plantillas guardadas'**
+  String get calcNoTemplates;
+
+  /// No description provided for @calcTemplateLoaded.
+  ///
+  /// In es, this message translates to:
+  /// **'Plantilla \"{name}\" cargada'**
+  String calcTemplateLoaded(String name);
+
+  /// No description provided for @calcDeleteTemplate.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar plantilla'**
+  String get calcDeleteTemplate;
+
+  /// No description provided for @calcDeleteTemplateConfirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Eliminar \"{name}\"?'**
+  String calcDeleteTemplateConfirm(String name);
+
   /// No description provided for @mealTypeBreakfast.
   ///
   /// In es, this message translates to:

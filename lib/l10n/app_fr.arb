@@ -78,6 +78,18 @@
   "calcGramsModeAccessibility": "J'ai les grammes, calculer les rations",
   "calcRationsModeAccessibility": "Je veux manger des rations, calculer les grammes",
 
+  "calcRepeatLastMeal": "Répéter le dernier {mealType}",
+  "calcRepeatLastMealTooltip": "Remplir rapidement avec le dernier repas",
+  "calcSaveAsTemplate": "Enregistrer comme modèle",
+  "calcTemplateNameHint": "Ex : Mon petit-déjeuner habituel",
+  "calcTemplateNameRequired": "Veuillez entrer un nom pour le modèle",
+  "calcTemplateSaved": "Modèle enregistré",
+  "calcLoadTemplate": "Charger un modèle",
+  "calcNoTemplates": "Aucun modèle enregistré",
+  "calcTemplateLoaded": "Modèle \"{name}\" chargé",
+  "calcDeleteTemplate": "Supprimer le modèle",
+  "calcDeleteTemplateConfirm": "Supprimer \"{name}\" ?",
+
   "mealTypeBreakfast": "Petit-déjeuner",
   "mealTypeMidMorning": "Collation du matin",
   "mealTypeLunch": "Déjeuner",

@@ -238,6 +238,45 @@ class AppLocalizationsCs extends AppLocalizations {
   String get calcRationsModeAccessibility => 'Chci sníst VJ, spočítej gramy';
 
   @override
+  String calcRepeatLastMeal(String mealType) {
+    return 'Opakovat poslední $mealType';
+  }
+
+  @override
+  String get calcRepeatLastMealTooltip => 'Rychle vyplnit posledním jídlem';
+
+  @override
+  String get calcSaveAsTemplate => 'Uložit jako šablonu';
+
+  @override
+  String get calcTemplateNameHint => 'Např: Moje obvyklá snídaně';
+
+  @override
+  String get calcTemplateNameRequired => 'Zadejte název šablony';
+
+  @override
+  String get calcTemplateSaved => 'Šablona uložena';
+
+  @override
+  String get calcLoadTemplate => 'Načíst šablonu';
+
+  @override
+  String get calcNoTemplates => 'Žádné uložené šablony';
+
+  @override
+  String calcTemplateLoaded(String name) {
+    return 'Šablona \"$name\" načtena';
+  }
+
+  @override
+  String get calcDeleteTemplate => 'Smazat šablonu';
+
+  @override
+  String calcDeleteTemplateConfirm(String name) {
+    return 'Smazat \"$name\"?';
+  }
+
+  @override
   String get mealTypeBreakfast => 'Snídaně';
 
   @override
