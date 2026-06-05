@@ -46,6 +46,8 @@ class MealTypeChipSelector extends StatelessWidget {
                 selected: isSelected,
                 selectedColor: Colors.teal.withValues(alpha: 0.3),
                 checkmarkColor: Colors.teal,
+                visualDensity: VisualDensity.standard,
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 onSelected: (_) => onChanged(type),
               ),
             );
