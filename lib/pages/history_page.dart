@@ -111,6 +111,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   onSelected: (_) => setState(() => _viewMode = 0),
                   selectedColor: Colors.teal.withValues(alpha: 0.25),
                   checkmarkColor: Colors.teal,
+                  visualDensity: VisualDensity.standard,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 ),
               ),
               const SizedBox(width: 8),
@@ -123,6 +125,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   onSelected: (_) => setState(() => _viewMode = 1),
                   selectedColor: Colors.teal.withValues(alpha: 0.25),
                   checkmarkColor: Colors.teal,
+                  visualDensity: VisualDensity.standard,
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 ),
               ),
               const Spacer(),
@@ -281,19 +285,24 @@ class _HistoryPageState extends State<HistoryPage> {
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Row(
-                                          children: [
-                                            ExcludeSemantics(child: Icon(entry.mealType.icon, color: Colors.teal)),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              mealTypeLocalizedLabel(entry.mealType, l10n).toUpperCase(),
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: Colors.teal,
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              ExcludeSemantics(child: Icon(entry.mealType.icon, color: Colors.teal)),
+                                              const SizedBox(width: 8),
+                                              Flexible(
+                                                child: Text(
+                                                  mealTypeLocalizedLabel(entry.mealType, l10n).toUpperCase(),
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16,
+                                                    color: Colors.teal,
+                                                  ),
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
                                         Row(
                                           children: [
@@ -372,7 +381,8 @@ class _HistoryPageState extends State<HistoryPage> {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text(l10n.historySubtotal, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                          Flexible(child: Text(l10n.historySubtotal, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), overflow: TextOverflow.ellipsis)),
+                                          const SizedBox(width: 8),
                                           Text(
                                             l10n.historyRationsCarbs(entry.totalRations.toStringAsFixed(1), entry.totalCarbs.toStringAsFixed(0)),
                                             style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.teal),
@@ -393,16 +403,21 @@ class _HistoryPageState extends State<HistoryPage> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Row(
-                                              children: [
-                                                const ExcludeSemantics(child: Icon(Icons.monitor_heart, size: 14, color: Colors.redAccent)),
-                                                const SizedBox(width: 4),
-                                                Text(l10n.calcGlucoseLabel,
-                                                    style: const TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 12,
-                                                        color: Colors.redAccent)),
-                                              ],
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  const ExcludeSemantics(child: Icon(Icons.monitor_heart, size: 14, color: Colors.redAccent)),
+                                                  const SizedBox(width: 4),
+                                                  Flexible(
+                                                    child: Text(l10n.calcGlucoseLabel,
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 12,
+                                                            color: Colors.redAccent),
+                                                        overflow: TextOverflow.ellipsis),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                             Text(
                                               '${entry.glucose!.toStringAsFixed(0)} mg/dL',
@@ -427,16 +442,21 @@ class _HistoryPageState extends State<HistoryPage> {
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Row(
-                                              children: [
-                                                const ExcludeSemantics(child: Icon(Icons.water_drop, size: 14, color: Colors.orange)),
-                                                const SizedBox(width: 4),
-                                                Text(l10n.historyBolus,
-                                                    style: const TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 12,
-                                                        color: Colors.orange)),
-                                              ],
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  const ExcludeSemantics(child: Icon(Icons.water_drop, size: 14, color: Colors.orange)),
+                                                  const SizedBox(width: 4),
+                                                  Flexible(
+                                                    child: Text(l10n.historyBolus,
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 12,
+                                                            color: Colors.orange),
+                                                        overflow: TextOverflow.ellipsis),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                             Text(
                                               entry.totalBolus! == entry.totalBolus!.roundToDouble()
