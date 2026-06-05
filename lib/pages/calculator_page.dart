@@ -12,7 +12,9 @@ import '../models/meal_type.dart';
 import '../services/food_repository.dart';
 import '../services/meal_history_service.dart';
 import '../services/insulin_settings_service.dart';
+import '../services/meal_template_service.dart';
 import '../models/insulin_settings.dart';
+import '../models/meal_template.dart';
 import '../widgets/confirm_delete_dialog.dart';
 import '../widgets/date_time_picker_tile.dart';
 import '../widgets/food_search_sheet.dart';
@@ -168,6 +170,234 @@ class _CalculatorPageState extends State<CalculatorPage>
       _mealItems.fold(0.0, (acum, item) => acum + item['raciones']);
   double get _mealTotalCarbs =>
       _mealItems.fold(0.0, (acum, item) => acum + item['carbs']);
+
+  // ── Repeat last meal ──────────────────────────────────────────
+
+  Future<void> _repeatLastMeal() async {
+    if (user == null) return;
+    final l10n = AppLocalizations.of(context);
+
+    // Fetch recent meals and find one matching current meal type
+    final entries = await MealHistoryService.fetchAll(user!.uid);
+    if (entries.isEmpty) return;
+
+    final targetType = _selectedMealType;
+    MealEntry? lastMeal;
+
+    if (targetType != null) {
+      // Find last meal of the same type
+      for (final e in entries.reversed) {
+        if (e.mealType == targetType && e.items.isNotEmpty) {
+          lastMeal = e;
+          break;
+        }
+      }
+    }
+    // Fallback: last meal of any type
+    lastMeal ??= entries.lastWhere(
+      (e) => e.items.isNotEmpty,
+      orElse: () => entries.last,
+    );
+
+    if (!mounted || lastMeal.items.isEmpty) return;
+
+    _inputFocusNode.unfocus();
+    setState(() {
+      _mealItems.clear();
+      for (final item in lastMeal!.items) {
+        _mealItems.add({
+          'id': 'meal_${_mealItemCounter++}',
+          'name': item.name,
+          'grams': item.grams,
+          'carbs': item.carbs,
+          'raciones': item.raciones,
+        });
+      }
+      _selectedMealType ??= lastMeal.mealType;
+    });
+
+    final localizedType = mealTypeLocalizedLabel(lastMeal.mealType, l10n);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(l10n.calcRepeatLastMeal(localizedType)),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  // ── Save as template ──────────────────────────────────────────
+
+  Future<void> _saveAsTemplate() async {
+    if (_mealItems.isEmpty || user == null) return;
+    final l10n = AppLocalizations.of(context);
+
+    final nameController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.calcSaveAsTemplate),
+        content: Form(
+          key: formKey,
+          child: TextFormField(
+            controller: nameController,
+            autofocus: true,
+            decoration: InputDecoration(
+              labelText: l10n.calcTemplateNameHint,
+              border: const OutlineInputBorder(),
+            ),
+            validator: (v) {
+              if (v == null || v.trim().isEmpty) {
+                return l10n.calcTemplateNameRequired;
+              }
+              return null;
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+          ),
+          FilledButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                Navigator.pop(ctx, true);
+              }
+            },
+            child: Text(l10n.calcSaveAsTemplate),
+          ),
+        ],
+      ),
+    );
+
+    if (saved == true && mounted) {
+      final items = _mealItems
+          .map(
+            (item) => {
+              'name': item['name'],
+              'grams': item['grams'],
+              'carbs': item['carbs'],
+              'raciones': item['raciones'],
+            },
+          )
+          .toList();
+
+      await MealTemplateService.save(
+        user!.uid,
+        name: nameController.text.trim(),
+        items: items,
+        mealType: _selectedMealType?.rawValue,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.calcTemplateSaved)));
+      }
+    }
+  }
+
+  // ── Load template ─────────────────────────────────────────────
+
+  Future<void> _loadTemplate() async {
+    if (user == null) return;
+    final l10n = AppLocalizations.of(context);
+
+    final templates = await showDialog<MealTemplate>(
+      context: context,
+      builder: (ctx) => StreamBuilder<List<MealTemplate>>(
+        stream: MealTemplateService.watchAll(user!.uid),
+        builder: (context, snapshot) {
+          final templates = snapshot.data ?? [];
+          return AlertDialog(
+            title: Text(l10n.calcLoadTemplate),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: templates.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        l10n.calcNoTemplates,
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: templates.length,
+                      itemBuilder: (context, index) {
+                        final t = templates[index];
+                        final carbs = t.items.fold<double>(
+                          0,
+                          (sum, i) => sum + (i['carbs'] as num).toDouble(),
+                        );
+                        return ListTile(
+                          title: Text(t.name),
+                          subtitle: Text(
+                            '${t.items.length} items · ${carbs.toStringAsFixed(0)}g HC',
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: Colors.redAccent,
+                            ),
+                            tooltip: l10n.calcDeleteTemplate,
+                            onPressed: () async {
+                              final confirmed = await showConfirmDeleteDialog(
+                                ctx,
+                                content: l10n.calcDeleteTemplateConfirm(t.name),
+                              );
+                              if (confirmed == true) {
+                                await MealTemplateService.delete(
+                                  user!.uid,
+                                  t.id,
+                                );
+                              }
+                            },
+                          ),
+                          onTap: () => Navigator.pop(ctx, t),
+                        );
+                      },
+                    ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: Text(MaterialLocalizations.of(ctx).cancelButtonLabel),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    if (templates != null && mounted) {
+      _inputFocusNode.unfocus();
+      setState(() {
+        _mealItems.clear();
+        for (final item in templates.items) {
+          _mealItems.add({
+            'id': 'meal_${_mealItemCounter++}',
+            'name': item['name'],
+            'grams': item['grams'],
+            'carbs': item['carbs'],
+            'raciones': item['raciones'],
+          });
+        }
+        if (templates.mealType != null && _selectedMealType == null) {
+          _selectedMealType = MealType.fromString(templates.mealType!);
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.calcTemplateLoaded(templates.name)),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+    }
+  }
 
   void _openFoodSearchSheet() async {
     final Food? selectedFood = await showModalBottomSheet<Food>(
@@ -495,7 +725,8 @@ class _CalculatorPageState extends State<CalculatorPage>
                     stream: FoodRepository.watchFavoriteFoods(user!.uid),
                     builder: (context, snapshot) {
                       final favFoods = snapshot.data ?? [];
-                      if (favFoods.isEmpty) return const ExcludeSemantics(child: SizedBox.shrink());
+                      if (favFoods.isEmpty)
+                        return const ExcludeSemantics(child: SizedBox.shrink());
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -805,6 +1036,49 @@ class _CalculatorPageState extends State<CalculatorPage>
                     ),
                   ),
 
+                  if (_mealItems.isEmpty) ...[
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _repeatLastMeal,
+                            icon: const Icon(Icons.replay, size: 18),
+                            label: Text(l10n.calcRepeatLastMealTooltip),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              foregroundColor: Colors.teal,
+                              side: const BorderSide(color: Colors.teal),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppDimens.radiusCard,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: OutlinedButton.icon(
+                            onPressed: _loadTemplate,
+                            icon: const Icon(Icons.bookmark_outline, size: 18),
+                            label: Text(l10n.calcLoadTemplate),
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              foregroundColor: Colors.teal,
+                              side: const BorderSide(color: Colors.teal),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  AppDimens.radiusCard,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+
                   if (_mealItems.isNotEmpty) ...[
                     const SizedBox(height: 32),
                     const Divider(thickness: 2),
@@ -820,16 +1094,28 @@ class _CalculatorPageState extends State<CalculatorPage>
                             color: Colors.teal,
                           ),
                         ),
-                        TextButton.icon(
-                          onPressed: _clearMeal,
-                          icon: const Icon(
-                            Icons.delete_outline,
-                            color: Colors.redAccent,
-                          ),
-                          label: Text(
-                            l10n.calcClear,
-                            style: const TextStyle(color: Colors.redAccent),
-                          ),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.bookmark_add_outlined,
+                                color: Colors.teal,
+                              ),
+                              tooltip: l10n.calcSaveAsTemplate,
+                              onPressed: _saveAsTemplate,
+                            ),
+                            TextButton.icon(
+                              onPressed: _clearMeal,
+                              icon: const Icon(
+                                Icons.delete_outline,
+                                color: Colors.redAccent,
+                              ),
+                              label: Text(
+                                l10n.calcClear,
+                                style: const TextStyle(color: Colors.redAccent),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
