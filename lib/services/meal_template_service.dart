@@ -28,7 +28,7 @@ class MealTemplateService {
       await _templates(uid).add({
         'name': name,
         'items': items,
-        if (mealType != null) 'mealType': mealType,
+        'mealType': ?mealType,
         'createdAt': FieldValue.serverTimestamp(),
       });
     });

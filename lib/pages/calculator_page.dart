@@ -725,8 +725,9 @@ class _CalculatorPageState extends State<CalculatorPage>
                     stream: FoodRepository.watchFavoriteFoods(user!.uid),
                     builder: (context, snapshot) {
                       final favFoods = snapshot.data ?? [];
-                      if (favFoods.isEmpty)
+                      if (favFoods.isEmpty) {
                         return const ExcludeSemantics(child: SizedBox.shrink());
+                      }
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
