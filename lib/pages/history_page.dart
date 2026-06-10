@@ -764,6 +764,7 @@ class _HistoryPageState extends State<HistoryPage> {
             );
             return StatefulBuilder(
               builder: (ctx, setDialogState) {
+                bool saving = false;
                 return SingleChildScrollView(
                   controller: scrollController,
                   padding: AppDimens.screenPadding,
@@ -937,35 +938,49 @@ class _HistoryPageState extends State<HistoryPage> {
                       const SizedBox(height: 24),
 
                       FilledButton.icon(
-                        onPressed: editableItems.isEmpty ? null : () async {
-                          final updatedItems = editableItems.map((item) {
-                            final g = item['grams'] as double;
-                            final cp100 = item['carbsPer100g'] as double;
-                            final c = g * cp100 / 100;
-                            return {
-                              'name': item['name'],
-                              'grams': g,
-                              'carbs': c,
-                              'raciones': c / hcPerRation,
-                            };
-                          }).toList();
-
+                        onPressed: (editableItems.isEmpty || saving) ? null : () async {
+                          setDialogState(() => saving = true);
                           final messenger = ScaffoldMessenger.of(context);
-                          await MealHistoryService.updateEntry(
-                            user!.uid,
-                            entry.id,
-                            mealType: mealType.rawValue,
-                            totalCarbs: totalCarbs(),
-                            totalRations: totalRaciones(),
-                            items: updatedItems,
-                            glucose: editedGlucose,
-                            timestamp: selectedTime,
-                          );
-                          if (ctx.mounted) {
-                            Navigator.of(ctx).pop();
-                            messenger.showSnackBar(
-                              SnackBar(content: Text(l10n.historyEditSuccess)),
+                          try {
+                            final updatedItems = editableItems.map((item) {
+                              final g = item['grams'] as double;
+                              final cp100 = item['carbsPer100g'] as double;
+                              final c = g * cp100 / 100;
+                              return {
+                                'name': item['name'],
+                                'grams': g,
+                                'carbs': c,
+                                'raciones': c / hcPerRation,
+                              };
+                            }).toList();
+
+                            await MealHistoryService.updateEntry(
+                              user!.uid,
+                              entry.id,
+                              mealType: mealType.rawValue,
+                              totalCarbs: totalCarbs(),
+                              totalRations: totalRaciones(),
+                              items: updatedItems,
+                              glucose: editedGlucose,
+                              timestamp: selectedTime,
                             );
+                            if (ctx.mounted) {
+                              Navigator.of(ctx).pop();
+                              messenger.showSnackBar(
+                                SnackBar(content: Text(l10n.historyEditSuccess)),
+                              );
+                            }
+                          } catch (e) {
+                            debugPrint('[HistoryPage._editEntry] Error: $e');
+                            if (ctx.mounted) {
+                              setDialogState(() => saving = false);
+                              messenger.showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.serviceError),
+                                  duration: const Duration(seconds: 6),
+                                ),
+                              );
+                            }
                           }
                         },
                         icon: const Icon(Icons.save),

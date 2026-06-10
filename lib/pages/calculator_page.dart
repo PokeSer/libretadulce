@@ -505,9 +505,13 @@ class _CalculatorPageState extends State<CalculatorPage>
           _clearMeal();
         }
       } catch (e) {
+        debugPrint('[CalculatorPage._saveMealToHistory] Error: $e');
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.calcSaveError(e.toString()))),
+            SnackBar(
+              content: Text(l10n.calcSaveError(e.toString())),
+              duration: const Duration(seconds: 6),
+            ),
           );
         }
       }
