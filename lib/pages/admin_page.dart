@@ -31,10 +31,14 @@ class _AdminPageState extends State<AdminPage> {
         );
       }
     } catch (e) {
+      debugPrint('[AdminPage._approveRequest] Error: $e');
       if (mounted) {
         final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.serviceError)),
+          SnackBar(
+            content: Text(l10n.serviceError),
+            duration: const Duration(seconds: 6),
+          ),
         );
       }
     }
@@ -50,10 +54,14 @@ class _AdminPageState extends State<AdminPage> {
         );
       }
     } catch (e) {
+      debugPrint('[AdminPage._rejectRequest] Error: $e');
       if (mounted) {
         final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.serviceError)),
+          SnackBar(
+            content: Text(l10n.serviceError),
+            duration: const Duration(seconds: 6),
+          ),
         );
       }
     }
@@ -69,10 +77,14 @@ class _AdminPageState extends State<AdminPage> {
         );
       }
     } catch (e) {
+      debugPrint('[AdminPage._deleteGlobalFood] Error: $e');
       if (mounted) {
         final l10n = AppLocalizations.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.serviceError)),
+          SnackBar(
+            content: Text(l10n.serviceError),
+            duration: const Duration(seconds: 6),
+          ),
         );
       }
     }

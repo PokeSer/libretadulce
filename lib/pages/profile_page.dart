@@ -150,9 +150,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           try {
                             await authService.signOut();
                           } catch (e) {
+                            debugPrint('[ProfilePage.logout] Error: $e');
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(l10n.serviceError)),
+                                SnackBar(
+                                  content: Text(l10n.serviceError),
+                                  duration: const Duration(seconds: 6),
+                                ),
                               );
                             }
                           }

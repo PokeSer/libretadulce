@@ -31,9 +31,13 @@ class AuthService {
       }
 
       final googleAuth = googleUser.authentication;
+      final idToken = googleAuth.idToken;
+      if (idToken == null) {
+        throw AuthException('Failed to obtain Google ID token');
+      }
 
       final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
+        idToken: idToken,
       );
 
       return await _auth.signInWithCredential(credential);
