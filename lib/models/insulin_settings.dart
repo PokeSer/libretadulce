@@ -94,27 +94,15 @@ class InsulinSettings {
 
   factory InsulinSettings.fromFirestore(Map<String, dynamic> data) {
     return InsulinSettings(
-      ratioBase: (data['ratioBase'] as num).toDouble(),
-      ratioDesayuno: data['ratioDesayuno'] != null
-          ? (data['ratioDesayuno'] as num).toDouble()
-          : null,
-      ratioMediaManana: data['ratioMediaManana'] != null
-          ? (data['ratioMediaManana'] as num).toDouble()
-          : null,
-      ratioAlmuerzo: data['ratioAlmuerzo'] != null
-          ? (data['ratioAlmuerzo'] as num).toDouble()
-          : null,
-      ratioMerienda: data['ratioMerienda'] != null
-          ? (data['ratioMerienda'] as num).toDouble()
-          : null,
-      ratioCena: data['ratioCena'] != null
-          ? (data['ratioCena'] as num).toDouble()
-          : null,
-      ratioSnack: data['ratioSnack'] != null
-          ? (data['ratioSnack'] as num).toDouble()
-          : null,
-      factorCorreccion: (data['factorCorreccion'] as num).toDouble(),
-      glucosaObjetivo: (data['glucosaObjetivo'] as num).toDouble(),
+      ratioBase: (data['ratioBase'] as num?)?.toDouble() ?? 10.0,
+      ratioDesayuno: (data['ratioDesayuno'] as num?)?.toDouble(),
+      ratioMediaManana: (data['ratioMediaManana'] as num?)?.toDouble(),
+      ratioAlmuerzo: (data['ratioAlmuerzo'] as num?)?.toDouble(),
+      ratioMerienda: (data['ratioMerienda'] as num?)?.toDouble(),
+      ratioCena: (data['ratioCena'] as num?)?.toDouble(),
+      ratioSnack: (data['ratioSnack'] as num?)?.toDouble(),
+      factorCorreccion: (data['factorCorreccion'] as num?)?.toDouble() ?? 50.0,
+      glucosaObjetivo: (data['glucosaObjetivo'] as num?)?.toDouble() ?? 100.0,
       supportsHalfUnits: data['supportsHalfUnits'] ?? true,
       roundBolusDown: data['roundBolusDown'] ?? false,
       usesMmolL: data['usesMmolL'] ?? false,

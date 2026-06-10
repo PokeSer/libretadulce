@@ -27,7 +27,7 @@ class MealTemplate {
       mealType: data['mealType'],
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
+          : DateTime(2024),
     );
   }
 

@@ -31,16 +31,10 @@ class Food {
       id: docId,
       name: data['name'] ?? '',
       brand: data['brand'] ?? '',
-      carbsPer100g: (data['carbsPer100g'] as num).toDouble(),
-      kcalPer100g: data['kcalPer100g'] != null
-          ? (data['kcalPer100g'] as num).toDouble()
-          : null,
-      proteinsPer100g: data['proteinsPer100g'] != null
-          ? (data['proteinsPer100g'] as num).toDouble()
-          : null,
-      fatsPer100g: data['fatsPer100g'] != null
-          ? (data['fatsPer100g'] as num).toDouble()
-          : null,
+      carbsPer100g: (data['carbsPer100g'] as num?)?.toDouble() ?? 0.0,
+      kcalPer100g: (data['kcalPer100g'] as num?)?.toDouble(),
+      proteinsPer100g: (data['proteinsPer100g'] as num?)?.toDouble(),
+      fatsPer100g: (data['fatsPer100g'] as num?)?.toDouble(),
       isFavorite: data['isFavorite'] ?? false,
       productUrl: data['productUrl'],
     );
@@ -117,7 +111,7 @@ class FoodRequest {
       id: docId,
       name: data['name'] ?? '',
       brand: data['brand'] ?? '',
-      carbsPer100g: (data['carbsPer100g'] as num).toDouble(),
+      carbsPer100g: (data['carbsPer100g'] as num?)?.toDouble() ?? 0.0,
       productUrl: data['productUrl'],
       status: data['status'] ?? 'pending',
       userId: data['userId'] ?? '',
@@ -142,9 +136,9 @@ class MealItem {
   factory MealItem.fromMap(Map<String, dynamic> map) {
     return MealItem(
       name: map['name'] ?? '',
-      grams: (map['grams'] as num).toDouble(),
-      carbs: (map['carbs'] as num).toDouble(),
-      raciones: (map['raciones'] as num).toDouble(),
+      grams: (map['grams'] as num?)?.toDouble() ?? 0.0,
+      carbs: (map['carbs'] as num?)?.toDouble() ?? 0.0,
+      raciones: (map['raciones'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -187,8 +181,8 @@ class MealEntry {
       id: docId,
       timestamp: ts?.toDate() ?? DateTime.now(),
       mealType: MealType.fromString(data['mealType'] ?? ''),
-      totalCarbs: (data['totalCarbs'] as num).toDouble(),
-      totalRations: (data['totalRations'] as num).toDouble(),
+      totalCarbs: (data['totalCarbs'] as num?)?.toDouble() ?? 0.0,
+      totalRations: (data['totalRations'] as num?)?.toDouble() ?? 0.0,
       totalBolus: data['totalBolus'] != null
           ? (data['totalBolus'] as num).toDouble()
           : null,
