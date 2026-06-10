@@ -679,49 +679,128 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
   void _showFoodDetail(Food food, AppLocalizations l10n) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text(food.displayName),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(l10n.foodsDetailTitle,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Semantics(
-              label: l10n.foodsDetailCarbs('${food.carbsPer100g}'),
-              child: Text('🎯 ${l10n.foodsDetailCarbs('${food.carbsPer100g}')}',
-                  style: const TextStyle(fontSize: 16)),
+      builder: (ctx) {
+        final isDark = context.isDarkMode;
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
+          ),
+          title: Row(
+            children: [
+              ExcludeSemantics(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.teal.withValues(alpha: isDark ? 0.15 : 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.restaurant, color: Colors.teal, size: 22),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  food.displayName,
+                  style: const TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                l10n.foodsDetailTitle,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 13,
+                  color: AppColors.textSecondary(context),
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _nutritionRow(
+                icon: Icons.grain,
+                color: Colors.teal,
+                label: l10n.foodsDetailCarbs('${food.carbsPer100g}'),
+                isDark: isDark,
+              ),
+              if (food.kcalPer100g != null) ...[
+                const SizedBox(height: 10),
+                _nutritionRow(
+                  icon: Icons.local_fire_department,
+                  color: Colors.deepOrange,
+                  label: l10n.foodsDetailCalories('${food.kcalPer100g}'),
+                  isDark: isDark,
+                ),
+              ],
+              if (food.proteinsPer100g != null) ...[
+                const SizedBox(height: 10),
+                _nutritionRow(
+                  icon: Icons.fitness_center,
+                  color: Colors.indigo,
+                  label: l10n.foodsDetailProtein('${food.proteinsPer100g}'),
+                  isDark: isDark,
+                ),
+              ],
+              if (food.fatsPer100g != null) ...[
+                const SizedBox(height: 10),
+                _nutritionRow(
+                  icon: Icons.water_drop,
+                  color: Colors.amber.shade700,
+                  label: l10n.foodsDetailFat('${food.fatsPer100g}'),
+                  isDark: isDark,
+                ),
+              ],
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                l10n.foodsDetailClose,
+                style: TextStyle(color: AppColors.primary(context)),
+              ),
             ),
-            if (food.kcalPer100g != null)
-              Semantics(
-                label: l10n.foodsDetailCalories('${food.kcalPer100g}'),
-                child: Text(
-                    '🔥 ${l10n.foodsDetailCalories('${food.kcalPer100g}')}',
-                    style: const TextStyle(fontSize: 16)),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _nutritionRow({
+    required IconData icon,
+    required Color color,
+    required String label,
+    required bool isDark,
+  }) {
+    return Semantics(
+      label: label,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: isDark ? 0.12 : 0.07),
+          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        ),
+        child: Row(
+          children: [
+            ExcludeSemantics(
+              child: Icon(icon, color: color, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? color.withValues(alpha: 0.9) : color.withValues(alpha: 0.85),
+                ),
               ),
-            if (food.proteinsPer100g != null)
-              Semantics(
-                label: l10n.foodsDetailProtein('${food.proteinsPer100g}'),
-                child: Text(
-                    '💪 ${l10n.foodsDetailProtein('${food.proteinsPer100g}')}',
-                    style: const TextStyle(fontSize: 16)),
-              ),
-            if (food.fatsPer100g != null)
-              Semantics(
-                label: l10n.foodsDetailFat('${food.fatsPer100g}'),
-                child: Text(
-                    '🥑 ${l10n.foodsDetailFat('${food.fatsPer100g}')}',
-                    style: const TextStyle(fontSize: 16)),
-              ),
+            ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(l10n.foodsDetailClose),
-          ),
-        ],
       ),
     );
   }
