@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../core/theme/app_colors.dart';
+import '../core/utils/formatters.dart';
 import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
 import '../core/utils/meal_type_localizer.dart';
@@ -84,16 +85,21 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
 
     setState(() => _isSaving = true);
 
+    final ratioBase = parseSpanishDecimal(_ratioBaseCtrl.text.trim());
+    final factorCorreccion = parseSpanishDecimal(_factorCorreccionCtrl.text.trim());
+    final glucosaObjetivo = parseSpanishDecimal(_glucosaObjetivoCtrl.text.trim());
+    if (ratioBase == null || factorCorreccion == null || glucosaObjetivo == null) return;
+
     final settings = InsulinSettings(
-      ratioBase: double.parse(_ratioBaseCtrl.text.trim()),
+      ratioBase: ratioBase,
       ratioDesayuno: _tryParse(_ratioDesayunoCtrl),
       ratioMediaManana: _tryParse(_ratioMediaMananaCtrl),
       ratioAlmuerzo: _tryParse(_ratioAlmuerzoCtrl),
       ratioMerienda: _tryParse(_ratioMeriendaCtrl),
       ratioCena: _tryParse(_ratioCenaCtrl),
       ratioSnack: _tryParse(_ratioSnackCtrl),
-      factorCorreccion: double.parse(_factorCorreccionCtrl.text.trim()),
-      glucosaObjetivo: double.parse(_glucosaObjetivoCtrl.text.trim()),
+      factorCorreccion: factorCorreccion,
+      glucosaObjetivo: glucosaObjetivo,
       supportsHalfUnits: _supportsHalfUnits,
       roundBolusDown: _roundBolusDown,
       usesMmolL: _usesMmolL,
@@ -111,20 +117,22 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
         Navigator.pop(context);
       }
     } catch (e) {
+      debugPrint('[InsulinSettingsPage._save] Error: $e');
       if (mounted) {
         final l10n = AppLocalizations.of(context);
         setState(() => _isSaving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.serviceError)),
+          SnackBar(
+            content: Text(l10n.serviceError),
+            duration: const Duration(seconds: 6),
+          ),
         );
       }
     }
   }
 
   double? _tryParse(TextEditingController ctrl) {
-    final text = ctrl.text.trim();
-    if (text.isEmpty) return null;
-    return double.tryParse(text);
+    return parseSpanishDecimal(ctrl.text.trim());
   }
 
   @override
