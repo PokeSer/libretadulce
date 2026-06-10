@@ -2,43 +2,63 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Helper: Comprueba si el usuario autenticado tiene rol de admin local
+    // Helper: check admin role with safe fallback
     function isAdmin() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
+      return userDoc.exists && userDoc.data.role == 'admin';
     }
 
-    // Reglas para los documentos maestros de usuarios (nuevo).
-    // Cada usuario puede leer/escribir su propio documento base.
+    // Helper: validate that required string fields exist and are non-empty
+    function hasRequiredStrings(fields) {
+      return fields.hasAll(request.resource.data.keys())
+        && request.resource.data.keys().hasAll(fields);
+    }
+
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Reglas para los alimentos personales del usuario.
     match /users/{userId}/foods/{foodId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.carbsPer100g is number;
+      allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Reglas para el historial personal del usuario.
     match /users/{userId}/history/{mealId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.mealType is string
+        && request.resource.data.totalCarbs is number
+        && request.resource.data.totalRations is number
+        && request.resource.data.items is list;
+      allow delete: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Reglas para los ajustes personales del usuario (ratio insulina, etc).
     match /users/{userId}/settings/{docId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.ratioBase is number
+        && request.resource.data.ratioBase > 0
+        && request.resource.data.factorCorreccion is number
+        && request.resource.data.factorCorreccion > 0
+        && request.resource.data.glucosaObjetivo is number
+        && request.resource.data.glucosaObjetivo > 0;
     }
 
-    // Reglas para la base de datos global de alimentos.
     match /global_foods/{docId} {
-      allow read: if request.auth != null; 
-      // SOLO admins pueden escribir globalmente
+      allow read: if request.auth != null;
       allow write: if request.auth != null && isAdmin();
     }
 
-    // Reglas para las peticiones de nuevos alimentos.
     match /food_requests/{docId} {
-      allow create: if request.auth != null;
-      // SOLO admins pueden leer, aprobar o borrar las peticiones globales
+      allow create: if request.auth != null
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.carbsPer100g is number
+        && request.resource.data.userId == request.auth.uid;
       allow update, delete, read: if request.auth != null && isAdmin();
     }
   }
