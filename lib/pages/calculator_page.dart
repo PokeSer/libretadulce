@@ -40,12 +40,16 @@ class _CalculatorPageState extends State<CalculatorPage>
 
   String? _selectedFoodName;
   double _selectedCarbsPer100g = 0.0;
+  double _selectedFatsPer100g = 0.0;
+  double _selectedProteinsPer100g = 0.0;
   final TextEditingController _inputController = TextEditingController();
   final FocusNode _inputFocusNode = FocusNode();
 
   double _calculatedGrams = 0.0;
   double _totalCarbs = 0.0;
   double _totalRaciones = 0.0;
+  double _totalFats = 0.0;
+  double _totalProteins = 0.0;
 
   final List<Map<String, dynamic>> _mealItems = [];
   int _mealItemCounter = 0;
@@ -73,11 +77,13 @@ class _CalculatorPageState extends State<CalculatorPage>
   }
 
   void _calculateMacros() {
-    if (_inputController.text.isEmpty || _selectedCarbsPer100g == 0.0) {
+    if (_inputController.text.isEmpty) {
       setState(() {
         _calculatedGrams = 0.0;
         _totalCarbs = 0.0;
         _totalRaciones = 0.0;
+        _totalFats = 0.0;
+        _totalProteins = 0.0;
       });
       return;
     }
@@ -89,17 +95,31 @@ class _CalculatorPageState extends State<CalculatorPage>
           _calculatedGrams = inputVal;
           _totalCarbs = (_selectedCarbsPer100g / 100) * inputVal;
           _totalRaciones = _totalCarbs / 10;
+          _totalFats = (_selectedFatsPer100g / 100) * inputVal;
+          _totalProteins = (_selectedProteinsPer100g / 100) * inputVal;
         } else {
-          _totalRaciones = inputVal;
-          _totalCarbs = inputVal * 10;
-          _calculatedGrams = (_totalCarbs * 100) / _selectedCarbsPer100g;
+          // Inverse mode: only works if carbs per 100g > 0
+          if (_selectedCarbsPer100g > 0) {
+            _totalRaciones = inputVal;
+            _totalCarbs = inputVal * 10;
+            _calculatedGrams = (_totalCarbs * 100) / _selectedCarbsPer100g;
+            _totalFats = (_selectedFatsPer100g / 100) * _calculatedGrams;
+            _totalProteins = (_selectedProteinsPer100g / 100) * _calculatedGrams;
+          } else {
+            // Can't calculate grams from raciones when carbs are 0
+            _totalRaciones = 0.0;
+            _totalCarbs = 0.0;
+            _calculatedGrams = 0.0;
+            _totalFats = 0.0;
+            _totalProteins = 0.0;
+          }
         }
       });
     }
   }
 
   void _addToMeal() {
-    if (_selectedFoodName != null && _calculatedGrams > 0) {
+    if (_selectedFoodName != null && _calculatedGrams >= 0 && _inputController.text.isNotEmpty) {
       if (!MediaQuery.of(context).disableAnimations) {
         HapticFeedback.lightImpact();
       }
@@ -111,6 +131,8 @@ class _CalculatorPageState extends State<CalculatorPage>
           'grams': _calculatedGrams,
           'carbs': _totalCarbs,
           'raciones': _totalRaciones,
+          'fats': _totalFats,
+          'proteins': _totalProteins,
         });
         _inputController.clear();
         _calculateMacros();
@@ -167,10 +189,13 @@ class _CalculatorPageState extends State<CalculatorPage>
   }
 
   double get _mealTotalRaciones =>
-      _mealItems.fold(0.0, (acum, item) => acum + item['raciones']);
+      _mealItems.fold(0.0, (acum, item) => acum + (item['raciones'] as double? ?? 0.0));
   double get _mealTotalCarbs =>
-      _mealItems.fold(0.0, (acum, item) => acum + item['carbs']);
-
+      _mealItems.fold(0.0, (acum, item) => acum + (item['carbs'] as double? ?? 0.0));
+  double get _mealTotalFats =>
+      _mealItems.fold(0.0, (acum, item) => acum + (item['fats'] as double? ?? 0.0));
+  double get _mealTotalProteins =>
+      _mealItems.fold(0.0, (acum, item) => acum + (item['proteins'] as double? ?? 0.0));
   // ── Repeat last meal ──────────────────────────────────────────
 
   Future<void> _repeatLastMeal() async {
@@ -410,6 +435,8 @@ class _CalculatorPageState extends State<CalculatorPage>
       setState(() {
         _selectedFoodName = selectedFood.displayName;
         _selectedCarbsPer100g = selectedFood.carbsPer100g;
+        _selectedFatsPer100g = selectedFood.fatsPer100g ?? 0.0;
+        _selectedProteinsPer100g = selectedFood.proteinsPer100g ?? 0.0;
         _calculateMacros();
       });
     }
@@ -475,6 +502,8 @@ class _CalculatorPageState extends State<CalculatorPage>
           mealType: selectedMealType!,
           totalCarbs: _mealTotalCarbs,
           totalRations: _mealTotalRaciones,
+          totalFats: _mealTotalFats,
+          totalProteins: _mealTotalProteins,
           items: _mealItems,
           totalBolus: totalBolus,
           glucose: glucoseMgdl,
@@ -779,6 +808,10 @@ class _CalculatorPageState extends State<CalculatorPage>
                                           _selectedFoodName = food.displayName;
                                           _selectedCarbsPer100g =
                                               food.carbsPer100g;
+                                          _selectedFatsPer100g =
+                                              food.fatsPer100g ?? 0.0;
+                                          _selectedProteinsPer100g =
+                                              food.proteinsPer100g ?? 0.0;
                                           _calculateMacros();
                                         });
                                       },
@@ -1021,7 +1054,7 @@ class _CalculatorPageState extends State<CalculatorPage>
 
                   ElevatedButton.icon(
                     onPressed:
-                        (_selectedFoodName != null && _calculatedGrams > 0)
+                        (_selectedFoodName != null && _calculatedGrams >= 0 && _inputController.text.isNotEmpty)
                         ? _addToMeal
                         : null,
                     icon: const Icon(Icons.add_circle_outline),

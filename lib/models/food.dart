@@ -125,12 +125,16 @@ class MealItem {
   final double grams;
   final double carbs;
   final double raciones;
+  final double? fats;
+  final double? proteins;
 
   const MealItem({
     required this.name,
     required this.grams,
     required this.carbs,
     required this.raciones,
+    this.fats,
+    this.proteins,
   });
 
   factory MealItem.fromMap(Map<String, dynamic> map) {
@@ -139,6 +143,8 @@ class MealItem {
       grams: (map['grams'] as num?)?.toDouble() ?? 0.0,
       carbs: (map['carbs'] as num?)?.toDouble() ?? 0.0,
       raciones: (map['raciones'] as num?)?.toDouble() ?? 0.0,
+      fats: (map['fats'] as num?)?.toDouble(),
+      proteins: (map['proteins'] as num?)?.toDouble(),
     );
   }
 
@@ -148,6 +154,8 @@ class MealItem {
       'grams': grams,
       'carbs': carbs,
       'raciones': raciones,
+      if (fats != null) 'fats': fats,
+      if (proteins != null) 'proteins': proteins,
     };
   }
 }
@@ -158,6 +166,8 @@ class MealEntry {
   final MealType mealType;
   final double totalCarbs;
   final double totalRations;
+  final double? totalFats;
+  final double? totalProteins;
   final List<MealItem> items;
   final double? totalBolus;
   final double? glucose;
@@ -168,6 +178,8 @@ class MealEntry {
     required this.mealType,
     required this.totalCarbs,
     required this.totalRations,
+    this.totalFats,
+    this.totalProteins,
     required this.items,
     this.totalBolus,
     this.glucose,
@@ -183,6 +195,8 @@ class MealEntry {
       mealType: MealType.fromString(data['mealType'] ?? ''),
       totalCarbs: (data['totalCarbs'] as num?)?.toDouble() ?? 0.0,
       totalRations: (data['totalRations'] as num?)?.toDouble() ?? 0.0,
+      totalFats: (data['totalFats'] as num?)?.toDouble(),
+      totalProteins: (data['totalProteins'] as num?)?.toDouble(),
       totalBolus: data['totalBolus'] != null
           ? (data['totalBolus'] as num).toDouble()
           : null,
