@@ -116,6 +116,8 @@
   "historyMustLogin": "Musisz się zalogować",
   "historyTotalRations": "Suma wymienników",
   "historyTotalCarbs": "Suma węglowodanów",
+  "historyTotalFats": "Tłuszczu",
+  "historyTotalProteins": "Białka",
   "historySubtotal": "SUMA CZĘŚCIOWA:",
   "historyRationsCarbs": "{rac} WW ({carbs}g węgl.)",
   "historyBolus": "BOLUS:",

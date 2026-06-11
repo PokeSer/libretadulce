@@ -253,6 +253,8 @@
   "historyMustLogin": "Debes iniciar sesión",
   "historyTotalRations": "Total Raciones",
   "historyTotalCarbs": "Total Carbohidratos",
+  "historyTotalFats": "Grasas",
+  "historyTotalProteins": "Proteínas",
   "historySubtotal": "SUBTOTAL:",
   "historyRationsCarbs": "{rac}Raciones ({carbs}g HC)",
   "@historyRationsCarbs": {

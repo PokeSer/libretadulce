@@ -364,6 +364,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get historyTotalCarbs => 'Totale Carboidrati';
 
   @override
+  String get historyTotalFats => 'Grassi';
+
+  @override
+  String get historyTotalProteins => 'Proteine';
+
+  @override
   String get historySubtotal => 'SUBTOTALE:';
 
   @override

@@ -116,6 +116,8 @@
   "historyMustLogin": "Vous devez vous connecter",
   "historyTotalRations": "Total Rations",
   "historyTotalCarbs": "Total Glucides",
+  "historyTotalFats": "Lipides",
+  "historyTotalProteins": "Protéines",
   "historySubtotal": "SOUS-TOTAL :",
   "historyRationsCarbs": "{rac} Rations ({carbs}g HC)",
   "historyBolus": "BOLUS :",

@@ -362,6 +362,12 @@ class AppLocalizationsCs extends AppLocalizations {
   String get historyTotalCarbs => 'Celkem sacharidů';
 
   @override
+  String get historyTotalFats => 'Tuků';
+
+  @override
+  String get historyTotalProteins => 'Bílkovin';
+
+  @override
   String get historySubtotal => 'MEZISOUČET:';
 
   @override

@@ -116,6 +116,8 @@
   "historyMustLogin": "Você precisa iniciar sessão",
   "historyTotalRations": "Total de Porções",
   "historyTotalCarbs": "Total de Carboidratos",
+  "historyTotalFats": "Gorduras",
+  "historyTotalProteins": "Proteínas",
   "historySubtotal": "SUBTOTAL:",
   "historyRationsCarbs": "{rac} Porções ({carbs}g CHO)",
   "historyBolus": "BOLUS:",

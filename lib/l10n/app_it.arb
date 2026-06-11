@@ -116,6 +116,8 @@
   "historyMustLogin": "Devi accedere",
   "historyTotalRations": "Totale Razioni",
   "historyTotalCarbs": "Totale Carboidrati",
+  "historyTotalFats": "Grassi",
+  "historyTotalProteins": "Proteine",
   "historySubtotal": "SUBTOTALE:",
   "historyRationsCarbs": "{rac} Razioni ({carbs}g HC)",
   "historyBolus": "BOLO:",

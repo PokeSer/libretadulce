@@ -116,6 +116,8 @@
   "historyMustLogin": "Du musst dich anmelden",
   "historyTotalRations": "Gesamtrationen",
   "historyTotalCarbs": "Gesamt-KH",
+  "historyTotalFats": "Fett",
+  "historyTotalProteins": "Eiweiß",
   "historySubtotal": "ZWISCHENSUMME:",
   "historyRationsCarbs": "{rac} Rationen ({carbs}g KH)",
   "historyBolus": "BOLUS:",

@@ -364,6 +364,12 @@ class AppLocalizationsPl extends AppLocalizations {
   String get historyTotalCarbs => 'Suma węglowodanów';
 
   @override
+  String get historyTotalFats => 'Tłuszczu';
+
+  @override
+  String get historyTotalProteins => 'Białka';
+
+  @override
   String get historySubtotal => 'SUMA CZĘŚCIOWA:';
 
   @override

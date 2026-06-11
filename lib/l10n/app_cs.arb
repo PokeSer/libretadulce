@@ -116,6 +116,8 @@
   "historyMustLogin": "Musíte se přihlásit",
   "historyTotalRations": "Celkem VJ",
   "historyTotalCarbs": "Celkem sacharidů",
+  "historyTotalFats": "Tuků",
+  "historyTotalProteins": "Bílkovin",
   "historySubtotal": "MEZISOUČET:",
   "historyRationsCarbs": "{rac} VJ ({carbs}g sach.)",
   "historyBolus": "BOLUS:",

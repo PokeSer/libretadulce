@@ -390,6 +390,84 @@ class _HistoryPageState extends State<HistoryPage> {
                                         ],
                                       ),
                                     ),
+                                    if (entry.totalFats != null && entry.totalFats! > 0) ...[
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                                        decoration: BoxDecoration(
+                                          color: context.isDarkMode
+                                              ? Colors.orange.withValues(alpha: 0.1)
+                                              : Colors.orange.shade50,
+                                          borderRadius: BorderRadius.circular(AppDimens.radiusInput),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  const ExcludeSemantics(child: Icon(Icons.opacity, size: 14, color: Colors.orange)),
+                                                  const SizedBox(width: 4),
+                                                  Flexible(
+                                                    child: Text(l10n.historyTotalFats,
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 12,
+                                                            color: Colors.orange),
+                                                        overflow: TextOverflow.ellipsis),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Text(
+                                              '${entry.totalFats!.toStringAsFixed(1)}g',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.orange),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                    if (entry.totalProteins != null && entry.totalProteins! > 0) ...[
+                                      const SizedBox(height: 8),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                                        decoration: BoxDecoration(
+                                          color: context.isDarkMode
+                                              ? Colors.blue.withValues(alpha: 0.1)
+                                              : Colors.blue.shade50,
+                                          borderRadius: BorderRadius.circular(AppDimens.radiusInput),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Row(
+                                                children: [
+                                                  const ExcludeSemantics(child: Icon(Icons.fitness_center, size: 14, color: Colors.blue)),
+                                                  const SizedBox(width: 4),
+                                                  Flexible(
+                                                    child: Text(l10n.historyTotalProteins,
+                                                        style: const TextStyle(
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 12,
+                                                            color: Colors.blue),
+                                                        overflow: TextOverflow.ellipsis),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Text(
+                                              '${entry.totalProteins!.toStringAsFixed(1)}g',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.blue),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                     if (entry.glucose != null) ...[
                                       const SizedBox(height: 8),
                                       Container(

@@ -728,6 +728,18 @@ abstract class AppLocalizations {
   /// **'Total Carbohidratos'**
   String get historyTotalCarbs;
 
+  /// No description provided for @historyTotalFats.
+  ///
+  /// In es, this message translates to:
+  /// **'Grasas'**
+  String get historyTotalFats;
+
+  /// No description provided for @historyTotalProteins.
+  ///
+  /// In es, this message translates to:
+  /// **'Proteínas'**
+  String get historyTotalProteins;
+
   /// No description provided for @historySubtotal.
   ///
   /// In es, this message translates to:
