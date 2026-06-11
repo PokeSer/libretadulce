@@ -134,6 +134,16 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String calcFats(String fats) {
+    return '${fats}g tuků';
+  }
+
+  @override
+  String calcProteins(String proteins) {
+    return '${proteins}g bílkovin';
+  }
+
+  @override
   String get calcDeleteFromPlate => 'Odebrat z talíře';
 
   @override
@@ -147,6 +157,16 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String calcTotalHC(String carbs) {
     return '${carbs}g sach.';
+  }
+
+  @override
+  String calcTotalFats(String fats) {
+    return '${fats}g tuků';
+  }
+
+  @override
+  String calcTotalProteins(String proteins) {
+    return '${proteins}g bílkovin';
   }
 
   @override

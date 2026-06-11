@@ -332,6 +332,18 @@ abstract class AppLocalizations {
   /// **'{carbs}g HC'**
   String calcHC(String carbs);
 
+  /// No description provided for @calcFats.
+  ///
+  /// In es, this message translates to:
+  /// **'{fats}g Grasas'**
+  String calcFats(String fats);
+
+  /// No description provided for @calcProteins.
+  ///
+  /// In es, this message translates to:
+  /// **'{proteins}g Proteínas'**
+  String calcProteins(String proteins);
+
   /// No description provided for @calcDeleteFromPlate.
   ///
   /// In es, this message translates to:
@@ -355,6 +367,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'{carbs}g HC'**
   String calcTotalHC(String carbs);
+
+  /// No description provided for @calcTotalFats.
+  ///
+  /// In es, this message translates to:
+  /// **'{fats}g Grasas'**
+  String calcTotalFats(String fats);
+
+  /// No description provided for @calcTotalProteins.
+  ///
+  /// In es, this message translates to:
+  /// **'{proteins}g Proteínas'**
+  String calcTotalProteins(String proteins);
 
   /// No description provided for @calcMealTypeLabel.
   ///

@@ -90,6 +90,22 @@
       }
     }
   },
+  "calcFats": "{fats}g Grasas",
+  "@calcFats": {
+    "placeholders": {
+      "fats": {
+        "type": "String"
+      }
+    }
+  },
+  "calcProteins": "{proteins}g Proteínas",
+  "@calcProteins": {
+    "placeholders": {
+      "proteins": {
+        "type": "String"
+      }
+    }
+  },
   "calcDeleteFromPlate": "Eliminar del plato",
   "calcTotalPlate": "TOTAL DEL PLATO:",
   "calcTotalRac": "{rac}Rac.",
@@ -104,6 +120,22 @@
   "@calcTotalHC": {
     "placeholders": {
       "carbs": {
+        "type": "String"
+      }
+    }
+  },
+  "calcTotalFats": "{fats}g Grasas",
+  "@calcTotalFats": {
+    "placeholders": {
+      "fats": {
+        "type": "String"
+      }
+    }
+  },
+  "calcTotalProteins": "{proteins}g Proteínas",
+  "@calcTotalProteins": {
+    "placeholders": {
+      "proteins": {
         "type": "String"
       }
     }

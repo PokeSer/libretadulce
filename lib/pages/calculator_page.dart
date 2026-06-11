@@ -1250,6 +1250,32 @@ class _CalculatorPageState extends State<CalculatorPage>
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
+                                      if (item['fats'] != null && item['fats'] > 0)
+                                        Flexible(
+                                          child: Text(
+                                            l10n.calcFats(
+                                              item['fats'].toStringAsFixed(1),
+                                            ),
+                                            style: const TextStyle(
+                                              color: Colors.orange,
+                                              fontSize: 13,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      if (item['proteins'] != null && item['proteins'] > 0)
+                                        Flexible(
+                                          child: Text(
+                                            l10n.calcProteins(
+                                              item['proteins'].toStringAsFixed(1),
+                                            ),
+                                            style: const TextStyle(
+                                              color: Colors.blue,
+                                              fontSize: 13,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
                                     ],
                                   ),
                                   const SizedBox(width: 8),
@@ -1327,6 +1353,26 @@ class _CalculatorPageState extends State<CalculatorPage>
                                       : Colors.teal.shade800,
                                 ),
                               ),
+                              if (_mealTotalFats > 0)
+                                Text(
+                                  l10n.calcTotalFats(
+                                    _mealTotalFats.toStringAsFixed(1),
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              if (_mealTotalProteins > 0)
+                                Text(
+                                  l10n.calcTotalProteins(
+                                    _mealTotalProteins.toStringAsFixed(1),
+                                  ),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.blue,
+                                  ),
+                                ),
                             ],
                           ),
                         ],

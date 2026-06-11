@@ -134,6 +134,16 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String calcFats(String fats) {
+    return '${fats}g Fett';
+  }
+
+  @override
+  String calcProteins(String proteins) {
+    return '${proteins}g Eiweiß';
+  }
+
+  @override
   String get calcDeleteFromPlate => 'Vom Teller entfernen';
 
   @override
@@ -147,6 +157,16 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String calcTotalHC(String carbs) {
     return '${carbs}g KH';
+  }
+
+  @override
+  String calcTotalFats(String fats) {
+    return '${fats}g Fett';
+  }
+
+  @override
+  String calcTotalProteins(String proteins) {
+    return '${proteins}g Eiweiß';
   }
 
   @override
