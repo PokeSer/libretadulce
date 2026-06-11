@@ -520,6 +520,7 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
           child: TextField(
             controller: _listSearchController,
             decoration: InputDecoration(
+              labelText: l10n.foodsSearch,
               hintText: l10n.foodsSearch,
               prefixIcon: const Icon(Icons.search),
               filled: true,
@@ -816,6 +817,7 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
             onChanged: (value) =>
                 setState(() => _globalSearchQuery = value.toLowerCase()),
             decoration: InputDecoration(
+              labelText: l10n.globalSearch,
               hintText: l10n.globalSearch,
               prefixIcon: const Icon(Icons.search),
               border: OutlineInputBorder(
