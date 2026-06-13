@@ -956,4 +956,163 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get calcTabRations => 'Razioni';
+
+  @override
+  String get photoTitle => 'Analizza foto del piatto';
+
+  @override
+  String get photoTakeButton => 'Scatta foto al piatto';
+
+  @override
+  String get photoAnalyzing => 'Analisi IA in corso...';
+
+  @override
+  String get photoAnalyzingHint =>
+      'Gemini sta identificando gli alimenti e stimando i valori nutrizionali';
+
+  @override
+  String get photoNoFoodDetected =>
+      'Impossibile analizzare la foto. Prova con un\'immagine più nitida e una buona illuminazione.';
+
+  @override
+  String photoError(String error) {
+    return 'Errore: $error';
+  }
+
+  @override
+  String get photoRetry => 'Riprova';
+
+  @override
+  String get photoEmptyHint =>
+      'Scatta una foto al tuo piatto per l\'analisi IA';
+
+  @override
+  String get photoEmptySubtitle =>
+      'Gemini identificherà gli alimenti, stimerà le porzioni e calcolerà i valori nutrizionali';
+
+  @override
+  String get photoResultsTitle => 'Alimenti rilevati';
+
+  @override
+  String get photoResultsHint =>
+      'Regola i grammi se necessario e aggiungi al piatto';
+
+  @override
+  String get photoConfidence => 'affidabilità';
+
+  @override
+  String get photoAddButton => 'Aggiungi';
+
+  @override
+  String photoAddToPlate(String name) {
+    return 'Aggiungi $name al piatto';
+  }
+
+  @override
+  String get photoDone => 'Fatto';
+
+  @override
+  String get photoGramsLabel => 'Grammi';
+
+  @override
+  String get photoNoNutrition => 'Nessun dato nutrizionale';
+
+  @override
+  String get photoCameraButton => 'Analizza piatto con IA';
+
+  @override
+  String get photoApiKeyMissing =>
+      'Per usare l\'analisi IA serve una chiave API Gemini. Gratuita su aistudio.google.com';
+
+  @override
+  String get photoConfigureKey => 'Vai alle impostazioni';
+
+  @override
+  String get profileGeminiKey => 'Chiave API Gemini';
+
+  @override
+  String get photoPrivacyTitle => 'Privacy';
+
+  @override
+  String get photoPrivacyText =>
+      'La foto del tuo piatto sarà inviata all\'API Gemini (Google) per l\'analisi. Non viene archiviata né usata per l\'addestramento. Accetti?';
+
+  @override
+  String get photoPrivacyCancel => 'Annulla';
+
+  @override
+  String get photoPrivacyAccept => 'Accetta';
+
+  @override
+  String get photoTipTitle => 'Consiglio per una foto migliore';
+
+  @override
+  String get photoTipBody =>
+      'Per risultati migliori, mantieni una distanza adeguata dal piatto e assicurati che tutti gli alimenti siano visibili. Una vista dall\'alto con una buona illuminazione funziona meglio.';
+
+  @override
+  String get photoTipChecklist =>
+      '• Mostra l\'intero piatto\n• Buona illuminazione naturale\n• Distanza di circa 30-40 cm\n• Nessun altro oggetto intorno';
+
+  @override
+  String get photoTipCancel => 'Annulla';
+
+  @override
+  String get photoTipContinue => 'Capito, scatta foto';
+
+  @override
+  String get photoTipDontShowAgain => 'Non mostrare più questo avviso';
+
+  @override
+  String get photoGalleryButton => 'Scegli dalla galleria';
+
+  @override
+  String get photoDisclaimerTitle => 'Valori stimati dall\'IA';
+
+  @override
+  String get photoDisclaimerText =>
+      'Questi valori sono approssimazioni generate dall\'IA. Per un conteggio preciso dei carboidrati, usa sempre una bilancia da cucina e controlla le etichette nutrizionali.';
+
+  @override
+  String get photoAddFoodsTitle => 'Aggiungi ogni alimento al tuo piatto:';
+
+  @override
+  String get photoTableFood => 'Alimento';
+
+  @override
+  String get photoTableGrams => 'Grammi';
+
+  @override
+  String get photoTableCarbs => 'Carboidrati';
+
+  @override
+  String get photoTableRations => 'Razioni';
+
+  @override
+  String get photoTableGI => 'IG';
+
+  @override
+  String get photoTableTotal => 'TOTALE';
+
+  @override
+  String get photoBolusTitle => 'Bolo di insulina stimato';
+
+  @override
+  String photoBolusEstimation(String units, String carbs) {
+    return 'In base alle tue impostazioni, per ${carbs}g di carboidrati avresti bisogno di $units di insulina. Ricorda che questo calcolo non include la correzione glicemica.';
+  }
+
+  @override
+  String get photoBolusReminder =>
+      'Questa è una stima. Controlla sempre la glicemia attuale per applicare la correzione necessaria e consulta il medico per qualsiasi dubbio sulla terapia insulinica.';
+
+  @override
+  String get profileGeminiKeyHint => 'Incolla qui la tua chiave API';
+
+  @override
+  String get profileGeminiKeyDesc =>
+      'Necessaria per l\'analisi IA degli alimenti. Gratuita su aistudio.google.com';
+
+  @override
+  String get profileGeminiKeySaved => 'Chiave API salvata';
 }

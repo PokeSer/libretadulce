@@ -960,4 +960,164 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get calcTabRations => 'Rationen';
+
+  @override
+  String get photoTitle => 'Tellerfoto analysieren';
+
+  @override
+  String get photoTakeButton => 'Foto vom Teller machen';
+
+  @override
+  String get photoAnalyzing => 'KI-Analyse läuft...';
+
+  @override
+  String get photoAnalyzingHint =>
+      'Gemini identifiziert Lebensmittel und schätzt Nährwerte';
+
+  @override
+  String get photoNoFoodDetected =>
+      'Foto konnte nicht analysiert werden. Versuche ein klareres Bild mit guter Beleuchtung.';
+
+  @override
+  String photoError(String error) {
+    return 'Fehler: $error';
+  }
+
+  @override
+  String get photoRetry => 'Erneut versuchen';
+
+  @override
+  String get photoEmptyHint =>
+      'Mach ein Foto von deinem Teller für die KI-Analyse';
+
+  @override
+  String get photoEmptySubtitle =>
+      'Gemini identifiziert Lebensmittel, schätzt Portionen und berechnet Nährwerte';
+
+  @override
+  String get photoResultsTitle => 'Erkannte Lebensmittel';
+
+  @override
+  String get photoResultsHint =>
+      'Gramm bei Bedarf anpassen und zum Teller hinzufügen';
+
+  @override
+  String get photoConfidence => 'Sicherheit';
+
+  @override
+  String get photoAddButton => 'Hinzufügen';
+
+  @override
+  String photoAddToPlate(String name) {
+    return '$name zum Teller hinzufügen';
+  }
+
+  @override
+  String get photoDone => 'Fertig';
+
+  @override
+  String get photoGramsLabel => 'Gramm';
+
+  @override
+  String get photoNoNutrition => 'Keine Nährwertdaten';
+
+  @override
+  String get photoCameraButton => 'Teller mit KI analysieren';
+
+  @override
+  String get photoApiKeyMissing =>
+      'Für die KI-Analyse benötigst du einen Gemini-API-Schlüssel. Kostenlos unter aistudio.google.com';
+
+  @override
+  String get photoConfigureKey => 'Zu den Einstellungen';
+
+  @override
+  String get profileGeminiKey => 'Gemini API-Schlüssel';
+
+  @override
+  String get photoPrivacyTitle => 'Datenschutz';
+
+  @override
+  String get photoPrivacyText =>
+      'Dein Tellerfoto wird zur Analyse an die Gemini-API (Google) gesendet. Es wird nicht gespeichert oder für Modelltraining verwendet. Akzeptierst du?';
+
+  @override
+  String get photoPrivacyCancel => 'Abbrechen';
+
+  @override
+  String get photoPrivacyAccept => 'Akzeptieren';
+
+  @override
+  String get photoTipTitle => 'Tipp für ein besseres Foto';
+
+  @override
+  String get photoTipBody =>
+      'Für beste Ergebnisse halte einen angemessenen Abstand zum Teller und stelle sicher, dass alle Lebensmittel sichtbar sind. Eine Draufsicht mit guter Beleuchtung funktioniert am besten.';
+
+  @override
+  String get photoTipChecklist =>
+      '• Ganzen Teller zeigen\n• Gute natürliche Beleuchtung\n• Abstand ca. 30-40 cm\n• Keine anderen Gegenstände';
+
+  @override
+  String get photoTipCancel => 'Abbrechen';
+
+  @override
+  String get photoTipContinue => 'Verstanden, Foto machen';
+
+  @override
+  String get photoTipDontShowAgain => 'Diesen Hinweis nicht mehr anzeigen';
+
+  @override
+  String get photoGalleryButton => 'Aus Galerie wählen';
+
+  @override
+  String get photoDisclaimerTitle => 'KI-geschätzte Werte';
+
+  @override
+  String get photoDisclaimerText =>
+      'Diese Werte sind KI-generierte Näherungen. Für genaues Kohlenhydratzählen verwende immer eine Küchenwaage und prüfe die Nährwertangaben der Produkte.';
+
+  @override
+  String get photoAddFoodsTitle =>
+      'Füge jedes Lebensmittel deinem Teller hinzu:';
+
+  @override
+  String get photoTableFood => 'Lebensmittel';
+
+  @override
+  String get photoTableGrams => 'Gramm';
+
+  @override
+  String get photoTableCarbs => 'Kohlenhydrate';
+
+  @override
+  String get photoTableRations => 'KE';
+
+  @override
+  String get photoTableGI => 'GI';
+
+  @override
+  String get photoTableTotal => 'GESAMT';
+
+  @override
+  String get photoBolusTitle => 'Geschätzter Insulinbolus';
+
+  @override
+  String photoBolusEstimation(String units, String carbs) {
+    return 'Basierend auf deinen Einstellungen würdest du für ${carbs}g Kohlenhydrate $units Insulin benötigen. Denk daran, dass dies keine Glukosekorrektur beinhaltet.';
+  }
+
+  @override
+  String get photoBolusReminder =>
+      'Dies ist eine Schätzung. Überprüfe immer deinen aktuellen Blutzucker für die notwendige Korrektur und konsultiere deinen Arzt bei Fragen zu deiner Insulindosis.';
+
+  @override
+  String get profileGeminiKeyHint => 'API-Schlüssel hier einfügen';
+
+  @override
+  String get profileGeminiKeyDesc =>
+      'Erforderlich für KI-Lebensmittelanalyse. Kostenlos unter aistudio.google.com';
+
+  @override
+  String get profileGeminiKeySaved => 'API-Schlüssel gespeichert';
 }

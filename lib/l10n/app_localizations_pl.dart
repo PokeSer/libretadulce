@@ -960,4 +960,162 @@ class AppLocalizationsPl extends AppLocalizations {
 
   @override
   String get calcTabRations => 'Wymienniki';
+
+  @override
+  String get photoTitle => 'Analiza zdjęcia talerza';
+
+  @override
+  String get photoTakeButton => 'Zrób zdjęcie talerza';
+
+  @override
+  String get photoAnalyzing => 'Analiza AI...';
+
+  @override
+  String get photoAnalyzingHint =>
+      'Gemini identyfikuje żywność i szacuje wartości odżywcze';
+
+  @override
+  String get photoNoFoodDetected =>
+      'Nie udało się przeanalizować zdjęcia. Spróbuj zrobić wyraźniejsze zdjęcie przy dobrym oświetleniu.';
+
+  @override
+  String photoError(String error) {
+    return 'Błąd: $error';
+  }
+
+  @override
+  String get photoRetry => 'Spróbuj ponownie';
+
+  @override
+  String get photoEmptyHint => 'Zrób zdjęcie swojego talerza do analizy AI';
+
+  @override
+  String get photoEmptySubtitle =>
+      'Gemini zidentyfikuje żywność, oszacuje porcje i obliczy wartości odżywcze';
+
+  @override
+  String get photoResultsTitle => 'Wykryte produkty';
+
+  @override
+  String get photoResultsHint =>
+      'W razie potrzeby dostosuj gramy i dodaj do talerza';
+
+  @override
+  String get photoConfidence => 'pewność';
+
+  @override
+  String get photoAddButton => 'Dodaj';
+
+  @override
+  String photoAddToPlate(String name) {
+    return 'Dodaj $name do talerza';
+  }
+
+  @override
+  String get photoDone => 'Gotowe';
+
+  @override
+  String get photoGramsLabel => 'Gramy';
+
+  @override
+  String get photoNoNutrition => 'Brak danych żywieniowych';
+
+  @override
+  String get photoCameraButton => 'Analizuj talerz z AI';
+
+  @override
+  String get photoApiKeyMissing =>
+      'Do analizy AI potrzebny jest klucz API Gemini. Darmowy na aistudio.google.com';
+
+  @override
+  String get photoConfigureKey => 'Przejdź do ustawień';
+
+  @override
+  String get profileGeminiKey => 'Klucz API Gemini';
+
+  @override
+  String get photoPrivacyTitle => 'Prywatność';
+
+  @override
+  String get photoPrivacyText =>
+      'Zdjęcie twojego talerza zostanie wysłane do Gemini API (Google) w celu analizy. Nie jest przechowywane ani używane do trenowania modeli. Akceptujesz?';
+
+  @override
+  String get photoPrivacyCancel => 'Anuluj';
+
+  @override
+  String get photoPrivacyAccept => 'Akceptuję';
+
+  @override
+  String get photoTipTitle => 'Wskazówka dla lepszego zdjęcia';
+
+  @override
+  String get photoTipBody =>
+      'Dla najlepszych rezultatów zachowaj odpowiednią odległość od talerza i upewnij się, że wszystkie produkty są widoczne. Najlepiej sprawdza się widok z góry przy dobrym oświetleniu.';
+
+  @override
+  String get photoTipChecklist =>
+      '• Pokaż cały talerz\n• Dobre naturalne oświetlenie\n• Odległość około 30-40 cm\n• Brak innych przedmiotów wokół';
+
+  @override
+  String get photoTipCancel => 'Anuluj';
+
+  @override
+  String get photoTipContinue => 'Rozumiem, zrób zdjęcie';
+
+  @override
+  String get photoTipDontShowAgain => 'Nie pokazuj więcej tej wskazówki';
+
+  @override
+  String get photoGalleryButton => 'Wybierz z galerii';
+
+  @override
+  String get photoDisclaimerTitle => 'Wartości oszacowane przez AI';
+
+  @override
+  String get photoDisclaimerText =>
+      'Te wartości są przybliżeniami generowanymi przez AI. Do dokładnego liczenia węglowodanów zawsze używaj wagi kuchennej i sprawdzaj etykiety żywieniowe produktów.';
+
+  @override
+  String get photoAddFoodsTitle => 'Dodaj każdy produkt do talerza:';
+
+  @override
+  String get photoTableFood => 'Produkt';
+
+  @override
+  String get photoTableGrams => 'Gramy';
+
+  @override
+  String get photoTableCarbs => 'Węglowod.';
+
+  @override
+  String get photoTableRations => 'Wymienniki';
+
+  @override
+  String get photoTableGI => 'IG';
+
+  @override
+  String get photoTableTotal => 'RAZEM';
+
+  @override
+  String get photoBolusTitle => 'Szacowany bolus insuliny';
+
+  @override
+  String photoBolusEstimation(String units, String carbs) {
+    return 'Zgodnie z Twoimi ustawieniami, na ${carbs}g węglowodanów potrzebowałbyś $units insuliny. Pamiętaj, że to obliczenie nie uwzględnia korekty glikemii.';
+  }
+
+  @override
+  String get photoBolusReminder =>
+      'To jest wartość szacunkowa. Zawsze sprawdzaj aktualny poziom glukozy, aby zastosować niezbędną korektę i skonsultuj się z lekarzem w sprawie dawek insuliny.';
+
+  @override
+  String get profileGeminiKeyHint => 'Wklej tutaj swój klucz API';
+
+  @override
+  String get profileGeminiKeyDesc =>
+      'Wymagany do analizy żywności AI. Darmowy na aistudio.google.com';
+
+  @override
+  String get profileGeminiKeySaved => 'Klucz API zapisany';
 }

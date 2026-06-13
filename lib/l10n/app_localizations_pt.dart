@@ -956,4 +956,162 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get calcTabRations => 'Rações';
+
+  @override
+  String get photoTitle => 'Analisar foto do prato';
+
+  @override
+  String get photoTakeButton => 'Tirar foto ao prato';
+
+  @override
+  String get photoAnalyzing => 'A analisar com IA...';
+
+  @override
+  String get photoAnalyzingHint =>
+      'O Gemini está a identificar alimentos e a estimar valores nutricionais';
+
+  @override
+  String get photoNoFoodDetected =>
+      'Não foi possível analisar a foto. Tente uma imagem mais nítida com boa iluminação.';
+
+  @override
+  String photoError(String error) {
+    return 'Erro: $error';
+  }
+
+  @override
+  String get photoRetry => 'Tentar novamente';
+
+  @override
+  String get photoEmptyHint => 'Tire uma foto do seu prato para análise com IA';
+
+  @override
+  String get photoEmptySubtitle =>
+      'O Gemini irá identificar os alimentos, estimar as porções e calcular os valores nutricionais';
+
+  @override
+  String get photoResultsTitle => 'Alimentos detetados';
+
+  @override
+  String get photoResultsHint =>
+      'Ajuste as gramas se necessário e adicione ao prato';
+
+  @override
+  String get photoConfidence => 'confiança';
+
+  @override
+  String get photoAddButton => 'Adicionar';
+
+  @override
+  String photoAddToPlate(String name) {
+    return 'Adicionar $name ao prato';
+  }
+
+  @override
+  String get photoDone => 'Concluído';
+
+  @override
+  String get photoGramsLabel => 'Gramas';
+
+  @override
+  String get photoNoNutrition => 'Sem dados nutricionais';
+
+  @override
+  String get photoCameraButton => 'Analisar prato com IA';
+
+  @override
+  String get photoApiKeyMissing =>
+      'Para usar a análise com IA precisa de uma chave API do Gemini. É gratuita em aistudio.google.com';
+
+  @override
+  String get photoConfigureKey => 'Ir para Definições';
+
+  @override
+  String get profileGeminiKey => 'Chave API Gemini';
+
+  @override
+  String get photoPrivacyTitle => 'Privacidade';
+
+  @override
+  String get photoPrivacyText =>
+      'A foto do seu prato será enviada para a API Gemini (Google) para análise. Não é armazenada nem usada para treino de modelos. Aceita?';
+
+  @override
+  String get photoPrivacyCancel => 'Cancelar';
+
+  @override
+  String get photoPrivacyAccept => 'Aceitar';
+
+  @override
+  String get photoTipTitle => 'Dica para uma foto melhor';
+
+  @override
+  String get photoTipBody =>
+      'Para melhores resultados, mantenha uma distância adequada do prato e certifique-se de que todos os alimentos estejam visíveis. Uma vista de cima com boa iluminação funciona melhor.';
+
+  @override
+  String get photoTipChecklist =>
+      '• Mostre o prato inteiro\n• Boa iluminação natural\n• Distância de cerca de 30-40 cm\n• Sem outros objetos ao redor';
+
+  @override
+  String get photoTipCancel => 'Cancelar';
+
+  @override
+  String get photoTipContinue => 'Entendido, tirar foto';
+
+  @override
+  String get photoTipDontShowAgain => 'Não mostrar este aviso novamente';
+
+  @override
+  String get photoGalleryButton => 'Escolher da galeria';
+
+  @override
+  String get photoDisclaimerTitle => 'Valores estimados por IA';
+
+  @override
+  String get photoDisclaimerText =>
+      'Estes valores são aproximações geradas por IA. Para uma contagem precisa de hidratos de carbono, use sempre uma balança de cozinha e verifique os rótulos nutricionais dos produtos.';
+
+  @override
+  String get photoAddFoodsTitle => 'Adicione cada alimento ao seu prato:';
+
+  @override
+  String get photoTableFood => 'Alimento';
+
+  @override
+  String get photoTableGrams => 'Gramas';
+
+  @override
+  String get photoTableCarbs => 'Hidratos';
+
+  @override
+  String get photoTableRations => 'Rações';
+
+  @override
+  String get photoTableGI => 'IG';
+
+  @override
+  String get photoTableTotal => 'TOTAL';
+
+  @override
+  String get photoBolusTitle => 'Bolus de insulina estimado';
+
+  @override
+  String photoBolusEstimation(String units, String carbs) {
+    return 'De acordo com as suas definições, para ${carbs}g de hidratos precisaria de $units de insulina. Lembre-se que este cálculo não inclui a correção glicémica.';
+  }
+
+  @override
+  String get photoBolusReminder =>
+      'Esta é uma estimativa. Verifique sempre a sua glicemia atual para aplicar a correção necessária e consulte o seu médico sobre qualquer dúvida na sua terapêutica.';
+
+  @override
+  String get profileGeminiKeyHint => 'Cole aqui a sua chave API';
+
+  @override
+  String get profileGeminiKeyDesc =>
+      'Necessária para análise de alimentos com IA. Gratuita em aistudio.google.com';
+
+  @override
+  String get profileGeminiKeySaved => 'Chave API guardada';
 }

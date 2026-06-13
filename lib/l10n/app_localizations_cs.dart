@@ -954,4 +954,162 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get calcTabRations => 'VJ';
+
+  @override
+  String get photoTitle => 'Analyzovat fotografii talíře';
+
+  @override
+  String get photoTakeButton => 'Vyfotit talíř';
+
+  @override
+  String get photoAnalyzing => 'Analýza pomocí AI...';
+
+  @override
+  String get photoAnalyzingHint =>
+      'Gemini identifikuje potraviny a odhaduje nutriční hodnoty';
+
+  @override
+  String get photoNoFoodDetected =>
+      'Fotografii se nepodařilo analyzovat. Zkuste snímek s lepším osvětlením.';
+
+  @override
+  String photoError(String error) {
+    return 'Chyba: $error';
+  }
+
+  @override
+  String get photoRetry => 'Zkusit znovu';
+
+  @override
+  String get photoEmptyHint => 'Vyfoťte svůj talíř pro analýzu pomocí AI';
+
+  @override
+  String get photoEmptySubtitle =>
+      'Gemini identifikuje potraviny, odhadne porce a vypočítá nutriční hodnoty';
+
+  @override
+  String get photoResultsTitle => 'Rozpoznané potraviny';
+
+  @override
+  String get photoResultsHint =>
+      'V případě potřeby upravte gramy a přidejte na talíř';
+
+  @override
+  String get photoConfidence => 'jistota';
+
+  @override
+  String get photoAddButton => 'Přidat';
+
+  @override
+  String photoAddToPlate(String name) {
+    return 'Přidat $name na talíř';
+  }
+
+  @override
+  String get photoDone => 'Hotovo';
+
+  @override
+  String get photoGramsLabel => 'Gramy';
+
+  @override
+  String get photoNoNutrition => 'Žádné nutriční údaje';
+
+  @override
+  String get photoCameraButton => 'Analyzovat talíř pomocí AI';
+
+  @override
+  String get photoApiKeyMissing =>
+      'Pro analýzu pomocí AI potřebujete Gemini API klíč. Zdarma na aistudio.google.com';
+
+  @override
+  String get photoConfigureKey => 'Přejít do nastavení';
+
+  @override
+  String get profileGeminiKey => 'Gemini API klíč';
+
+  @override
+  String get photoPrivacyTitle => 'Soukromí';
+
+  @override
+  String get photoPrivacyText =>
+      'Fotografie vašeho talíře bude odeslána do Gemini API (Google) k analýze. Není ukládána ani používána k trénování modelů. Souhlasíte?';
+
+  @override
+  String get photoPrivacyCancel => 'Zrušit';
+
+  @override
+  String get photoPrivacyAccept => 'Souhlasím';
+
+  @override
+  String get photoTipTitle => 'Tip pro lepší fotografii';
+
+  @override
+  String get photoTipBody =>
+      'Pro nejlepší výsledky udržujte přiměřenou vzdálenost od talíře a ujistěte se, že jsou vidět všechny potraviny. Nejlépe funguje pohled shora s dobrým osvětlením.';
+
+  @override
+  String get photoTipChecklist =>
+      '• Ukažte celý talíř\n• Dobré přirozené osvětlení\n• Vzdálenost asi 30-40 cm\n• Žádné další předměty v okolí';
+
+  @override
+  String get photoTipCancel => 'Zrušit';
+
+  @override
+  String get photoTipContinue => 'Rozumím, vyfotit';
+
+  @override
+  String get photoTipDontShowAgain => 'Tuto radu již nezobrazovat';
+
+  @override
+  String get photoGalleryButton => 'Vybrat z galerie';
+
+  @override
+  String get photoDisclaimerTitle => 'Hodnoty odhadnuté AI';
+
+  @override
+  String get photoDisclaimerText =>
+      'Tyto hodnoty jsou aproximace generované AI. Pro přesné počítání sacharidů vždy používejte kuchyňskou váhu a kontrolujte nutriční štítky výrobků.';
+
+  @override
+  String get photoAddFoodsTitle => 'Přidejte každou potravinu na talíř:';
+
+  @override
+  String get photoTableFood => 'Potravina';
+
+  @override
+  String get photoTableGrams => 'Gramy';
+
+  @override
+  String get photoTableCarbs => 'Sacharidy';
+
+  @override
+  String get photoTableRations => 'VJ';
+
+  @override
+  String get photoTableGI => 'IG';
+
+  @override
+  String get photoTableTotal => 'CELKEM';
+
+  @override
+  String get photoBolusTitle => 'Odhadovaný inzulínový bolus';
+
+  @override
+  String photoBolusEstimation(String units, String carbs) {
+    return 'Podle vašeho nastavení byste pro ${carbs}g sacharidů potřebovali $units inzulínu. Nezapomeňte, že tento výpočet nezahrnuje korekci podle glykémie.';
+  }
+
+  @override
+  String get photoBolusReminder =>
+      'Toto je orientační výpočet. Vždy zkontrolujte aktuální glykémii pro potřebnou korekci a konzultujte s lékařem jakékoli pochybnosti o dávkování inzulínu.';
+
+  @override
+  String get profileGeminiKeyHint => 'Vložte svůj API klíč';
+
+  @override
+  String get profileGeminiKeyDesc =>
+      'Vyžadováno pro AI analýzu potravin. Zdarma na aistudio.google.com';
+
+  @override
+  String get profileGeminiKeySaved => 'API klíč uložen';
 }

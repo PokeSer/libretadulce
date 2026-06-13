@@ -953,4 +953,161 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get calcTabRations => 'Rations';
+
+  @override
+  String get photoTitle => 'Analyze plate photo';
+
+  @override
+  String get photoTakeButton => 'Take photo of plate';
+
+  @override
+  String get photoAnalyzing => 'Analyzing with AI...';
+
+  @override
+  String get photoAnalyzingHint =>
+      'Gemini is identifying foods and estimating nutritional values';
+
+  @override
+  String get photoNoFoodDetected =>
+      'Could not analyze the photo. Try a clearer image with good lighting.';
+
+  @override
+  String photoError(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get photoRetry => 'Try again';
+
+  @override
+  String get photoEmptyHint => 'Take a photo of your plate for AI analysis';
+
+  @override
+  String get photoEmptySubtitle =>
+      'Gemini will identify foods, estimate portions and calculate nutritional values';
+
+  @override
+  String get photoResultsTitle => 'Detected foods';
+
+  @override
+  String get photoResultsHint => 'Adjust grams if needed and add to plate';
+
+  @override
+  String get photoConfidence => 'confidence';
+
+  @override
+  String get photoAddButton => 'Add';
+
+  @override
+  String photoAddToPlate(String name) {
+    return 'Add $name to plate';
+  }
+
+  @override
+  String get photoDone => 'Done';
+
+  @override
+  String get photoGramsLabel => 'Grams';
+
+  @override
+  String get photoNoNutrition => 'No nutritional data';
+
+  @override
+  String get photoCameraButton => 'Analyze plate with AI';
+
+  @override
+  String get photoApiKeyMissing =>
+      'To use AI analysis you need a Gemini API key. It\'s free at aistudio.google.com';
+
+  @override
+  String get photoConfigureKey => 'Go to Settings';
+
+  @override
+  String get profileGeminiKey => 'Gemini API Key';
+
+  @override
+  String get photoPrivacyTitle => 'Privacy';
+
+  @override
+  String get photoPrivacyText =>
+      'Your plate photo will be sent to the Gemini API (Google) for analysis. It is not stored or used for model training. Do you accept?';
+
+  @override
+  String get photoPrivacyCancel => 'Cancel';
+
+  @override
+  String get photoPrivacyAccept => 'Accept';
+
+  @override
+  String get photoTipTitle => 'Tip for a better photo';
+
+  @override
+  String get photoTipBody =>
+      'For best results, keep a proper distance from the plate and make sure all foods are visible. A top-down view with good lighting works best.';
+
+  @override
+  String get photoTipChecklist =>
+      '• Show the full plate\n• Good natural lighting\n• Distance of about 30-40 cm\n• No other objects around';
+
+  @override
+  String get photoTipCancel => 'Cancel';
+
+  @override
+  String get photoTipContinue => 'Got it, take photo';
+
+  @override
+  String get photoTipDontShowAgain => 'Don\'t show this tip again';
+
+  @override
+  String get photoGalleryButton => 'Choose from gallery';
+
+  @override
+  String get photoDisclaimerTitle => 'AI-estimated values';
+
+  @override
+  String get photoDisclaimerText =>
+      'These values are AI-generated approximations. For accurate carbohydrate counting, always use a kitchen scale and check product nutrition labels.';
+
+  @override
+  String get photoAddFoodsTitle => 'Add each food to your plate:';
+
+  @override
+  String get photoTableFood => 'Food';
+
+  @override
+  String get photoTableGrams => 'Grams';
+
+  @override
+  String get photoTableCarbs => 'Carbs';
+
+  @override
+  String get photoTableRations => 'Rations';
+
+  @override
+  String get photoTableGI => 'GI';
+
+  @override
+  String get photoTableTotal => 'TOTAL';
+
+  @override
+  String get photoBolusTitle => 'Estimated insulin bolus';
+
+  @override
+  String photoBolusEstimation(String units, String carbs) {
+    return 'Based on your settings, for ${carbs}g of carbs you would need $units of insulin. Remember this does not include glucose correction.';
+  }
+
+  @override
+  String get photoBolusReminder =>
+      'This is an estimate. Always check your current blood glucose to apply the necessary correction and consult your doctor about your insulin regimen.';
+
+  @override
+  String get profileGeminiKeyHint => 'Paste your API key here';
+
+  @override
+  String get profileGeminiKeyDesc =>
+      'Required for AI food analysis. Free at aistudio.google.com';
+
+  @override
+  String get profileGeminiKeySaved => 'API key saved';
 }

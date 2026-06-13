@@ -1807,6 +1807,288 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Raciones'**
   String get calcTabRations;
+
+  /// No description provided for @photoTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Analizar foto del plato'**
+  String get photoTitle;
+
+  /// No description provided for @photoTakeButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Hacer foto al plato'**
+  String get photoTakeButton;
+
+  /// No description provided for @photoAnalyzing.
+  ///
+  /// In es, this message translates to:
+  /// **'Analizando con IA...'**
+  String get photoAnalyzing;
+
+  /// No description provided for @photoAnalyzingHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Gemini está identificando alimentos y estimando valores nutricionales'**
+  String get photoAnalyzingHint;
+
+  /// No description provided for @photoNoFoodDetected.
+  ///
+  /// In es, this message translates to:
+  /// **'No se ha podido analizar la foto. Prueba con otra imagen más clara y con buena iluminación.'**
+  String get photoNoFoodDetected;
+
+  /// No description provided for @photoError.
+  ///
+  /// In es, this message translates to:
+  /// **'Error: {error}'**
+  String photoError(String error);
+
+  /// No description provided for @photoRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Volver a intentar'**
+  String get photoRetry;
+
+  /// No description provided for @photoEmptyHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Haz una foto a tu plato para analizarlo con IA'**
+  String get photoEmptyHint;
+
+  /// No description provided for @photoEmptySubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Gemini identificará los alimentos, estimará las porciones y calculará los valores nutricionales'**
+  String get photoEmptySubtitle;
+
+  /// No description provided for @photoResultsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Alimentos detectados'**
+  String get photoResultsTitle;
+
+  /// No description provided for @photoResultsHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Ajusta los gramos si es necesario y añade al plato'**
+  String get photoResultsHint;
+
+  /// No description provided for @photoConfidence.
+  ///
+  /// In es, this message translates to:
+  /// **'confianza'**
+  String get photoConfidence;
+
+  /// No description provided for @photoAddButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir'**
+  String get photoAddButton;
+
+  /// No description provided for @photoAddToPlate.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir {name} al plato'**
+  String photoAddToPlate(String name);
+
+  /// No description provided for @photoDone.
+  ///
+  /// In es, this message translates to:
+  /// **'Listo'**
+  String get photoDone;
+
+  /// No description provided for @photoGramsLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Gramos'**
+  String get photoGramsLabel;
+
+  /// No description provided for @photoNoNutrition.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin datos nutricionales'**
+  String get photoNoNutrition;
+
+  /// No description provided for @photoCameraButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Analizar plato con IA'**
+  String get photoCameraButton;
+
+  /// No description provided for @photoApiKeyMissing.
+  ///
+  /// In es, this message translates to:
+  /// **'Para usar el análisis con IA necesitas una clave de API de Gemini. Es gratis, puedes obtenerla en aistudio.google.com'**
+  String get photoApiKeyMissing;
+
+  /// No description provided for @photoConfigureKey.
+  ///
+  /// In es, this message translates to:
+  /// **'Ir a Ajustes'**
+  String get photoConfigureKey;
+
+  /// No description provided for @profileGeminiKey.
+  ///
+  /// In es, this message translates to:
+  /// **'Clave API de Gemini'**
+  String get profileGeminiKey;
+
+  /// No description provided for @photoPrivacyTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Privacidad'**
+  String get photoPrivacyTitle;
+
+  /// No description provided for @photoPrivacyText.
+  ///
+  /// In es, this message translates to:
+  /// **'La foto de tu plato se enviará a la API de Gemini (Google) para su análisis. No se almacena ni se usa para entrenar modelos. ¿Aceptas?'**
+  String get photoPrivacyText;
+
+  /// No description provided for @photoPrivacyCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get photoPrivacyCancel;
+
+  /// No description provided for @photoPrivacyAccept.
+  ///
+  /// In es, this message translates to:
+  /// **'Aceptar'**
+  String get photoPrivacyAccept;
+
+  /// No description provided for @photoTipTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Consejo para una mejor foto'**
+  String get photoTipTitle;
+
+  /// No description provided for @photoTipBody.
+  ///
+  /// In es, this message translates to:
+  /// **'Para obtener mejores resultados, mantén una distancia prudente del plato y asegúrate de que se vean todos los alimentos. Una vista desde arriba con buena iluminación funciona mejor.'**
+  String get photoTipBody;
+
+  /// No description provided for @photoTipChecklist.
+  ///
+  /// In es, this message translates to:
+  /// **'• Muestra el plato entero\n• Buena iluminación natural\n• Distancia de unos 30-40 cm\n• Sin otros objetos alrededor'**
+  String get photoTipChecklist;
+
+  /// No description provided for @photoTipCancel.
+  ///
+  /// In es, this message translates to:
+  /// **'Cancelar'**
+  String get photoTipCancel;
+
+  /// No description provided for @photoTipContinue.
+  ///
+  /// In es, this message translates to:
+  /// **'Entendido, hacer foto'**
+  String get photoTipContinue;
+
+  /// No description provided for @photoTipDontShowAgain.
+  ///
+  /// In es, this message translates to:
+  /// **'No volver a mostrar este aviso'**
+  String get photoTipDontShowAgain;
+
+  /// No description provided for @photoGalleryButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Elegir de la galería'**
+  String get photoGalleryButton;
+
+  /// No description provided for @photoDisclaimerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Valores estimados por IA'**
+  String get photoDisclaimerTitle;
+
+  /// No description provided for @photoDisclaimerText.
+  ///
+  /// In es, this message translates to:
+  /// **'Estos valores son aproximaciones generadas por IA. Para un conteo preciso de raciones de hidratos de carbono, usa siempre una báscula de cocina y consulta las etiquetas nutricionales de los productos.'**
+  String get photoDisclaimerText;
+
+  /// No description provided for @photoAddFoodsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Añade cada alimento a tu plato:'**
+  String get photoAddFoodsTitle;
+
+  /// No description provided for @photoTableFood.
+  ///
+  /// In es, this message translates to:
+  /// **'Alimento'**
+  String get photoTableFood;
+
+  /// No description provided for @photoTableGrams.
+  ///
+  /// In es, this message translates to:
+  /// **'Gramos'**
+  String get photoTableGrams;
+
+  /// No description provided for @photoTableCarbs.
+  ///
+  /// In es, this message translates to:
+  /// **'Hidratos'**
+  String get photoTableCarbs;
+
+  /// No description provided for @photoTableRations.
+  ///
+  /// In es, this message translates to:
+  /// **'Raciones'**
+  String get photoTableRations;
+
+  /// No description provided for @photoTableGI.
+  ///
+  /// In es, this message translates to:
+  /// **'IG'**
+  String get photoTableGI;
+
+  /// No description provided for @photoTableTotal.
+  ///
+  /// In es, this message translates to:
+  /// **'TOTAL'**
+  String get photoTableTotal;
+
+  /// No description provided for @photoBolusTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Bolo de insulina estimado'**
+  String get photoBolusTitle;
+
+  /// No description provided for @photoBolusEstimation.
+  ///
+  /// In es, this message translates to:
+  /// **'Según tus ajustes, para {carbs}g de hidratos te corresponderían {units} de insulina. Recuerda que este cálculo no incluye la corrección por glucemia.'**
+  String photoBolusEstimation(String units, String carbs);
+
+  /// No description provided for @photoBolusReminder.
+  ///
+  /// In es, this message translates to:
+  /// **'Este cálculo es orientativo. Verifica siempre tu glucemia actual para aplicar la corrección necesaria y consulta con tu médico cualquier duda sobre tu pauta de insulina.'**
+  String get photoBolusReminder;
+
+  /// No description provided for @profileGeminiKeyHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Pega aquí tu clave API'**
+  String get profileGeminiKeyHint;
+
+  /// No description provided for @profileGeminiKeyDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Necesaria para el análisis de alimentos con IA. Gratis en aistudio.google.com'**
+  String get profileGeminiKeyDesc;
+
+  /// No description provided for @profileGeminiKeySaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Clave API guardada'**
+  String get profileGeminiKeySaved;
 }
 
 class _AppLocalizationsDelegate
