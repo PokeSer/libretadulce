@@ -15,8 +15,11 @@ import '../services/insulin_settings_service.dart';
 import '../services/meal_template_service.dart';
 import '../models/insulin_settings.dart';
 import '../models/meal_template.dart';
+import '../services/calculation_service.dart';
+import '../widgets/bolus_result_card.dart';
 import '../widgets/confirm_delete_dialog.dart';
 import '../widgets/date_time_picker_tile.dart';
+import '../widgets/food_photo_analyzer_sheet.dart';
 import '../widgets/food_search_sheet.dart';
 import '../widgets/glucose_input_field.dart';
 import '../widgets/meal_type_chip_selector.dart';
@@ -93,18 +96,18 @@ class _CalculatorPageState extends State<CalculatorPage>
       setState(() {
         if (!_isInverseMode) {
           _calculatedGrams = inputVal;
-          _totalCarbs = (_selectedCarbsPer100g / 100) * inputVal;
-          _totalRaciones = _totalCarbs / 10;
-          _totalFats = (_selectedFatsPer100g / 100) * inputVal;
-          _totalProteins = (_selectedProteinsPer100g / 100) * inputVal;
+          _totalCarbs = CalculationService.carbsFromGrams(_selectedCarbsPer100g, inputVal);
+          _totalRaciones = CalculationService.rationsFromCarbs(_totalCarbs);
+          _totalFats = CalculationService.macroFromGrams(_selectedFatsPer100g, inputVal);
+          _totalProteins = CalculationService.macroFromGrams(_selectedProteinsPer100g, inputVal);
         } else {
           // Inverse mode: only works if carbs per 100g > 0
           if (_selectedCarbsPer100g > 0) {
             _totalRaciones = inputVal;
-            _totalCarbs = inputVal * 10;
-            _calculatedGrams = (_totalCarbs * 100) / _selectedCarbsPer100g;
-            _totalFats = (_selectedFatsPer100g / 100) * _calculatedGrams;
-            _totalProteins = (_selectedProteinsPer100g / 100) * _calculatedGrams;
+            _totalCarbs = CalculationService.carbsFromRations(inputVal);
+            _calculatedGrams = CalculationService.gramsFromCarbs(_totalCarbs, _selectedCarbsPer100g);
+            _totalFats = CalculationService.macroFromGrams(_selectedFatsPer100g, _calculatedGrams);
+            _totalProteins = CalculationService.macroFromGrams(_selectedProteinsPer100g, _calculatedGrams);
           } else {
             // Can't calculate grams from raciones when carbs are 0
             _totalRaciones = 0.0;
@@ -119,7 +122,9 @@ class _CalculatorPageState extends State<CalculatorPage>
   }
 
   void _addToMeal() {
-    if (_selectedFoodName != null && _calculatedGrams >= 0 && _inputController.text.isNotEmpty) {
+    if (_selectedFoodName != null &&
+        _calculatedGrams >= 0 &&
+        _inputController.text.isNotEmpty) {
       if (!MediaQuery.of(context).disableAnimations) {
         HapticFeedback.lightImpact();
       }
@@ -188,14 +193,10 @@ class _CalculatorPageState extends State<CalculatorPage>
     );
   }
 
-  double get _mealTotalRaciones =>
-      _mealItems.fold(0.0, (acum, item) => acum + (item['raciones'] as double? ?? 0.0));
-  double get _mealTotalCarbs =>
-      _mealItems.fold(0.0, (acum, item) => acum + (item['carbs'] as double? ?? 0.0));
-  double get _mealTotalFats =>
-      _mealItems.fold(0.0, (acum, item) => acum + (item['fats'] as double? ?? 0.0));
-  double get _mealTotalProteins =>
-      _mealItems.fold(0.0, (acum, item) => acum + (item['proteins'] as double? ?? 0.0));
+  double get _mealTotalRaciones => CalculationService.sumMealItems(_mealItems, 'raciones');
+  double get _mealTotalCarbs => CalculationService.sumMealItems(_mealItems, 'carbs');
+  double get _mealTotalFats => CalculationService.sumMealItems(_mealItems, 'fats');
+  double get _mealTotalProteins => CalculationService.sumMealItems(_mealItems, 'proteins');
   // ── Repeat last meal ──────────────────────────────────────────
 
   Future<void> _repeatLastMeal() async {
@@ -442,6 +443,25 @@ class _CalculatorPageState extends State<CalculatorPage>
     }
   }
 
+  void _openPhotoAnalyzer() async {
+    final result = await showModalBottomSheet<PhotoAnalysisResult>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const FoodPhotoAnalyzerSheet(),
+    );
+    if (result != null) {
+      setState(() {
+        _selectedFoodName = result.name;
+        _selectedCarbsPer100g = result.carbsPer100g;
+        _selectedFatsPer100g = result.fatsPer100g ?? 0.0;
+        _selectedProteinsPer100g = result.proteinsPer100g ?? 0.0;
+        _inputController.text = result.grams.toStringAsFixed(0);
+        _calculateMacros();
+      });
+    }
+  }
+
   Future<void> _saveMealToHistory() async {
     if (_mealItems.isEmpty || user == null) return;
     final l10n = AppLocalizations.of(context);
@@ -460,12 +480,16 @@ class _CalculatorPageState extends State<CalculatorPage>
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: mealTypes.map((type) {
-                return ListTile(
-                  title: Text(mealTypeLocalizedLabel(type, l10n)),
-                  onTap: () {
-                    selectedMealType = type.rawValue;
-                    Navigator.pop(ctx);
-                  },
+                return Semantics(
+                  button: true,
+                  label: mealTypeLocalizedLabel(type, l10n),
+                  child: ListTile(
+                    title: Text(mealTypeLocalizedLabel(type, l10n)),
+                    onTap: () {
+                      selectedMealType = type.rawValue;
+                      Navigator.pop(ctx);
+                    },
+                  ),
                 );
               }).toList(),
             ),
@@ -591,7 +615,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     return _insulinSettings!.calculateCorrection(gluc);
   }
 
-  Widget _buildBolusResult(bool isDark, AppLocalizations l10n) {
+  Widget _buildBolusResult(AppLocalizations l10n) {
     final bolus = _calculateMealBolus();
     final correction = _calculateCorrection();
 
@@ -624,92 +648,20 @@ class _CalculatorPageState extends State<CalculatorPage>
 
     final unitSuffix = l10n.calcBolusUnitSuffix;
 
-    return Semantics(
-      liveRegion: true,
-      label:
+    return BolusResultCard(
+      mealBolusLabel: l10n.calcBolusMeal,
+      mealBolusValue: _insulinSettings!.formatBolus(bolusRounded),
+      correctionLabel: l10n.calcBolusCorrection,
+      correctionValue: correctionRounded != null
+          ? _insulinSettings!.formatBolus(correctionRounded)
+          : '--',
+      totalLabel: l10n.calcBolusTotal,
+      totalValue: _insulinSettings!.formatBolus(total),
+      unitSuffix: unitSuffix,
+      semanticsLabel:
           '${l10n.calcBolusMeal}: ${_insulinSettings!.formatBolus(bolusRounded)} $unitSuffix, '
           '${l10n.calcBolusCorrection}: ${correctionRounded != null ? _insulinSettings!.formatBolus(correctionRounded) : '--'} $unitSuffix, '
           '${l10n.calcBolusTotal}: ${_insulinSettings!.formatBolus(total)} $unitSuffix',
-      child: Row(
-        children: [
-          Expanded(
-            child: _bolusItem(
-              l10n.calcBolusMeal,
-              _insulinSettings!.formatBolus(bolusRounded),
-              unitSuffix,
-              Colors.teal,
-              isDark,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _bolusItem(
-              l10n.calcBolusCorrection,
-              correctionRounded != null
-                  ? _insulinSettings!.formatBolus(correctionRounded)
-                  : '--',
-              unitSuffix,
-              Colors.orange,
-              isDark,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _bolusItem(
-              l10n.calcBolusTotal,
-              _insulinSettings!.formatBolus(total),
-              unitSuffix,
-              Colors.redAccent,
-              isDark,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _bolusItem(
-    String label,
-    String value,
-    String unit,
-    Color color,
-    bool isDark,
-  ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: isDark ? 0.15 : 0.08),
-        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              color: color,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              color: color,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            unit,
-            style: TextStyle(fontSize: 10, color: color.withValues(alpha: 0.7)),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
     );
   }
 
@@ -911,6 +863,56 @@ class _CalculatorPageState extends State<CalculatorPage>
                     ),
                   ),
 
+                  const SizedBox(height: 12),
+
+                  // Camera button for AI photo analysis
+                  Semantics(
+                    button: true,
+                    label: l10n.photoCameraButton,
+                    child: InkWell(
+                      onTap: _openPhotoAnalyzer,
+                      borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.teal.withValues(alpha: 0.4),
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            AppDimens.radiusCard,
+                          ),
+                          color: Colors.teal.withValues(alpha: 0.05),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const ExcludeSemantics(
+                              child: Icon(
+                                Icons.camera_alt,
+                                color: Colors.teal,
+                                size: 22,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Flexible(
+                              child: Text(
+                                l10n.photoCameraButton,
+                                style: const TextStyle(
+                                  color: Colors.teal,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 24),
 
                   TextField(
@@ -1054,7 +1056,9 @@ class _CalculatorPageState extends State<CalculatorPage>
 
                   ElevatedButton.icon(
                     onPressed:
-                        (_selectedFoodName != null && _calculatedGrams >= 0 && _inputController.text.isNotEmpty)
+                        (_selectedFoodName != null &&
+                            _calculatedGrams >= 0 &&
+                            _inputController.text.isNotEmpty)
                         ? _addToMeal
                         : null,
                     icon: const Icon(Icons.add_circle_outline),
@@ -1250,7 +1254,8 @@ class _CalculatorPageState extends State<CalculatorPage>
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      if (item['fats'] != null && item['fats'] > 0)
+                                      if (item['fats'] != null &&
+                                          item['fats'] > 0)
                                         Flexible(
                                           child: Text(
                                             l10n.calcFats(
@@ -1263,11 +1268,14 @@ class _CalculatorPageState extends State<CalculatorPage>
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                      if (item['proteins'] != null && item['proteins'] > 0)
+                                      if (item['proteins'] != null &&
+                                          item['proteins'] > 0)
                                         Flexible(
                                           child: Text(
                                             l10n.calcProteins(
-                                              item['proteins'].toStringAsFixed(1),
+                                              item['proteins'].toStringAsFixed(
+                                                1,
+                                              ),
                                             ),
                                             style: const TextStyle(
                                               color: Colors.blue,
@@ -1454,7 +1462,7 @@ class _CalculatorPageState extends State<CalculatorPage>
                               onChanged: (_) => setState(() {}),
                             ),
                             const SizedBox(height: 16),
-                            _buildBolusResult(isDark, l10n),
+                            _buildBolusResult(l10n),
                           ],
                         ),
                       ),

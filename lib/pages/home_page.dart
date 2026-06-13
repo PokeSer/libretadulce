@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../core/extensions/context_extensions.dart';
@@ -13,6 +12,7 @@ import 'admin_page.dart';
 import 'history_page.dart';
 import '../l10n/app_localizations.dart';
 import '../services/update_service.dart';
+import '../services/user_repository.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,18 +36,12 @@ class _HomePageState extends State<HomePage> {
   Future<void> _checkAdminStatus() async {
     if (user != null) {
       try {
-        final userDoc = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
-
-        if (!userDoc.exists) {
-          await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
-            'email': user!.email,
-            'role': 'user',
-            'createdAt': FieldValue.serverTimestamp(),
-          });
-        } else {
-          if (userDoc.data()?['role'] == 'admin') {
-            if (mounted) setState(() => _isAdmin = true);
-          }
+        final role = await UserRepository.ensureUserDoc(
+          uid: user!.uid,
+          email: user!.email ?? '',
+        );
+        if (role == 'admin' && mounted) {
+          setState(() => _isAdmin = true);
         }
       } catch (e) {
         debugPrint('[HomePage._checkAdminStatus] Error: $e');
@@ -148,6 +142,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Expanded(
                     child: OutlinedButton(
+                      autofocus: true,
                       onPressed: () => Navigator.pop(ctx),
                       style: OutlinedButton.styleFrom(
                         padding: AppDimens.buttonPaddingV,
@@ -195,32 +190,36 @@ class _HomePageState extends State<HomePage> {
       barrierDismissible: false,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ExcludeSemantics(
-                child: Icon(Icons.download_rounded, color: primary, size: 40),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.updateDownloading,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              LinearProgressIndicator(
-                value: progress > 0 ? progress : null,
-                backgroundColor: AppColors.textMuted(context),
-                color: primary,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                progress > 0
-                    ? '${(progress * 100).toStringAsFixed(0)}%'
-                    : l10n.updateDownloading,
-                style: TextStyle(fontSize: 12, color: AppColors.textSecondary(context)),
-              ),
-            ],
+          content: Semantics(
+            liveRegion: true,
+            label: l10n.updateDownloading,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ExcludeSemantics(
+                  child: Icon(Icons.download_rounded, color: primary, size: 40),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.updateDownloading,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                LinearProgressIndicator(
+                  value: progress > 0 ? progress : null,
+                  backgroundColor: AppColors.textMuted(context),
+                  color: primary,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  progress > 0
+                      ? '${(progress * 100).toStringAsFixed(0)}%'
+                      : l10n.updateDownloading,
+                  style: TextStyle(fontSize: 12, color: AppColors.textSecondary(context)),
+                ),
+              ],
+            ),
           ),
         ),
       ),

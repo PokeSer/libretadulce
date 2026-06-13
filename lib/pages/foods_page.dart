@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
@@ -10,6 +9,7 @@ import '../core/utils/formatters.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
 import '../services/food_repository.dart';
+import '../services/food_request_repository.dart';
 import '../services/open_food_facts_service.dart';
 import '../widgets/food_list_item.dart';
 import '../widgets/confirm_delete_dialog.dart';
@@ -156,6 +156,7 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
             children: [
               TextField(
                 controller: _nameController,
+                autofocus: true,
                 textCapitalization: TextCapitalization.sentences,
                 autofillHints: const [AutofillHints.name],
                 decoration: InputDecoration(
@@ -416,17 +417,13 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
 
                 if (name.isNotEmpty && carbs != null && user != null) {
                   try {
-                    await FirebaseFirestore.instance
-                        .collection('food_requests')
-                        .add({
-                      'name': name,
-                      'brand': brand,
-                      'carbsPer100g': carbs,
-                      'productUrl': url,
-                      'status': 'pending',
-                      'userId': user!.uid,
-                      'timestamp': FieldValue.serverTimestamp(),
-                    });
+                    await FoodRequestRepository.submitRequest(
+                      name: name,
+                      brand: brand,
+                      carbsPer100g: carbs,
+                      productUrl: url,
+                      userId: user!.uid,
+                    );
                     if (context.mounted) {
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -481,7 +478,7 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
         indicatorColor: AppColors.primary(context),
         tabs: [
           Tab(icon: const ExcludeSemantics(child: Icon(Icons.fastfood)), text: l10n.navFoods),
-          Tab(icon: const ExcludeSemantics(child: Icon(Icons.book)), text: 'Libreta Dulce'),
+          Tab(icon: const ExcludeSemantics(child: Icon(Icons.book)), text: l10n.navGlobal),
         ],
       ),
       body: TabBarView(
