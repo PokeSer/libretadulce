@@ -4,6 +4,7 @@ import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../main.dart' show appSettings;
+import '../services/food_photo_analyzer_service.dart';
 import '../widgets/app_card.dart';
 import 'insulin_settings_page.dart';
 
@@ -16,10 +17,7 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          l10n.profileSettings,
-          style: AppTextStyles.appBarTitle,
-        ),
+        title: Text(l10n.profileSettings, style: AppTextStyles.appBarTitle),
       ),
       body: ListenableBuilder(
         listenable: appSettings,
@@ -29,11 +27,21 @@ class SettingsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildSectionLabel(context, l10n.profileSettingsSectionApp, Icons.settings),
+                _buildSectionLabel(
+                  context,
+                  l10n.profileSettingsSectionApp,
+                  Icons.settings,
+                ),
                 const SizedBox(height: 12),
+                _buildGeminiKeyCard(context, l10n),
+                const SizedBox(height: 16),
                 _buildThemeCard(context, l10n),
                 const SizedBox(height: 32),
-                _buildSectionLabel(context, l10n.profileSettingsSectionHealth, Icons.monitor_heart_outlined),
+                _buildSectionLabel(
+                  context,
+                  l10n.profileSettingsSectionHealth,
+                  Icons.monitor_heart_outlined,
+                ),
                 const SizedBox(height: 12),
                 _buildHealthCard(context, l10n),
                 const SizedBox(height: 32),
@@ -68,6 +76,64 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
+  Widget _buildGeminiKeyCard(BuildContext context, AppLocalizations l10n) {
+    final controller = TextEditingController();
+    FoodPhotoAnalyzerService.getApiKey().then((key) {
+      controller.text = key ?? '';
+    });
+
+    return AppCard(
+      borderRadius: 14,
+      child: Padding(
+        padding: AppDimens.listTileContent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const ExcludeSemantics(
+                  child: Icon(Icons.key, color: Colors.orange, size: 20),
+                ),
+                const SizedBox(width: 8),
+                Text(l10n.profileGeminiKey, style: AppTextStyles.cardTitle),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              l10n.profileGeminiKeyDesc,
+              style: AppTextStyles.cardSubtitle(context),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: controller,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: l10n.profileGeminiKeyHint,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+                ),
+                isDense: true,
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.save, color: Colors.teal),
+                  tooltip: MaterialLocalizations.of(context).saveButtonLabel,
+                  onPressed: () {
+                    FoodPhotoAnalyzerService.saveApiKey(controller.text);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(l10n.profileGeminiKeySaved),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildThemeCard(BuildContext context, AppLocalizations l10n) {
     final currentTheme = appSettings.themeMode;
     final primary = AppColors.primary(context);
@@ -82,10 +148,7 @@ class SettingsPage extends StatelessWidget {
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: ExcludeSemantics(
-                child: Icon(
-                  _themeIcon(currentTheme),
-                  color: primary,
-                ),
+                child: Icon(_themeIcon(currentTheme), color: primary),
               ),
               title: Text(
                 l10n.profileThemeLabel,
@@ -103,23 +166,41 @@ class SettingsPage extends StatelessWidget {
                   selectedBackgroundColor: AppColors.primaryLight(context),
                   selectedForegroundColor: primary,
                   visualDensity: VisualDensity.standard,
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
+                  ),
                 ),
                 segments: [
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.system,
-                    icon: const ExcludeSemantics(child: Icon(Icons.phone_android, size: 18)),
-                    label: Text(l10n.profileThemeSystem, style: const TextStyle(fontSize: 12)),
+                    icon: const ExcludeSemantics(
+                      child: Icon(Icons.phone_android, size: 18),
+                    ),
+                    label: Text(
+                      l10n.profileThemeSystem,
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ),
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.light,
-                    icon: const ExcludeSemantics(child: Icon(Icons.light_mode, size: 18)),
-                    label: Text(l10n.profileThemeLight, style: const TextStyle(fontSize: 12)),
+                    icon: const ExcludeSemantics(
+                      child: Icon(Icons.light_mode, size: 18),
+                    ),
+                    label: Text(
+                      l10n.profileThemeLight,
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ),
                   ButtonSegment<ThemeMode>(
                     value: ThemeMode.dark,
-                    icon: const ExcludeSemantics(child: Icon(Icons.dark_mode, size: 18)),
-                    label: Text(l10n.profileThemeDark, style: const TextStyle(fontSize: 12)),
+                    icon: const ExcludeSemantics(
+                      child: Icon(Icons.dark_mode, size: 18),
+                    ),
+                    label: Text(
+                      l10n.profileThemeDark,
+                      style: const TextStyle(fontSize: 12),
+                    ),
                   ),
                 ],
                 selected: {currentTheme},
@@ -154,7 +235,9 @@ class SettingsPage extends StatelessWidget {
         trailing: ExcludeSemantics(
           child: Icon(Icons.chevron_right, color: AppColors.textMuted(context)),
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCardLg)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppDimens.radiusCardLg),
+        ),
         onTap: () {
           Navigator.push(
             context,

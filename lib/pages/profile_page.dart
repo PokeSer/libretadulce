@@ -154,7 +154,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             if (context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(l10n.serviceError),
+                                  content: Semantics(
+                                    liveRegion: true,
+                                    child: Text(l10n.serviceError),
+                                  ),
                                   duration: const Duration(seconds: 6),
                                 ),
                               );

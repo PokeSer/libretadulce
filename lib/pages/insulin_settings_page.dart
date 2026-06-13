@@ -192,6 +192,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
               const SizedBox(height: 8),
               TextFormField(
                 controller: _ratioBaseCtrl,
+                autofocus: true,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(
                   labelText: l10n.insulinRatioBase,
