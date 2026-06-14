@@ -96,18 +96,36 @@ class _CalculatorPageState extends State<CalculatorPage>
       setState(() {
         if (!_isInverseMode) {
           _calculatedGrams = inputVal;
-          _totalCarbs = CalculationService.carbsFromGrams(_selectedCarbsPer100g, inputVal);
+          _totalCarbs = CalculationService.carbsFromGrams(
+            _selectedCarbsPer100g,
+            inputVal,
+          );
           _totalRaciones = CalculationService.rationsFromCarbs(_totalCarbs);
-          _totalFats = CalculationService.macroFromGrams(_selectedFatsPer100g, inputVal);
-          _totalProteins = CalculationService.macroFromGrams(_selectedProteinsPer100g, inputVal);
+          _totalFats = CalculationService.macroFromGrams(
+            _selectedFatsPer100g,
+            inputVal,
+          );
+          _totalProteins = CalculationService.macroFromGrams(
+            _selectedProteinsPer100g,
+            inputVal,
+          );
         } else {
           // Inverse mode: only works if carbs per 100g > 0
           if (_selectedCarbsPer100g > 0) {
             _totalRaciones = inputVal;
             _totalCarbs = CalculationService.carbsFromRations(inputVal);
-            _calculatedGrams = CalculationService.gramsFromCarbs(_totalCarbs, _selectedCarbsPer100g);
-            _totalFats = CalculationService.macroFromGrams(_selectedFatsPer100g, _calculatedGrams);
-            _totalProteins = CalculationService.macroFromGrams(_selectedProteinsPer100g, _calculatedGrams);
+            _calculatedGrams = CalculationService.gramsFromCarbs(
+              _totalCarbs,
+              _selectedCarbsPer100g,
+            );
+            _totalFats = CalculationService.macroFromGrams(
+              _selectedFatsPer100g,
+              _calculatedGrams,
+            );
+            _totalProteins = CalculationService.macroFromGrams(
+              _selectedProteinsPer100g,
+              _calculatedGrams,
+            );
           } else {
             // Can't calculate grams from raciones when carbs are 0
             _totalRaciones = 0.0;
@@ -193,10 +211,14 @@ class _CalculatorPageState extends State<CalculatorPage>
     );
   }
 
-  double get _mealTotalRaciones => CalculationService.sumMealItems(_mealItems, 'raciones');
-  double get _mealTotalCarbs => CalculationService.sumMealItems(_mealItems, 'carbs');
-  double get _mealTotalFats => CalculationService.sumMealItems(_mealItems, 'fats');
-  double get _mealTotalProteins => CalculationService.sumMealItems(_mealItems, 'proteins');
+  double get _mealTotalRaciones =>
+      CalculationService.sumMealItems(_mealItems, 'raciones');
+  double get _mealTotalCarbs =>
+      CalculationService.sumMealItems(_mealItems, 'carbs');
+  double get _mealTotalFats =>
+      CalculationService.sumMealItems(_mealItems, 'fats');
+  double get _mealTotalProteins =>
+      CalculationService.sumMealItems(_mealItems, 'proteins');
   // ── Repeat last meal ──────────────────────────────────────────
 
   Future<void> _repeatLastMeal() async {
@@ -443,23 +465,37 @@ class _CalculatorPageState extends State<CalculatorPage>
     }
   }
 
-  void _openPhotoAnalyzer() async {
-    final result = await showModalBottomSheet<PhotoAnalysisResult>(
+  void _openPhotoAnalyzer() {
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (_) => const FoodPhotoAnalyzerSheet(),
+      builder: (_) => FoodPhotoAnalyzerSheet(
+        onAddToPlate: (result) {
+          // Calculate macros from the result
+          final carbs = result.grams * result.carbsPer100g / 100;
+          final raciones = carbs / 10.0;
+          final fats = result.fatsPer100g != null
+              ? result.grams * result.fatsPer100g! / 100
+              : 0.0;
+          final proteins = result.proteinsPer100g != null
+              ? result.grams * result.proteinsPer100g! / 100
+              : 0.0;
+
+          setState(() {
+            _mealItems.add({
+              'id': 'meal_${_mealItemCounter++}',
+              'name': result.name,
+              'grams': result.grams,
+              'carbs': carbs,
+              'raciones': raciones,
+              'fats': fats,
+              'proteins': proteins,
+            });
+          });
+        },
+      ),
     );
-    if (result != null) {
-      setState(() {
-        _selectedFoodName = result.name;
-        _selectedCarbsPer100g = result.carbsPer100g;
-        _selectedFatsPer100g = result.fatsPer100g ?? 0.0;
-        _selectedProteinsPer100g = result.proteinsPer100g ?? 0.0;
-        _inputController.text = result.grams.toStringAsFixed(0);
-        _calculateMacros();
-      });
-    }
   }
 
   Future<void> _saveMealToHistory() async {
@@ -613,6 +649,25 @@ class _CalculatorPageState extends State<CalculatorPage>
     final gluc = double.tryParse(glucText);
     if (gluc == null) return null;
     return _insulinSettings!.calculateCorrection(gluc);
+  }
+
+  /// Compact colored pill for a macro value (HC, fats, proteins).
+  Widget _macroPill(String text, Color color, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: isDark ? 0.15 : 0.08),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: 12,
+          color: color,
+        ),
+      ),
+    );
   }
 
   Widget _buildBolusResult(AppLocalizations l10n) {
@@ -1202,99 +1257,118 @@ class _CalculatorPageState extends State<CalculatorPage>
                           onDismissed: (direction) => _removeMealItem(index),
                           child: Card(
                             margin: const EdgeInsets.only(bottom: 8),
-                            child: ListTile(
-                              leading: ExcludeSemantics(
-                                child: Icon(
-                                  Icons.check_circle,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                            clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                AppDimens.radiusCard,
                               ),
-                              title: Text(
-                                item['name'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              subtitle: Text(
-                                l10n.calcGramsConsumed(
-                                  item['grams'].toStringAsFixed(0),
-                                ),
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 12, 4, 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                  // Row 1: name + raciones + delete
+                                  Row(
                                     children: [
-                                      Flexible(
+                                      Icon(
+                                        Icons.check_circle,
+                                        size: 20,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Expanded(
                                         child: Text(
-                                          l10n.calcRacShort(
-                                            item['raciones'].toStringAsFixed(1),
-                                          ),
-                                          style: TextStyle(
+                                          item['name'],
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
-                                            fontSize: 16,
+                                            fontSize: 15,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      Flexible(
-                                        child: Text(
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        l10n.calcRacShort(
+                                          item['raciones'].toStringAsFixed(1),
+                                        ),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.delete_outline,
+                                          color: Colors.redAccent,
+                                          size: 20,
+                                        ),
+                                        tooltip: l10n.calcDeleteFromPlate,
+                                        visualDensity: VisualDensity.compact,
+                                        onPressed: () => _removeMealItem(index),
+                                      ),
+                                    ],
+                                  ),
+                                  // Row 2: grams
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 28,
+                                      top: 2,
+                                    ),
+                                    child: Text(
+                                      l10n.calcGramsConsumed(
+                                        item['grams'].toStringAsFixed(0),
+                                      ),
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: isDark
+                                            ? Colors.grey.shade400
+                                            : Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // Row 3: macro chips
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 28),
+                                    child: Wrap(
+                                      spacing: 6,
+                                      runSpacing: 4,
+                                      children: [
+                                        _macroPill(
                                           l10n.calcHC(
                                             item['carbs'].toStringAsFixed(1),
                                           ),
-                                          style: const TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 13,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
+                                          Colors.teal,
+                                          isDark,
                                         ),
-                                      ),
-                                      if (item['fats'] != null &&
-                                          item['fats'] > 0)
-                                        Flexible(
-                                          child: Text(
+                                        if (item['fats'] != null &&
+                                            item['fats'] > 0)
+                                          _macroPill(
                                             l10n.calcFats(
                                               item['fats'].toStringAsFixed(1),
                                             ),
-                                            style: const TextStyle(
-                                              color: Colors.orange,
-                                              fontSize: 13,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
+                                            Colors.orange,
+                                            isDark,
                                           ),
-                                        ),
-                                      if (item['proteins'] != null &&
-                                          item['proteins'] > 0)
-                                        Flexible(
-                                          child: Text(
+                                        if (item['proteins'] != null &&
+                                            item['proteins'] > 0)
+                                          _macroPill(
                                             l10n.calcProteins(
                                               item['proteins'].toStringAsFixed(
                                                 1,
                                               ),
                                             ),
-                                            style: const TextStyle(
-                                              color: Colors.blue,
-                                              fontSize: 13,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
+                                            Colors.blue,
+                                            isDark,
                                           ),
-                                        ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 8),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.delete_outline,
-                                      color: Colors.redAccent,
-                                      size: 22,
+                                      ],
                                     ),
-                                    tooltip: l10n.calcDeleteFromPlate,
-                                    onPressed: () => _removeMealItem(index),
                                   ),
                                 ],
                               ),
@@ -1307,7 +1381,7 @@ class _CalculatorPageState extends State<CalculatorPage>
                     const SizedBox(height: 8),
 
                     Container(
-                      padding: AppDimens.cardPadding,
+                      padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
                       decoration: BoxDecoration(
                         color: isDark
                             ? Colors.teal.withValues(alpha: 0.1)
@@ -1321,65 +1395,72 @@ class _CalculatorPageState extends State<CalculatorPage>
                               : Colors.teal.shade200,
                         ),
                       ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: Text(
-                              l10n.calcTotalPlate,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w900,
-                                color: Colors.teal,
-                                fontSize: 16,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                          // Row 1: icon + title + raciones
+                          Row(
                             children: [
+                              const Icon(
+                                Icons.summarize,
+                                color: Colors.teal,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  l10n.calcTotalPlate,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.teal,
+                                    fontSize: 16,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
                               Text(
                                 l10n.calcTotalRac(
                                   _mealTotalRaciones.toStringAsFixed(1),
                                 ),
                                 style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 22,
                                   fontWeight: FontWeight.w900,
                                   color: isDark
                                       ? Colors.teal.shade200
                                       : Colors.teal.shade800,
                                 ),
                               ),
-                              Text(
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          // Row 2: macro pills
+                          Wrap(
+                            spacing: 6,
+                            runSpacing: 4,
+                            children: [
+                              _macroPill(
                                 l10n.calcTotalHC(
                                   _mealTotalCarbs.toStringAsFixed(1),
                                 ),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: isDark
-                                      ? Colors.teal.shade300
-                                      : Colors.teal.shade800,
-                                ),
+                                Colors.teal,
+                                isDark,
                               ),
                               if (_mealTotalFats > 0)
-                                Text(
+                                _macroPill(
                                   l10n.calcTotalFats(
                                     _mealTotalFats.toStringAsFixed(1),
                                   ),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.orange,
-                                  ),
+                                  Colors.orange,
+                                  isDark,
                                 ),
                               if (_mealTotalProteins > 0)
-                                Text(
+                                _macroPill(
                                   l10n.calcTotalProteins(
                                     _mealTotalProteins.toStringAsFixed(1),
                                   ),
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.blue,
-                                  ),
+                                  Colors.blue,
+                                  isDark,
                                 ),
                             ],
                           ),
