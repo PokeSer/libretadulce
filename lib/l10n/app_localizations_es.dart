@@ -327,6 +327,85 @@ class AppLocalizationsEs extends AppLocalizations {
   String get historyExportButton => 'Exportar';
 
   @override
+  String get historyExportOptionsTitle => 'Exportar datos';
+
+  @override
+  String get historyPdfExportOption => 'Informe PDF';
+
+  @override
+  String get historyPdfExportSubtitle => 'Documento profesional para tu médico';
+
+  @override
+  String get historyCsvExportOption => 'Hoja de cálculo CSV';
+
+  @override
+  String get historyCsvExportSubtitle =>
+      'Para analizar en Excel o Google Sheets';
+
+  @override
+  String get historyPdfButton => 'Informe PDF';
+
+  @override
+  String get historyPdfTitle => 'Informe de Control Glucémico';
+
+  @override
+  String historyPdfSubtitle(String name, String date) {
+    return 'Paciente: $name · Generado: $date';
+  }
+
+  @override
+  String get historyPdfFileName => 'informe_libretadulce.pdf';
+
+  @override
+  String get historyPdfAvgCarbs => 'Media HC/día';
+
+  @override
+  String get historyPdfAvgGlucose => 'Glucemia media';
+
+  @override
+  String get historyPdfAvgInsulin => 'Media insulina/dosis';
+
+  @override
+  String get historyPdfDays => 'Días';
+
+  @override
+  String get historyPdfMeals => 'Comidas';
+
+  @override
+  String get historyPdfPeriod => 'Periodo';
+
+  @override
+  String get historyPdfFood => 'Alimento';
+
+  @override
+  String get historyPdfMealType => 'Tipo';
+
+  @override
+  String get historyPdfGlucose => 'Glucemia';
+
+  @override
+  String get historyPdfDateRangeTitle => 'Seleccionar fechas';
+
+  @override
+  String get historyPdfFrom => 'Desde';
+
+  @override
+  String get historyPdfTo => 'Hasta';
+
+  @override
+  String get historyPdfGenerate => 'Generar PDF';
+
+  @override
+  String get historyPdfDisclaimer =>
+      'Este informe ha sido generado por Libreta Dulce. Los datos provienen de los registros del usuario y no sustituyen el criterio médico profesional. Consulte siempre con su equipo sanitario.';
+
+  @override
+  String get historyPdfError => 'Error al generar el PDF';
+
+  @override
+  String get historyPdfEmpty => 'No hay datos para generar el informe';
+
+  @override
   String get historyExportAccessibility => 'Exportar historial a CSV';
 
   @override
@@ -427,6 +506,15 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get historyLast7Days => 'Últimos 7 días';
+
+  @override
+  String get historyGlucoseInRange => 'En rango';
+
+  @override
+  String get historyGlucoseHigh => 'Alta';
+
+  @override
+  String get historyGlucoseLow => 'Baja';
 
   @override
   String historyChartTooltip(String day, String carbs) {

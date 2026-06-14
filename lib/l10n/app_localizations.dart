@@ -656,6 +656,156 @@ abstract class AppLocalizations {
   /// **'Exportar'**
   String get historyExportButton;
 
+  /// No description provided for @historyExportOptionsTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Exportar datos'**
+  String get historyExportOptionsTitle;
+
+  /// No description provided for @historyPdfExportOption.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe PDF'**
+  String get historyPdfExportOption;
+
+  /// No description provided for @historyPdfExportSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Documento profesional para tu médico'**
+  String get historyPdfExportSubtitle;
+
+  /// No description provided for @historyCsvExportOption.
+  ///
+  /// In es, this message translates to:
+  /// **'Hoja de cálculo CSV'**
+  String get historyCsvExportOption;
+
+  /// No description provided for @historyCsvExportSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Para analizar en Excel o Google Sheets'**
+  String get historyCsvExportSubtitle;
+
+  /// No description provided for @historyPdfButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe PDF'**
+  String get historyPdfButton;
+
+  /// No description provided for @historyPdfTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Informe de Control Glucémico'**
+  String get historyPdfTitle;
+
+  /// No description provided for @historyPdfSubtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Paciente: {name} · Generado: {date}'**
+  String historyPdfSubtitle(String name, String date);
+
+  /// No description provided for @historyPdfFileName.
+  ///
+  /// In es, this message translates to:
+  /// **'informe_libretadulce.pdf'**
+  String get historyPdfFileName;
+
+  /// No description provided for @historyPdfAvgCarbs.
+  ///
+  /// In es, this message translates to:
+  /// **'Media HC/día'**
+  String get historyPdfAvgCarbs;
+
+  /// No description provided for @historyPdfAvgGlucose.
+  ///
+  /// In es, this message translates to:
+  /// **'Glucemia media'**
+  String get historyPdfAvgGlucose;
+
+  /// No description provided for @historyPdfAvgInsulin.
+  ///
+  /// In es, this message translates to:
+  /// **'Media insulina/dosis'**
+  String get historyPdfAvgInsulin;
+
+  /// No description provided for @historyPdfDays.
+  ///
+  /// In es, this message translates to:
+  /// **'Días'**
+  String get historyPdfDays;
+
+  /// No description provided for @historyPdfMeals.
+  ///
+  /// In es, this message translates to:
+  /// **'Comidas'**
+  String get historyPdfMeals;
+
+  /// No description provided for @historyPdfPeriod.
+  ///
+  /// In es, this message translates to:
+  /// **'Periodo'**
+  String get historyPdfPeriod;
+
+  /// No description provided for @historyPdfFood.
+  ///
+  /// In es, this message translates to:
+  /// **'Alimento'**
+  String get historyPdfFood;
+
+  /// No description provided for @historyPdfMealType.
+  ///
+  /// In es, this message translates to:
+  /// **'Tipo'**
+  String get historyPdfMealType;
+
+  /// No description provided for @historyPdfGlucose.
+  ///
+  /// In es, this message translates to:
+  /// **'Glucemia'**
+  String get historyPdfGlucose;
+
+  /// No description provided for @historyPdfDateRangeTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar fechas'**
+  String get historyPdfDateRangeTitle;
+
+  /// No description provided for @historyPdfFrom.
+  ///
+  /// In es, this message translates to:
+  /// **'Desde'**
+  String get historyPdfFrom;
+
+  /// No description provided for @historyPdfTo.
+  ///
+  /// In es, this message translates to:
+  /// **'Hasta'**
+  String get historyPdfTo;
+
+  /// No description provided for @historyPdfGenerate.
+  ///
+  /// In es, this message translates to:
+  /// **'Generar PDF'**
+  String get historyPdfGenerate;
+
+  /// No description provided for @historyPdfDisclaimer.
+  ///
+  /// In es, this message translates to:
+  /// **'Este informe ha sido generado por Libreta Dulce. Los datos provienen de los registros del usuario y no sustituyen el criterio médico profesional. Consulte siempre con su equipo sanitario.'**
+  String get historyPdfDisclaimer;
+
+  /// No description provided for @historyPdfError.
+  ///
+  /// In es, this message translates to:
+  /// **'Error al generar el PDF'**
+  String get historyPdfError;
+
+  /// No description provided for @historyPdfEmpty.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay datos para generar el informe'**
+  String get historyPdfEmpty;
+
   /// No description provided for @historyExportAccessibility.
   ///
   /// In es, this message translates to:
@@ -841,6 +991,24 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Últimos 7 días'**
   String get historyLast7Days;
+
+  /// No description provided for @historyGlucoseInRange.
+  ///
+  /// In es, this message translates to:
+  /// **'En rango'**
+  String get historyGlucoseInRange;
+
+  /// No description provided for @historyGlucoseHigh.
+  ///
+  /// In es, this message translates to:
+  /// **'Alta'**
+  String get historyGlucoseHigh;
+
+  /// No description provided for @historyGlucoseLow.
+  ///
+  /// In es, this message translates to:
+  /// **'Baja'**
+  String get historyGlucoseLow;
 
   /// No description provided for @historyChartTooltip.
   ///

@@ -324,6 +324,85 @@ class AppLocalizationsCs extends AppLocalizations {
   String get historyExportButton => 'Exportovat';
 
   @override
+  String get historyExportOptionsTitle => 'Exportovat data';
+
+  @override
+  String get historyPdfExportOption => 'Zpráva PDF';
+
+  @override
+  String get historyPdfExportSubtitle => 'Profesionální dokument pro lékaře';
+
+  @override
+  String get historyCsvExportOption => 'Tabulka CSV';
+
+  @override
+  String get historyCsvExportSubtitle =>
+      'Pro analýzu v Excelu nebo Google Sheets';
+
+  @override
+  String get historyPdfButton => 'Zpráva PDF';
+
+  @override
+  String get historyPdfTitle => 'Zpráva o glykemické kontrole';
+
+  @override
+  String historyPdfSubtitle(String name, String date) {
+    return 'Pacient: $name · Vygenerováno: $date';
+  }
+
+  @override
+  String get historyPdfFileName => 'zprava_libretadulce.pdf';
+
+  @override
+  String get historyPdfAvgCarbs => 'Prům. sacharidů/den';
+
+  @override
+  String get historyPdfAvgGlucose => 'Prům. glykémie';
+
+  @override
+  String get historyPdfAvgInsulin => 'Prům. inzulín/dávka';
+
+  @override
+  String get historyPdfDays => 'Dny';
+
+  @override
+  String get historyPdfMeals => 'Jídla';
+
+  @override
+  String get historyPdfPeriod => 'Období';
+
+  @override
+  String get historyPdfFood => 'Potravina';
+
+  @override
+  String get historyPdfMealType => 'Typ';
+
+  @override
+  String get historyPdfGlucose => 'Glykémie';
+
+  @override
+  String get historyPdfDateRangeTitle => 'Vyberte datumy';
+
+  @override
+  String get historyPdfFrom => 'Od';
+
+  @override
+  String get historyPdfTo => 'Do';
+
+  @override
+  String get historyPdfGenerate => 'Generovat PDF';
+
+  @override
+  String get historyPdfDisclaimer =>
+      'Tato zpráva byla vygenerována aplikací Libreta Dulce. Údaje pocházejí z uživatelských záznamů a nenahrazují odborný lékařský úsudek. Vždy se poraďte se svým zdravotnickým týmem.';
+
+  @override
+  String get historyPdfError => 'Chyba při generování PDF';
+
+  @override
+  String get historyPdfEmpty => 'Žádná data pro generování zprávy';
+
+  @override
   String get historyExportAccessibility => 'Exportovat historii do CSV';
 
   @override
@@ -424,6 +503,15 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get historyLast7Days => 'Posledních 7 dní';
+
+  @override
+  String get historyGlucoseInRange => 'V normě';
+
+  @override
+  String get historyGlucoseHigh => 'Vysoká';
+
+  @override
+  String get historyGlucoseLow => 'Nízká';
 
   @override
   String historyChartTooltip(String day, String carbs) {
