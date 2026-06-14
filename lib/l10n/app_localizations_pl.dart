@@ -1070,6 +1070,9 @@ class AppLocalizationsPl extends AppLocalizations {
   String get photoGalleryButton => 'Wybierz z galerii';
 
   @override
+  String get photoAiNotesTitle => 'Uwaga dotycząca tego talerza';
+
+  @override
   String get photoDisclaimerTitle => 'Wartości oszacowane przez AI';
 
   @override
@@ -1095,7 +1098,25 @@ class AppLocalizationsPl extends AppLocalizations {
   String get photoTableGI => 'IG';
 
   @override
+  String get photoTableProtein => 'Białko';
+
+  @override
+  String get photoTableFat => 'Tłuszcz';
+
+  @override
+  String get photoTableFiber => 'Błonnik';
+
+  @override
   String get photoTableTotal => 'RAZEM';
+
+  @override
+  String get photoAddAllToPlate => 'Dodaj wszystko do talerza';
+
+  @override
+  String get photoAllAdded => 'Wszystko dodane';
+
+  @override
+  String get photoAddedToPlate => 'Dodano';
 
   @override
   String get photoBolusTitle => 'Szacowany bolus insuliny';

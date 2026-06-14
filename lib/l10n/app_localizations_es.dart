@@ -1067,6 +1067,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get photoGalleryButton => 'Elegir de la galería';
 
   @override
+  String get photoAiNotesTitle => 'Nota sobre este plato';
+
+  @override
   String get photoDisclaimerTitle => 'Valores estimados por IA';
 
   @override
@@ -1092,7 +1095,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get photoTableGI => 'IG';
 
   @override
+  String get photoTableProtein => 'Proteínas';
+
+  @override
+  String get photoTableFat => 'Grasas';
+
+  @override
+  String get photoTableFiber => 'Fibra';
+
+  @override
   String get photoTableTotal => 'TOTAL';
+
+  @override
+  String get photoAddAllToPlate => 'Añadir todo al plato';
+
+  @override
+  String get photoAllAdded => 'Todo añadido';
+
+  @override
+  String get photoAddedToPlate => 'Añadido';
 
   @override
   String get photoBolusTitle => 'Bolo de insulina estimado';

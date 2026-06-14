@@ -17,6 +17,9 @@ class PhotoAnalysisResult {
   final double carbsPer100g;
   final double? fatsPer100g;
   final double? proteinsPer100g;
+  final double? fiberPer100g;
+  final double? kcalPer100g;
+  final String? glycemicIndex;
 
   const PhotoAnalysisResult({
     required this.name,
@@ -24,12 +27,23 @@ class PhotoAnalysisResult {
     required this.carbsPer100g,
     this.fatsPer100g,
     this.proteinsPer100g,
+    this.fiberPer100g,
+    this.kcalPer100g,
+    this.glycemicIndex,
   });
 }
 
+/// Callback invoked when user adds a food item to their plate.
+/// Does NOT close the sheet — the sheet stays open for multiple additions.
+typedef OnAddFoodToPlate = void Function(PhotoAnalysisResult result);
+
 /// Bottom sheet: take photo → Gemini analyzes → professional result table.
 class FoodPhotoAnalyzerSheet extends StatefulWidget {
-  const FoodPhotoAnalyzerSheet({super.key});
+  /// Optional callback: when provided, tapping "Add to plate" calls this
+  /// instead of popping the sheet, allowing the user to add multiple foods.
+  final OnAddFoodToPlate? onAddToPlate;
+
+  const FoodPhotoAnalyzerSheet({super.key, this.onAddToPlate});
 
   @override
   State<FoodPhotoAnalyzerSheet> createState() => _FoodPhotoAnalyzerSheetState();
@@ -43,6 +57,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
   String? _errorMessage;
   GeminiAnalysisResult? _analysis;
   InsulinSettings? _insulinSettings;
+  final Set<String> _addedItems = {};
 
   @override
   void initState() {
@@ -193,16 +208,16 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
                   Flexible(
                     child: MergeSemantics(
                       child: InkWell(
-                      onTap: () => setDialogState(() => dontShow = !dontShow),
-                      borderRadius: BorderRadius.circular(4),
-                      child: Text(
-                        l10n.photoTipDontShowAgain,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
+                        onTap: () => setDialogState(() => dontShow = !dontShow),
+                        borderRadius: BorderRadius.circular(4),
+                        child: Text(
+                          l10n.photoTipDontShowAgain,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
                       ),
-                    ),
                     ),
                   ),
                 ],
@@ -257,16 +272,33 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
   }
 
   void _addToPlate(GeminiFoodItem item) {
-    Navigator.pop(
-      context,
-      PhotoAnalysisResult(
-        name: item.name,
-        grams: item.grams,
-        carbsPer100g: item.carbsPer100g,
-        fatsPer100g: item.fatsPer100g,
-        proteinsPer100g: item.proteinsPer100g,
-      ),
+    final result = PhotoAnalysisResult(
+      name: item.name,
+      grams: item.grams,
+      carbsPer100g: item.carbsPer100g,
+      fatsPer100g: item.fatsPer100g,
+      proteinsPer100g: item.proteinsPer100g,
+      fiberPer100g: item.fiberPer100g,
+      kcalPer100g: item.kcalPer100g,
+      glycemicIndex: item.glycemicIndex,
     );
+
+    if (widget.onAddToPlate != null) {
+      // Callback mode: stay open so user can add multiple foods
+      widget.onAddToPlate!(result);
+      setState(() => _addedItems.add(item.name));
+      final l10n = AppLocalizations.of(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(l10n.globalAddedToMyFoods(item.name)),
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } else {
+      // Legacy mode: pop with single result (backwards compatible)
+      Navigator.pop(context, result);
+    }
   }
 
   @override
@@ -557,14 +589,32 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
             const SizedBox(height: 16),
           ],
 
-          // --- Nutritional table ---
-          _buildTableHeader(l10n, isDark),
-          const SizedBox(height: 8),
-          ...items.asMap().entries.map(
-            (e) => _buildTableRow(e.value, l10n, isDark),
+          // --- Food cards ---
+          Text(
+            l10n.photoResultsTitle,
+            style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: isDark ? Colors.grey.shade200 : Colors.grey.shade800,
+            ),
           ),
-          const Divider(height: 24),
-          _buildTableTotal(totalCarbs, totalRations, totalKcal, l10n, isDark),
+          const SizedBox(height: 10),
+          ...items.asMap().entries.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: _buildFoodCard(e.value, l10n, isDark),
+            ),
+          ),
+
+          // --- Totals row ---
+          const SizedBox(height: 4),
+          _buildTotalsRow(totalCarbs, totalRations, totalKcal, l10n, isDark),
+
+          // --- AI Notes (separate from disclaimer) ---
+          if (analysis.notes.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            _buildAiNotesCard(analysis.notes, l10n, isDark),
+          ],
 
           if (_insulinSettings != null) ...[
             const SizedBox(height: 16),
@@ -573,7 +623,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
 
           const SizedBox(height: 16),
 
-          // --- Notes / disclaimer ---
+          // --- Disclaimer (no notes here anymore) ---
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
@@ -603,18 +653,6 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                if (analysis.notes.isNotEmpty)
-                  Text(
-                    analysis.notes,
-                    style: TextStyle(
-                      fontSize: 12,
-                      height: 1.4,
-                      color: isDark
-                          ? Colors.grey.shade300
-                          : Colors.grey.shade700,
-                    ),
-                  ),
-                const SizedBox(height: 4),
                 Text(
                   l10n.photoDisclaimerText,
                   style: TextStyle(
@@ -629,53 +667,60 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
 
           const SizedBox(height: 16),
 
-          // --- Action buttons: add individual foods ---
-          Text(
-            l10n.photoAddFoodsTitle,
-            style: TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: isDark ? Colors.grey.shade300 : Colors.grey.shade700,
-            ),
-          ),
-          const SizedBox(height: 8),
-          ...items.map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Semantics(
-                button: true,
-                label: l10n.photoAddToPlate(item.name),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _addToPlate(item),
-                    icon: const Icon(
-                      Icons.add_circle_outline,
-                      color: Colors.teal,
-                      size: 20,
-                    ),
-                    label: Text(
-                      '${item.name} (${item.grams.toStringAsFixed(0)}g)',
-                      style: const TextStyle(color: Colors.teal),
-                    ),
-                    style: OutlinedButton.styleFrom(
-                      side: BorderSide(
-                        color: Colors.teal.withValues(alpha: 0.4),
-                      ),
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          AppDimens.radiusCard,
+          // --- Add all button ---
+          if (items.length > 1 && widget.onAddToPlate != null) ...[
+            const SizedBox(height: 8),
+            Builder(
+              builder: (context) {
+                final allAdded = items.every(
+                  (i) => _addedItems.contains(i.name),
+                );
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Semantics(
+                    button: true,
+                    label: l10n.photoAddAllToPlate,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: FilledButton.icon(
+                        onPressed: allAdded
+                            ? null
+                            : () {
+                                for (final item in items) {
+                                  if (!_addedItems.contains(item.name)) {
+                                    _addToPlate(item);
+                                  }
+                                }
+                              },
+                        icon: Icon(
+                          allAdded ? Icons.check_circle : Icons.playlist_add,
+                          size: 20,
+                        ),
+                        label: Text(
+                          allAdded
+                              ? l10n.photoAllAdded
+                              : l10n.photoAddAllToPlate,
+                        ),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: Colors.teal,
+                          disabledBackgroundColor: Colors.green.withValues(
+                            alpha: 0.15,
+                          ),
+                          disabledForegroundColor: Colors.green,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              AppDimens.radiusCard,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
-          ),
-
-          const SizedBox(height: 8),
+          ],
 
           Row(
             children: [
@@ -694,172 +739,316 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
     );
   }
 
-  Widget _buildTableHeader(AppLocalizations l10n, bool isDark) {
-    final textColor = isDark ? Colors.grey.shade300 : Colors.grey.shade700;
+  /// Builds a professional food card with macro grid & glycemic index badge.
+  Widget _buildFoodCard(
+    GeminiFoodItem item,
+    AppLocalizations l10n,
+    bool isDark,
+  ) {
+    final cardBg = isDark ? Colors.grey.shade900 : Colors.grey.shade50;
+    final textColor = isDark ? Colors.grey.shade200 : Colors.grey.shade900;
+    final mutedColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+    final gi = item.glycemicIndex;
+
+    final carbsServing = item.grams * item.carbsPer100g / 100;
+    final rations = carbsServing / 10.0;
+    final proteinsServing = item.proteinsPer100g != null
+        ? item.grams * item.proteinsPer100g! / 100
+        : null;
+    final fatsServing = item.fatsPer100g != null
+        ? item.grams * item.fatsPer100g! / 100
+        : null;
+    final fiberServing = item.fiberPer100g != null
+        ? item.grams * item.fiberPer100g! / 100
+        : null;
+    final kcalServing = item.kcalPer100g != null
+        ? item.grams * item.kcalPer100g! / 100
+        : null;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.teal.withValues(alpha: 0.08),
-        borderRadius: BorderRadius.circular(8),
+        color: cardBg,
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        border: Border.all(
+          color: isDark ? Colors.grey.shade700 : Colors.grey.shade200,
+        ),
       ),
-      child: Row(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(width: 4),
-          Expanded(
-            flex: 3,
-            child: Text(
-              l10n.photoTableFood,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-                color: textColor,
-              ),
+          // --- Card header: name + GI badge + grams ---
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          color: textColor,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '${l10n.photoTableGrams}: ${item.grams.toStringAsFixed(0)}g',
+                        style: TextStyle(fontSize: 12, color: mutedColor),
+                      ),
+                    ],
+                  ),
+                ),
+                if (gi != null) _buildGiBadge(gi),
+              ],
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              l10n.photoTableGrams,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-                color: textColor,
-              ),
-              textAlign: TextAlign.center,
+
+          // --- Divider ---
+          Divider(height: 1, color: Colors.grey.withValues(alpha: 0.2)),
+
+          // --- Macro grid ---
+          Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Carbs row (always shown, most important for diabetes)
+                _buildMacroRow(
+                  l10n.photoTableCarbs,
+                  '${carbsServing.toStringAsFixed(1)}g',
+                  Icons.grain,
+                  Colors.teal,
+                  subtitle:
+                      '${rations.toStringAsFixed(1)} ${l10n.photoTableRations}',
+                  isDark: isDark,
+                ),
+                const SizedBox(height: 10),
+                // Second row: macros grid — always 4 equal columns
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildMacroChip(
+                        l10n.photoTableProtein,
+                        proteinsServing != null
+                            ? '${proteinsServing.toStringAsFixed(0)}g'
+                            : '–',
+                        Colors.blue,
+                        isDark,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: _buildMacroChip(
+                        l10n.photoTableFat,
+                        fatsServing != null
+                            ? '${fatsServing.toStringAsFixed(0)}g'
+                            : '–',
+                        Colors.amber,
+                        isDark,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: _buildMacroChip(
+                        l10n.photoTableFiber,
+                        fiberServing != null
+                            ? '${fiberServing.toStringAsFixed(0)}g'
+                            : '–',
+                        Colors.green,
+                        isDark,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: _buildMacroChip(
+                        l10n.foodsKcalLabel,
+                        kcalServing != null
+                            ? kcalServing.toStringAsFixed(0)
+                            : '–',
+                        Colors.deepOrange,
+                        isDark,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              l10n.photoTableCarbs,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-                color: textColor,
+
+          // --- Add to plate button ---
+          Divider(height: 1, color: Colors.grey.withValues(alpha: 0.2)),
+          if (_addedItems.contains(item.name))
+            // Already added — show checkmark
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.check_circle, color: Colors.green, size: 18),
+                  const SizedBox(width: 6),
+                  Text(
+                    l10n.photoAddedToPlate,
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
-              textAlign: TextAlign.center,
+            )
+          else
+            Semantics(
+              button: true,
+              label: l10n.photoAddToPlate(item.name),
+              child: InkWell(
+                onTap: () => _addToPlate(item),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.add_circle_outline,
+                        color: Colors.teal,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        l10n.photoAddToPlate(item.name),
+                        style: const TextStyle(
+                          color: Colors.teal,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
+        ],
+      ),
+    );
+  }
+
+  /// Compact macro chip (used inside the food card).
+  Widget _buildMacroChip(String label, String value, Color color, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: isDark ? 0.12 : 0.07),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+              color: color,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              l10n.photoTableRations,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-                color: textColor,
-              ),
-              textAlign: TextAlign.center,
+          const SizedBox(height: 1),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 9,
+              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              l10n.photoTableGI,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 11,
-                color: textColor,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTableRow(
-    GeminiFoodItem item,
-    AppLocalizations l10n,
-    bool isDark,
-  ) {
-    final carbs = item.grams * item.carbsPer100g / 100;
-    final rations = carbs / 10.0;
-    final gi = item.glycemicIndex;
-    final textColor = isDark ? Colors.grey.shade200 : Colors.grey.shade900;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey.withValues(alpha: 0.15)),
+  /// Carbs macro row (larger, with rations subtitle).
+  Widget _buildMacroRow(
+    String label,
+    String value,
+    IconData icon,
+    Color color, {
+    String? subtitle,
+    required bool isDark,
+  }) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: color),
+        const SizedBox(width: 8),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+          ),
         ),
+        const Spacer(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 16,
+                color: color,
+              ),
+            ),
+            if (subtitle != null)
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade500,
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Builds a colored glycemic index badge.
+  Widget _buildGiBadge(String gi) {
+    final color = _giColor(gi);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
+          Icon(
+            gi == 'Alto'
+                ? Icons.trending_up
+                : gi == 'Medio'
+                ? Icons.trending_flat
+                : Icons.trending_down,
+            size: 14,
+            color: color,
+          ),
           const SizedBox(width: 4),
-          Expanded(
-            flex: 3,
-            child: Text(
-              item.name,
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 13,
-                color: textColor,
-              ),
-              overflow: TextOverflow.ellipsis,
+          Text(
+            'IG $gi',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 11,
+              color: color,
             ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              '${item.grams.toStringAsFixed(0)}g',
-              style: TextStyle(fontSize: 13, color: textColor),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              '${carbs.toStringAsFixed(1)}g',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-                color: Colors.teal,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              rations.toStringAsFixed(1),
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-                color: Colors.amber.shade800,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: gi != null
-                ? Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 3,
-                      vertical: 1,
-                    ),
-                    decoration: BoxDecoration(
-                      color: _giColor(gi).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      gi,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 10,
-                        color: _giColor(gi),
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                : const Text(
-                    '–',
-                    style: TextStyle(fontSize: 11, color: Colors.grey),
-                    textAlign: TextAlign.center,
-                  ),
           ),
         ],
       ),
@@ -882,57 +1071,99 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
     }
   }
 
-  Widget _buildTableTotal(
+  /// Totals summary row.
+  Widget _buildTotalsRow(
     double totalCarbs,
     double totalRations,
     double totalKcal,
     AppLocalizations l10n,
     bool isDark,
   ) {
-    final textColor = isDark ? Colors.grey.shade100 : Colors.grey.shade900;
+    final textColor = isDark ? Colors.grey.shade200 : Colors.grey.shade800;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.teal.withValues(alpha: 0.06),
-        borderRadius: BorderRadius.circular(8),
+        color: Colors.teal.withValues(alpha: isDark ? 0.1 : 0.06),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        border: Border.all(color: Colors.teal.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
-          const SizedBox(width: 4),
-          Expanded(
-            flex: 3,
-            child: Text(
-              l10n.photoTableTotal,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-                color: textColor,
-              ),
+          const Icon(Icons.summarize, color: Colors.teal, size: 18),
+          const SizedBox(width: 10),
+          Text(
+            l10n.photoTableTotal,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+              color: textColor,
             ),
           ),
-          Expanded(flex: 2, child: const SizedBox()),
-          Expanded(
-            flex: 2,
-            child: Text(
-              '${totalCarbs.toStringAsFixed(1)}g',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-                color: Colors.teal,
+          const Spacer(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '${totalCarbs.toStringAsFixed(1)}g HC',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                  color: Colors.teal,
+                ),
               ),
-              textAlign: TextAlign.center,
-            ),
+              Text(
+                '${totalRations.toStringAsFixed(1)} ${l10n.photoTableRations}',
+                style: TextStyle(fontSize: 12, color: Colors.teal.shade700),
+              ),
+              if (totalKcal > 0)
+                Text(
+                  '${totalKcal.toStringAsFixed(0)} kcal',
+                  style: TextStyle(fontSize: 11, color: Colors.teal.shade600),
+                ),
+            ],
           ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              totalRations.toStringAsFixed(1),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 13,
-                color: Colors.amber.shade800,
+        ],
+      ),
+    );
+  }
+
+  /// AI-generated notes box — professional, not a warning.
+  Widget _buildAiNotesCard(String notes, AppLocalizations l10n, bool isDark) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.indigo.withValues(alpha: isDark ? 0.08 : 0.04),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        border: Border.all(color: Colors.indigo.withValues(alpha: 0.2)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(
+                Icons.lightbulb_outline,
+                color: Colors.indigo,
+                size: 18,
               ),
-              textAlign: TextAlign.center,
+              const SizedBox(width: 8),
+              Text(
+                l10n.photoAiNotesTitle,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.indigo,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            notes,
+            style: TextStyle(
+              fontSize: 13,
+              height: 1.5,
+              color: isDark ? Colors.grey.shade200 : Colors.grey.shade800,
             ),
           ),
         ],

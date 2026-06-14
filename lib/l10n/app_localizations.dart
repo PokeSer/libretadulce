@@ -2000,6 +2000,12 @@ abstract class AppLocalizations {
   /// **'Elegir de la galería'**
   String get photoGalleryButton;
 
+  /// No description provided for @photoAiNotesTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Nota sobre este plato'**
+  String get photoAiNotesTitle;
+
   /// No description provided for @photoDisclaimerTitle.
   ///
   /// In es, this message translates to:
@@ -2048,11 +2054,47 @@ abstract class AppLocalizations {
   /// **'IG'**
   String get photoTableGI;
 
+  /// No description provided for @photoTableProtein.
+  ///
+  /// In es, this message translates to:
+  /// **'Proteínas'**
+  String get photoTableProtein;
+
+  /// No description provided for @photoTableFat.
+  ///
+  /// In es, this message translates to:
+  /// **'Grasas'**
+  String get photoTableFat;
+
+  /// No description provided for @photoTableFiber.
+  ///
+  /// In es, this message translates to:
+  /// **'Fibra'**
+  String get photoTableFiber;
+
   /// No description provided for @photoTableTotal.
   ///
   /// In es, this message translates to:
   /// **'TOTAL'**
   String get photoTableTotal;
+
+  /// No description provided for @photoAddAllToPlate.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir todo al plato'**
+  String get photoAddAllToPlate;
+
+  /// No description provided for @photoAllAdded.
+  ///
+  /// In es, this message translates to:
+  /// **'Todo añadido'**
+  String get photoAllAdded;
+
+  /// No description provided for @photoAddedToPlate.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadido'**
+  String get photoAddedToPlate;
 
   /// No description provided for @photoBolusTitle.
   ///

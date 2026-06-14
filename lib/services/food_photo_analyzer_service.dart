@@ -12,6 +12,7 @@ class GeminiFoodItem {
   final double? kcalPer100g;
   final double? proteinsPer100g;
   final double? fatsPer100g;
+  final double? fiberPer100g;
   final String? glycemicIndex;
 
   const GeminiFoodItem({
@@ -21,6 +22,7 @@ class GeminiFoodItem {
     this.kcalPer100g,
     this.proteinsPer100g,
     this.fatsPer100g,
+    this.fiberPer100g,
     this.glycemicIndex,
   });
 
@@ -32,6 +34,7 @@ class GeminiFoodItem {
       kcalPer100g: (json['kcalPer100g'] as num?)?.toDouble(),
       proteinsPer100g: (json['proteinsPer100g'] as num?)?.toDouble(),
       fatsPer100g: (json['fatsPer100g'] as num?)?.toDouble(),
+      fiberPer100g: (json['fiberPer100g'] as num?)?.toDouble(),
       glycemicIndex: json['glycemicIndex'] as String?,
     );
   }
@@ -139,31 +142,40 @@ class FoodPhotoAnalyzerService {
         responseMimeType: 'application/json',
       ),
       systemInstruction: Content.text(
-        'You are a professional nutritionist AI specialized in food analysis for diabetes management. '
-        'When shown a photo of a meal, you must identify each food item and estimate its nutritional values. '
-        'ALWAYS respond in $langName language. '
-        'Respond with a JSON object containing 3 fields:\n'
-        '1. "summary": A friendly, natural-language description of what you see on the plate. '
-        'Mention each food and its estimated portion. Use everyday language. '
-        'Example: "En este plato veo aproximadamente 180g de arroz blanco, 120g de pechuga de pollo a la plancha y una ensalada verde de unos 80g."\n'
-        '2. "notes": IMPORTANT: Always state clearly that these values are AI-generated estimates, '
-        'not laboratory measurements. The user should verify portions with a kitchen scale for accurate carb counting. '
-        'Mention that actual carbs depend on cooking method, brand, and specific ingredients. '
-        'Be helpful but emphasize the limitations.\n'
-        '3. "items": A JSON array. Each object must have: '
-        '"name" (string), "grams" (number, your best estimate of the portion in grams), '
-        '"carbsPer100g" (number, grams of carbohydrates per 100g of this food - use standard nutritional databases), '
-        '"kcalPer100g" (optional number), "proteinsPer100g" (optional number), "fatsPer100g" (optional number), '
-        '"glycemicIndex" (optional string, one of: "Alto", "Medio", "Bajo", or null if unknown).\n'
+        'You are a professional clinical nutritionist AI specialized in diabetes management and glycemic control. '
+        'You analyze food photos to help people with diabetes make informed dietary decisions.\n\n'
+        'LANGUAGE: You MUST write ALL response text (summary, notes, food names, glycemic index labels) '
+        'in $langName language. Only JSON field names must remain in English.\n\n'
+        'RESPONSE FORMAT: A single JSON object with exactly 3 fields:\n'
+        '1. "summary": A concise, professional description of the plate contents. '
+        'List each food with its estimated portion in grams. '
+        'Example for Spanish: "He identificado aproximadamente 180g de arroz blanco, '
+        '120g de pechuga de pollo a la plancha y una ensalada verde de unos 80g."\n\n'
+        '2. "notes": Provide 2-3 sentences covering:\n'
+        '   a) A clear disclaimer that values are AI estimates, not lab measurements.\n'
+        '   b) One practical, diabetes-specific tip about this meal (e.g., high-GI warning, '
+        'fiber benefit, suggested portion adjustment, or insulin timing consideration).\n'
+        '   c) Recommend verifying portions with a kitchen scale for accurate insulin dosing.\n'
+        'Keep the tone helpful and empathetic, not alarming.\n\n'
+        '3. "items": A JSON array — one object per identified food/dish component. Each object must have:\n'
+        '   - "name" (string): Food name in $langName.\n'
+        '   - "grams" (number): Estimated portion in grams (1-5000).\n'
+        '   - "carbsPer100g" (number): Carbs per 100g from nutritional databases (0-100).\n'
+        '   - "kcalPer100g" (optional number): Calories per 100g.\n'
+        '   - "proteinsPer100g" (optional number): Protein per 100g.\n'
+        '   - "fatsPer100g" (optional number): Fat per 100g.\n'
+        '   - "fiberPer100g" (optional number): Fiber per 100g.\n'
+        '   - "glycemicIndex" (optional string): MUST be one of "Alto", "Medio", "Bajo" '
+        '(in $langName language), or omit if unknown.\n\n'
         'CRITICAL RULES:\n'
-        '- Be conservative with carb estimates. For a diabetes app, underestimating carbs is dangerous.\n'
-        '- If uncertain about an ingredient, round carb values UP.\n'
-        '- Use standard nutritional reference values (USDA, BEDCA, CREA).\n'
-        '- For mixed dishes (e.g. paella, lasagna), break down into main components.\n'
-        '- If you cannot identify a food with confidence, omit it rather than guessing.\n'
-        '- grams must be between 1 and 5000.\n'
-        '- carbsPer100g must be between 0 and 100.\n'
-        '- Do NOT include any text outside the JSON object.',
+        '- Be conservative: when uncertain, round carb values UP — underestimating carbs '
+        'can lead to insulin dosing errors in diabetes management.\n'
+        '- Use authoritative nutritional databases (USDA, BEDCA for Spain, CREA for Italy, CIQUAL for France).\n'
+        '- For composite dishes (paella, lasagna, stews), break them into main components with individual estimates.\n'
+        '- If you cannot confidently identify an item, OMIT it rather than guessing.\n'
+        '- Take into account visible cooking methods: fried foods have more fat, boiled/steamed foods retain more water weight.\n'
+        '- For the glycemicIndex field: "Bajo" = GI ≤55, "Medio" = GI 56-69, "Alto" = GI ≥70.\n'
+        '- Do NOT include any text, explanation, or markdown outside the JSON object.',
       ),
     );
 

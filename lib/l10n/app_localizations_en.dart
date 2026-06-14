@@ -1062,6 +1062,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get photoGalleryButton => 'Choose from gallery';
 
   @override
+  String get photoAiNotesTitle => 'Note about this plate';
+
+  @override
   String get photoDisclaimerTitle => 'AI-estimated values';
 
   @override
@@ -1087,7 +1090,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get photoTableGI => 'GI';
 
   @override
+  String get photoTableProtein => 'Protein';
+
+  @override
+  String get photoTableFat => 'Fat';
+
+  @override
+  String get photoTableFiber => 'Fiber';
+
+  @override
   String get photoTableTotal => 'TOTAL';
+
+  @override
+  String get photoAddAllToPlate => 'Add all to plate';
+
+  @override
+  String get photoAllAdded => 'All added';
+
+  @override
+  String get photoAddedToPlate => 'Added';
 
   @override
   String get photoBolusTitle => 'Estimated insulin bolus';

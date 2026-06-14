@@ -1071,6 +1071,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get photoGalleryButton => 'Aus Galerie wählen';
 
   @override
+  String get photoAiNotesTitle => 'Hinweis zu diesem Teller';
+
+  @override
   String get photoDisclaimerTitle => 'KI-geschätzte Werte';
 
   @override
@@ -1097,7 +1100,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get photoTableGI => 'GI';
 
   @override
+  String get photoTableProtein => 'Protein';
+
+  @override
+  String get photoTableFat => 'Fett';
+
+  @override
+  String get photoTableFiber => 'Ballaststoffe';
+
+  @override
   String get photoTableTotal => 'GESAMT';
+
+  @override
+  String get photoAddAllToPlate => 'Alles zum Teller hinzufügen';
+
+  @override
+  String get photoAllAdded => 'Alles hinzugefügt';
+
+  @override
+  String get photoAddedToPlate => 'Hinzugefügt';
 
   @override
   String get photoBolusTitle => 'Geschätzter Insulinbolus';

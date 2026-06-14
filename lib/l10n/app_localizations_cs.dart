@@ -1064,6 +1064,9 @@ class AppLocalizationsCs extends AppLocalizations {
   String get photoGalleryButton => 'Vybrat z galerie';
 
   @override
+  String get photoAiNotesTitle => 'Poznámka k tomuto talíři';
+
+  @override
   String get photoDisclaimerTitle => 'Hodnoty odhadnuté AI';
 
   @override
@@ -1089,7 +1092,25 @@ class AppLocalizationsCs extends AppLocalizations {
   String get photoTableGI => 'IG';
 
   @override
+  String get photoTableProtein => 'Bílkoviny';
+
+  @override
+  String get photoTableFat => 'Tuky';
+
+  @override
+  String get photoTableFiber => 'Vláknina';
+
+  @override
   String get photoTableTotal => 'CELKEM';
+
+  @override
+  String get photoAddAllToPlate => 'Přidat vše na talíř';
+
+  @override
+  String get photoAllAdded => 'Vše přidáno';
+
+  @override
+  String get photoAddedToPlate => 'Přidáno';
 
   @override
   String get photoBolusTitle => 'Odhadovaný inzulínový bolus';
