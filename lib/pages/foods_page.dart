@@ -77,6 +77,9 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
     TextEditingController? nameCtrl,
     TextEditingController? brandCtrl,
     TextEditingController? carbsCtrl,
+    TextEditingController? kcalCtrl,
+    TextEditingController? proteinsCtrl,
+    TextEditingController? fatsCtrl,
   }) async {
     final l10n = AppLocalizations.of(context);
     final barcode = await OpenFoodFactsService.scanBarcode(context);
@@ -98,17 +101,21 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
             (carbsCtrl ?? _carbsController).text =
                 result.carbsPer100g!.toStringAsFixed(1);
           }
-          if (carbsCtrl == null) {
-            if (result.kcalPer100g != null) {
-              _kcalController.text = result.kcalPer100g!.toStringAsFixed(0);
-            }
-            if (result.proteinsPer100g != null) {
-              _proteinsController.text =
-                  result.proteinsPer100g!.toStringAsFixed(1);
-            }
-            if (result.fatsPer100g != null) {
-              _fatsController.text = result.fatsPer100g!.toStringAsFixed(1);
-            }
+          // Fill extra nutrition fields when scanning for add-food form
+          if (kcalCtrl != null && result.kcalPer100g != null) {
+            kcalCtrl.text = result.kcalPer100g!.toStringAsFixed(0);
+          } else if (carbsCtrl == null && result.kcalPer100g != null) {
+            _kcalController.text = result.kcalPer100g!.toStringAsFixed(0);
+          }
+          if (proteinsCtrl != null && result.proteinsPer100g != null) {
+            proteinsCtrl.text = result.proteinsPer100g!.toStringAsFixed(1);
+          } else if (carbsCtrl == null && result.proteinsPer100g != null) {
+            _proteinsController.text = result.proteinsPer100g!.toStringAsFixed(1);
+          }
+          if (fatsCtrl != null && result.fatsPer100g != null) {
+            fatsCtrl.text = result.fatsPer100g!.toStringAsFixed(1);
+          } else if (carbsCtrl == null && result.fatsPer100g != null) {
+            _fatsController.text = result.fatsPer100g!.toStringAsFixed(1);
           }
         });
         if (mounted) {
@@ -145,8 +152,15 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
               _clearFoodControllers();
             }
           },
-          onScanTap: (nameCtrl, brandCtrl, carbsCtrl) =>
-              _scanBarcode(nameCtrl: nameCtrl, brandCtrl: brandCtrl, carbsCtrl: carbsCtrl),
+          onScanTap: (nameCtrl, brandCtrl, carbsCtrl, kcalCtrl, proteinsCtrl, fatsCtrl) =>
+              _scanBarcode(
+                nameCtrl: nameCtrl,
+                brandCtrl: brandCtrl,
+                carbsCtrl: carbsCtrl,
+                kcalCtrl: kcalCtrl,
+                proteinsCtrl: proteinsCtrl,
+                fatsCtrl: fatsCtrl,
+              ),
         );
       },
     );

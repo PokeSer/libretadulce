@@ -13,6 +13,9 @@ class FoodFormSheet extends StatefulWidget {
     TextEditingController nameCtrl,
     TextEditingController brandCtrl,
     TextEditingController carbsCtrl,
+    TextEditingController kcalCtrl,
+    TextEditingController proteinsCtrl,
+    TextEditingController fatsCtrl,
   )? onScanTap;
 
   const FoodFormSheet({
@@ -128,6 +131,9 @@ class _FoodFormSheetState extends State<FoodFormSheet> {
                 _nameController,
                 _brandController,
                 _carbsController,
+                _kcalController,
+                _proteinsController,
+                _fatsController,
               ),
             ),
         ],
