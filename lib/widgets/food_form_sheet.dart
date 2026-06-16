@@ -9,11 +9,17 @@ import '../models/food.dart';
 class FoodFormSheet extends StatefulWidget {
   final Food? initial;
   final ValueChanged<Food> onSave;
+  final Future<void> Function(
+    TextEditingController nameCtrl,
+    TextEditingController brandCtrl,
+    TextEditingController carbsCtrl,
+  )? onScanTap;
 
   const FoodFormSheet({
     super.key,
     this.initial,
     required this.onSave,
+    this.onScanTap,
   });
 
   @override
@@ -114,6 +120,16 @@ class _FoodFormSheetState extends State<FoodFormSheet> {
             _isEditMode ? l10n.foodsDetailTitle : l10n.foodsAddTitle,
             style: TextStyle(color: AppColors.primary(context)),
           ),
+          if (widget.onScanTap != null)
+            IconButton(
+              icon: Icon(Icons.qr_code_scanner, color: AppColors.primary(context)),
+              tooltip: l10n.foodsScanTooltip,
+              onPressed: () => widget.onScanTap?.call(
+                _nameController,
+                _brandController,
+                _carbsController,
+              ),
+            ),
         ],
       ),
       content: Column(

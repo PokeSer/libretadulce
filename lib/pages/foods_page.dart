@@ -145,6 +145,8 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
               _clearFoodControllers();
             }
           },
+          onScanTap: (nameCtrl, brandCtrl, carbsCtrl) =>
+              _scanBarcode(nameCtrl: nameCtrl, brandCtrl: brandCtrl, carbsCtrl: carbsCtrl),
         );
       },
     );
