@@ -8,12 +8,11 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'firebase_options.dart';
 import 'core/services/app_settings.dart';
+import 'core/services/app_settings_scope.dart';
 import 'core/theme/app_dimens.dart';
 import 'l10n/app_localizations.dart';
 import 'pages/login_page.dart';
 import 'pages/home_page.dart';
-
-late final AppSettings appSettings;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +20,7 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  appSettings = AppSettings();
+  final appSettings = AppSettings();
   await appSettings.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseFirestore.instance.settings = const Settings(
@@ -38,7 +37,7 @@ void main() async {
     'cs_CZ',
   ];
   await Future.wait(locales.map((l) => initializeDateFormatting(l, null)));
-  runApp(const MyApp());
+  runApp(AppSettingsScope(settings: appSettings, child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -46,35 +45,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: appSettings,
-      builder: (context, _) {
-        return MaterialApp(
-          title: 'Libreta Dulce',
-          debugShowCheckedModeBanner: false,
-          supportedLocales: AppLocalizations.supportedLocales,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          localeResolutionCallback: (locale, supportedLocales) {
-            if (locale != null) {
-              for (final supportedLocale in supportedLocales) {
-                if (supportedLocale.languageCode == locale.languageCode) {
-                  return supportedLocale;
-                }
-              }
+    final settings = AppSettingsScope.of(context);
+    return MaterialApp(
+      title: 'Libreta Dulce',
+      debugShowCheckedModeBanner: false,
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      localeResolutionCallback: (locale, supportedLocales) {
+        if (locale != null) {
+          for (final supportedLocale in supportedLocales) {
+            if (supportedLocale.languageCode == locale.languageCode) {
+              return supportedLocale;
             }
-            return supportedLocales.first;
-          },
-          themeMode: appSettings.themeMode,
-          theme: _buildLightTheme(),
-          darkTheme: _buildDarkTheme(),
-          home: const AuthWrapper(),
-        );
+          }
+        }
+        return supportedLocales.first;
       },
+      themeMode: settings.themeMode,
+      theme: _buildLightTheme(),
+      darkTheme: _buildDarkTheme(),
+      home: const AuthWrapper(),
     );
   }
 

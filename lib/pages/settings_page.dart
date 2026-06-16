@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
+import '../core/services/app_settings.dart';
+import '../core/services/app_settings_scope.dart';
 import '../l10n/app_localizations.dart';
-import '../main.dart' show appSettings;
 import '../services/food_photo_analyzer_service.dart';
 import '../widgets/app_card.dart';
 import 'insulin_settings_page.dart';
@@ -14,41 +15,37 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final appSettings = AppSettingsScope.of(context);
 
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.profileSettings, style: AppTextStyles.appBarTitle),
       ),
-      body: ListenableBuilder(
-        listenable: appSettings,
-        builder: (context, _) {
-          return SingleChildScrollView(
-            padding: AppDimens.screenPadding,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildSectionLabel(
-                  context,
-                  l10n.profileSettingsSectionApp,
-                  Icons.settings,
-                ),
-                const SizedBox(height: 12),
-                _buildGeminiKeyCard(context, l10n),
-                const SizedBox(height: 16),
-                _buildThemeCard(context, l10n),
-                const SizedBox(height: 32),
-                _buildSectionLabel(
-                  context,
-                  l10n.profileSettingsSectionHealth,
-                  Icons.monitor_heart_outlined,
-                ),
-                const SizedBox(height: 12),
-                _buildHealthCard(context, l10n),
-                const SizedBox(height: 32),
-              ],
+      body: SingleChildScrollView(
+        padding: AppDimens.screenPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSectionLabel(
+              context,
+              l10n.profileSettingsSectionApp,
+              Icons.settings,
             ),
-          );
-        },
+            const SizedBox(height: 12),
+            _buildGeminiKeyCard(context, l10n),
+            const SizedBox(height: 16),
+            _buildThemeCard(context, l10n, appSettings),
+            const SizedBox(height: 32),
+            _buildSectionLabel(
+              context,
+              l10n.profileSettingsSectionHealth,
+              Icons.monitor_heart_outlined,
+            ),
+            const SizedBox(height: 12),
+            _buildHealthCard(context, l10n),
+            const SizedBox(height: 32),
+          ],
+        ),
       ),
     );
   }
@@ -134,7 +131,7 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildThemeCard(BuildContext context, AppLocalizations l10n) {
+  Widget _buildThemeCard(BuildContext context, AppLocalizations l10n, AppSettings appSettings) {
     final currentTheme = appSettings.themeMode;
     final primary = AppColors.primary(context);
 
