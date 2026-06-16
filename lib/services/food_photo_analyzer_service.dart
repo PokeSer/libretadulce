@@ -131,7 +131,19 @@ class FoodPhotoAnalyzerService {
       'pl': 'Polish',
       'pt': 'Portuguese',
     };
-    final langName = languageNames[locale] ?? 'Spanish';
+    final langName = languageNames[locale] ?? 'English';
+
+    const giLabels = {
+      'en': (low: 'Low',     mid: 'Medium',  high: 'High'),
+      'es': (low: 'Bajo',    mid: 'Medio',   high: 'Alto'),
+      'fr': (low: 'Faible',  mid: 'Moyen',   high: 'Élevé'),
+      'it': (low: 'Basso',   mid: 'Medio',   high: 'Alto'),
+      'de': (low: 'Niedrig', mid: 'Mittel',  high: 'Hoch'),
+      'pt': (low: 'Baixo',   mid: 'Médio',   high: 'Alto'),
+      'pl': (low: 'Niski',   mid: 'Średni',  high: 'Wysoki'),
+      'cs': (low: 'Nízký',   mid: 'Střední', high: 'Vysoký'),
+    };
+    final gi = giLabels[locale] ?? giLabels['en']!;
 
     final model = GenerativeModel(
       model: 'gemini-3.5-flash',
@@ -165,7 +177,7 @@ class FoodPhotoAnalyzerService {
         '   - "proteinsPer100g" (optional number): Protein per 100g.\n'
         '   - "fatsPer100g" (optional number): Fat per 100g.\n'
         '   - "fiberPer100g" (optional number): Fiber per 100g.\n'
-        '   - "glycemicIndex" (optional string): MUST be one of "Alto", "Medio", "Bajo" '
+        '   - "glycemicIndex" (optional string): MUST be one of "${gi.high}", "${gi.mid}", "${gi.low}" '
         '(in $langName language), or omit if unknown.\n\n'
         'CRITICAL RULES:\n'
         '- Be conservative: when uncertain, round carb values UP — underestimating carbs '
@@ -174,7 +186,7 @@ class FoodPhotoAnalyzerService {
         '- For composite dishes (paella, lasagna, stews), break them into main components with individual estimates.\n'
         '- If you cannot confidently identify an item, OMIT it rather than guessing.\n'
         '- Take into account visible cooking methods: fried foods have more fat, boiled/steamed foods retain more water weight.\n'
-        '- For the glycemicIndex field: "Bajo" = GI ≤55, "Medio" = GI 56-69, "Alto" = GI ≥70.\n'
+        '- For the glycemicIndex field: "${gi.low}" = GI ≤55, "${gi.mid}" = GI 56-69, "${gi.high}" = GI ≥70.\n'
         '- Do NOT include any text, explanation, or markdown outside the JSON object.',
       ),
     );
