@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
@@ -13,6 +12,9 @@ import '../services/food_request_repository.dart';
 import '../services/open_food_facts_service.dart';
 import '../widgets/food_list_item.dart';
 import '../widgets/confirm_delete_dialog.dart';
+import '../widgets/food_detail_dialog.dart';
+import '../widgets/food_form_sheet.dart';
+import '../widgets/global_food_list_tile.dart';
 
 class FoodsPage extends StatefulWidget {
   const FoodsPage({super.key});
@@ -133,160 +135,16 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
   // ── Personal foods actions ──
 
   void _showAddFoodDialog() {
-    final l10n = AppLocalizations.of(context);
     showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(l10n.foodsAddTitle,
-                  style: TextStyle(color: AppColors.primary(context))),
-              IconButton(
-                icon: Icon(Icons.qr_code_scanner,
-                    color: AppColors.primary(context)),
-                tooltip: l10n.foodsScanTooltip,
-                onPressed: () => _scanBarcode(),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: _nameController,
-                autofocus: true,
-                textCapitalization: TextCapitalization.sentences,
-                autofillHints: const [AutofillHints.name],
-                decoration: InputDecoration(
-                  labelText: l10n.foodsNameLabel,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.apple),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _brandController,
-                textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
-                  labelText: l10n.foodsBrandLabel,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.storefront),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _carbsController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(
-                  labelText: l10n.foodsCarbsLabel,
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.scale),
-                  suffixText: l10n.foodsCarbsSuffix,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _kcalController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        labelText: l10n.foodsKcalLabel,
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: _proteinsController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        labelText: l10n.foodsProteinLabel,
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: TextField(
-                      controller: _fatsController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        labelText: l10n.foodsFatLabel,
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                _clearFoodControllers();
-                Navigator.pop(context);
-              },
-              child: Text(l10n.foodsCancel,
-                  style: TextStyle(color: AppColors.textMuted(context))),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (_nameController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l10n.foodsNameRequired)),
-                  );
-                  return;
-                }
-                if (_carbsController.text.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l10n.foodsCarbsRequired)),
-                  );
-                  return;
-                }
-
-                final carbs = parseSpanishDecimal(_carbsController.text);
-                final kcal = parseSpanishDecimal(_kcalController.text);
-                final proteins = parseSpanishDecimal(_proteinsController.text);
-                final fats = parseSpanishDecimal(_fatsController.text);
-
-                if (carbs == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(l10n.foodsCarbsInvalid)),
-                  );
-                  return;
-                }
-
-                final food = Food(
-                  id: '',
-                  name: _nameController.text.trim(),
-                  brand: _brandController.text.trim(),
-                  carbsPer100g: carbs,
-                  kcalPer100g: kcal,
-                  proteinsPer100g: proteins,
-                  fatsPer100g: fats,
-                );
-
-                await FoodRepository.addFood(user!.uid, food);
-
-                if (!context.mounted) return;
-                _clearFoodControllers();
-                Navigator.pop(context);
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary(context)),
-              child: Text(l10n.foodsSave,
-                  style: TextStyle(color: AppColors.onPrimary(context))),
-            ),
-          ],
+        return FoodFormSheet(
+          onSave: (food) async {
+            await FoodRepository.addFood(user!.uid, food);
+            if (context.mounted) {
+              _clearFoodControllers();
+            }
+          },
         );
       },
     );
@@ -331,120 +189,41 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
 
   void _showRequestFoodDialog() {
     final l10n = AppLocalizations.of(context);
-    final nameController = TextEditingController();
-    final brandController = TextEditingController();
-    final carbsController = TextEditingController();
-    final urlController = TextEditingController();
+    final nameCtrl = TextEditingController(), brandCtrl = TextEditingController();
+    final carbsCtrl = TextEditingController(), urlCtrl = TextEditingController();
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: Text(l10n.globalRequestTitle)),
-              IconButton(
-                icon: Icon(Icons.qr_code_scanner,
-                    color: AppColors.primary(context)),
-                tooltip: l10n.globalScanTooltip,
-                onPressed: () => _scanBarcode(
-                  nameCtrl: nameController,
-                  brandCtrl: brandController,
-                  carbsCtrl: carbsController,
-                ),
-              ),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  l10n.globalRequestDesc,
-                  style: TextStyle(color: AppColors.textMuted(context)),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: nameController,
-                  autofillHints: const [AutofillHints.name],
-                  decoration: InputDecoration(
-                    labelText: l10n.globalRequestName,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: brandController,
-                  decoration: InputDecoration(
-                    labelText: l10n.globalRequestBrand,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: carbsController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    labelText: l10n.globalRequestCarbs,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: urlController,
-                  autofillHints: const [AutofillHints.url],
-                  decoration: InputDecoration(
-                    labelText: l10n.globalRequestUrl,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(l10n.globalRequestCancel),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                final name = nameController.text.trim();
-                final brand = brandController.text.trim();
-                final carbs = parseSpanishDecimal(carbsController.text);
-                final url = urlController.text.trim();
-
-                if (name.isNotEmpty && carbs != null && user != null) {
-                  try {
-                    await FoodRequestRepository.submitRequest(
-                      name: name,
-                      brand: brand,
-                      carbsPer100g: carbs,
-                      productUrl: url,
-                      userId: user!.uid,
-                    );
-                    if (context.mounted) {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l10n.globalRequestSent)),
-                      );
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(l10n.serviceError)),
-                      );
-                    }
-                  }
-                }
-              },
-              child: Text(l10n.globalRequestSend),
-            ),
-          ],
-        );
-      },
-    );
+    showDialog(context: context, builder: (ctx) => AlertDialog(
+      title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Expanded(child: Text(l10n.globalRequestTitle)),
+        IconButton(icon: Icon(Icons.qr_code_scanner, color: AppColors.primary(ctx)), tooltip: l10n.globalScanTooltip,
+          onPressed: () => _scanBarcode(nameCtrl: nameCtrl, brandCtrl: brandCtrl, carbsCtrl: carbsCtrl)),
+      ]),
+      content: SingleChildScrollView(child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Text(l10n.globalRequestDesc, style: TextStyle(color: AppColors.textMuted(ctx))), const SizedBox(height: 16),
+        TextField(controller: nameCtrl, autofillHints: const [AutofillHints.name], decoration: InputDecoration(labelText: l10n.globalRequestName, border: const OutlineInputBorder())),
+        const SizedBox(height: 16),
+        TextField(controller: brandCtrl, decoration: InputDecoration(labelText: l10n.globalRequestBrand, border: const OutlineInputBorder())),
+        const SizedBox(height: 16),
+        TextField(controller: carbsCtrl, keyboardType: const TextInputType.numberWithOptions(decimal: true), decoration: InputDecoration(labelText: l10n.globalRequestCarbs, border: const OutlineInputBorder())),
+        const SizedBox(height: 16),
+        TextField(controller: urlCtrl, autofillHints: const [AutofillHints.url], decoration: InputDecoration(labelText: l10n.globalRequestUrl, border: const OutlineInputBorder())),
+      ])),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.globalRequestCancel)),
+        ElevatedButton(onPressed: () async {
+          final name = nameCtrl.text.trim(), brand = brandCtrl.text.trim();
+          final carbs = parseSpanishDecimal(carbsCtrl.text), url = urlCtrl.text.trim();
+          if (name.isNotEmpty && carbs != null && user != null) {
+            try {
+              await FoodRequestRepository.submitRequest(name: name, brand: brand, carbsPer100g: carbs, productUrl: url, userId: user!.uid);
+              if (ctx.mounted) { Navigator.pop(ctx); ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(l10n.globalRequestSent))); }
+            } catch (e) {
+              if (ctx.mounted) ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(l10n.serviceError)));
+            }
+          }
+        }, child: Text(l10n.globalRequestSend)),
+      ],
+    ));
   }
 
   void _copyToMyFoods(Food food) async {
@@ -662,7 +441,7 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
                           ),
                         ],
                       ),
-                      onTap: () => _showFoodDetail(food, l10n),
+                      onTap: () => showDialog(context: context, builder: (_) => FoodDetailDialog(food: food)),
                     ),
                   );
                 },
@@ -671,135 +450,6 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
           ),
         ),
       ],
-    );
-  }
-
-  void _showFoodDetail(Food food, AppLocalizations l10n) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        final isDark = context.isDarkMode;
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
-          ),
-          title: Row(
-            children: [
-              ExcludeSemantics(
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.teal.withValues(alpha: isDark ? 0.15 : 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.restaurant, color: Colors.teal, size: 22),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  food.displayName,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                l10n.foodsDetailTitle,
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                  color: AppColors.textSecondary(context),
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _nutritionRow(
-                icon: Icons.grain,
-                color: Colors.teal,
-                label: l10n.foodsDetailCarbs('${food.carbsPer100g}'),
-                isDark: isDark,
-              ),
-              if (food.kcalPer100g != null) ...[
-                const SizedBox(height: 10),
-                _nutritionRow(
-                  icon: Icons.local_fire_department,
-                  color: Colors.deepOrange,
-                  label: l10n.foodsDetailCalories('${food.kcalPer100g}'),
-                  isDark: isDark,
-                ),
-              ],
-              if (food.proteinsPer100g != null) ...[
-                const SizedBox(height: 10),
-                _nutritionRow(
-                  icon: Icons.fitness_center,
-                  color: Colors.indigo,
-                  label: l10n.foodsDetailProtein('${food.proteinsPer100g}'),
-                  isDark: isDark,
-                ),
-              ],
-              if (food.fatsPer100g != null) ...[
-                const SizedBox(height: 10),
-                _nutritionRow(
-                  icon: Icons.water_drop,
-                  color: Colors.amber.shade700,
-                  label: l10n.foodsDetailFat('${food.fatsPer100g}'),
-                  isDark: isDark,
-                ),
-              ],
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(
-                l10n.foodsDetailClose,
-                style: TextStyle(color: AppColors.primary(context)),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _nutritionRow({
-    required IconData icon,
-    required Color color,
-    required String label,
-    required bool isDark,
-  }) {
-    return Semantics(
-      label: label,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        decoration: BoxDecoration(
-          color: color.withValues(alpha: isDark ? 0.12 : 0.07),
-          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-        ),
-        child: Row(
-          children: [
-            ExcludeSemantics(
-              child: Icon(icon, color: color, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  color: isDark ? color.withValues(alpha: 0.9) : color.withValues(alpha: 0.85),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -868,33 +518,9 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
                 itemBuilder: (context, index) {
                   final food = filtered[index];
 
-                  return Card(
-                    margin: AppDimens.cardMargin,
-                    shape: RoundedRectangleBorder(
-                      side: context.isDarkMode
-                          ? BorderSide(color: AppColors.borderSecondary(context))
-                          : BorderSide.none,
-                      borderRadius:
-                          BorderRadius.circular(AppDimens.radiusCard),
-                    ),
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: AppColors.primary(context),
-                        child: Icon(Icons.public,
-                            color: AppColors.onPrimary(context),
-                            semanticLabel: l10n.globalGlobalFood),
-                      ),
-                      title: Text(food.displayName,
-                          style: AppTextStyles.appBarTitle),
-                      subtitle: Text(
-                          l10n.calcCarbsPer100g('${food.carbsPer100g}')),
-                      trailing: IconButton(
-                        icon: Icon(Icons.add_circle,
-                            color: AppColors.primary(context)),
-                        tooltip: l10n.globalCopyToMyFoods,
-                        onPressed: () => _copyToMyFoods(food),
-                      ),
-                    ),
+                  return GlobalFoodListTile(
+                    food: food,
+                    onCopyToPersonal: () => _copyToMyFoods(food),
                   );
                 },
               );
