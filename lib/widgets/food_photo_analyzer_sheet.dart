@@ -58,6 +58,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
   GeminiAnalysisResult? _analysis;
   InsulinSettings? _insulinSettings;
   final Set<String> _addedItems = {};
+  ImageSource? _lastSource; // remember camera vs gallery for retry
 
   @override
   void initState() {
@@ -91,7 +92,14 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
     await _pickImage(ImageSource.gallery);
   }
 
+  /// Retry picking an image using the last used source.
+  /// Falls back to camera if no previous pick occurred.
+  Future<void> _retry() async {
+    await _pickImage(_lastSource ?? ImageSource.camera);
+  }
+
   Future<void> _pickImage(ImageSource source) async {
+    _lastSource = source;
     // Show photo tip on first use (unless permanently dismissed)
     if (mounted) {
       final dismissed = await FoodPhotoAnalyzerService.isPhotoTipDismissed();
@@ -453,7 +461,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
             ),
             const SizedBox(height: 24),
             FilledButton.icon(
-              onPressed: _takePhoto,
+              onPressed: _retry,
               icon: const Icon(Icons.camera_alt),
               label: Text(l10n.photoRetry),
               style: FilledButton.styleFrom(backgroundColor: Colors.teal),
@@ -726,7 +734,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: _takePhoto,
+                  onPressed: _retry,
                   icon: const Icon(Icons.refresh),
                   label: Text(l10n.photoRetry),
                 ),
