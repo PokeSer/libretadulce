@@ -9,8 +9,31 @@ import '../services/food_photo_analyzer_service.dart';
 import '../widgets/app_card.dart';
 import 'insulin_settings_page.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  final TextEditingController _geminiKeyController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    FoodPhotoAnalyzerService.getApiKey().then((key) {
+      if (mounted) {
+        _geminiKeyController.text = key ?? '';
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _geminiKeyController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,11 +97,6 @@ class SettingsPage extends StatelessWidget {
   }
 
   Widget _buildGeminiKeyCard(BuildContext context, AppLocalizations l10n) {
-    final controller = TextEditingController();
-    FoodPhotoAnalyzerService.getApiKey().then((key) {
-      controller.text = key ?? '';
-    });
-
     return AppCard(
       borderRadius: 14,
       child: Padding(
@@ -102,7 +120,7 @@ class SettingsPage extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             TextField(
-              controller: controller,
+              controller: _geminiKeyController,
               obscureText: true,
               decoration: InputDecoration(
                 hintText: l10n.profileGeminiKeyHint,
@@ -111,10 +129,10 @@ class SettingsPage extends StatelessWidget {
                 ),
                 isDense: true,
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.save, color: Colors.teal),
+                  icon: Icon(Icons.save, color: AppColors.primary(context)),
                   tooltip: MaterialLocalizations.of(context).saveButtonLabel,
                   onPressed: () {
-                    FoodPhotoAnalyzerService.saveApiKey(controller.text);
+                    FoodPhotoAnalyzerService.saveApiKey(_geminiKeyController.text);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(l10n.profileGeminiKeySaved),

@@ -100,8 +100,8 @@ class _HistoryPageState extends State<HistoryPage> {
                       0)
                     Text(
                       l10n.historyToday,
-                      style: const TextStyle(
-                        color: Colors.teal,
+                      style: TextStyle(
+                        color: AppColors.primary(context),
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
                       ),
@@ -113,7 +113,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 onPressed: _isToday(_selectedDate)
                     ? null
                     : () => _changeDate(1),
-                color: Colors.teal,
+                color: AppColors.primary(context),
                 tooltip: l10n.historyNextDay,
               ),
             ],
@@ -131,8 +131,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   label: Text(l10n.historyDaily),
                   selected: _viewMode == 0,
                   onSelected: (_) => setState(() => _viewMode = 0),
-                  selectedColor: Colors.teal.withValues(alpha: 0.25),
-                  checkmarkColor: Colors.teal,
+                  selectedColor: AppColors.primary(context).withValues(alpha: 0.25),
+                  checkmarkColor: AppColors.primary(context),
                   visualDensity: VisualDensity.standard,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -148,8 +148,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   label: Text(l10n.historyWeekly),
                   selected: _viewMode == 1,
                   onSelected: (_) => setState(() => _viewMode = 1),
-                  selectedColor: Colors.teal.withValues(alpha: 0.25),
-                  checkmarkColor: Colors.teal,
+                  selectedColor: AppColors.primary(context).withValues(alpha: 0.25),
+                  checkmarkColor: AppColors.primary(context),
                   visualDensity: VisualDensity.standard,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -163,13 +163,13 @@ class _HistoryPageState extends State<HistoryPage> {
                 label: l10n.historyExportAccessibility,
                 child: TextButton.icon(
                   onPressed: _showExportOptions,
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.file_download_outlined,
-                    color: Colors.teal,
+                    color: AppColors.primary(context),
                   ),
                   label: Text(
                     l10n.historyExportButton,
-                    style: const TextStyle(color: Colors.teal),
+                    style: TextStyle(color: AppColors.primary(context)),
                   ),
                 ),
               ),
@@ -249,7 +249,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             background: Container(
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
-                                color: Colors.teal,
+                                color: AppColors.primary(context),
                                 borderRadius: BorderRadius.circular(
                                   AppDimens.radiusDialog,
                                 ),
@@ -320,6 +320,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             },
                             child: HistoryEntryCard(
                               entry: entry,
+                              uid: user!.uid,
                               onEdit: () => _showEditDialog(entry),
                               onDelete: () async {
                                 final messenger = ScaffoldMessenger.of(context);
@@ -410,10 +411,10 @@ class _HistoryPageState extends State<HistoryPage> {
               children: [
                 Text(
                   l10n.historyExportOptionsTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.teal,
+                    color: AppColors.primary(context),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -435,9 +436,9 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
                 const Divider(indent: 72),
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.table_chart_outlined,
-                    color: Colors.teal,
+                    color: AppColors.primary(context),
                     size: 28,
                   ),
                   title: Text(l10n.historyCsvExportOption),
@@ -479,8 +480,8 @@ class _HistoryPageState extends State<HistoryPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  leading: const Icon(Icons.calendar_today,
-                      color: Colors.teal),
+                  leading: Icon(Icons.calendar_today,
+                      color: AppColors.primary(context)),
                   title: Text(l10n.historyPdfFrom),
                   subtitle: Text(DateFormat('dd/MM/yyyy', locale)
                       .format(fromDate)),
@@ -580,13 +581,23 @@ class _HistoryPageState extends State<HistoryPage> {
         return;
       }
 
+      // Load insulin settings to know if the user is on mmol/L or mg/dL
+      final settings = await InsulinSettingsService.getSettings(user!.uid);
+      final glucoseUnit = settings?.glucoseLabel() ?? 'mg/dL';
+
       final buffer = StringBuffer();
-      buffer.writeln('${l10n.historyCsvHeader},Glucemia (mg/dL),Bolo (uds)');
+      buffer.writeln('${l10n.historyCsvHeader},$glucoseUnit,${l10n.historyBolus.replaceAll(':', '')} (uds)');
 
       for (final entry in entries) {
         final dateStr = DateFormat('yyyy-MM-dd').format(entry.timestamp);
         final timeStr = DateFormat('HH:mm').format(entry.timestamp);
-        final glucoseStr = entry.glucose?.toStringAsFixed(0) ?? '';
+        // Glucose stored in mg/dL; convert to display unit if needed
+        final rawGlucose = entry.glucose;
+        final glucoseStr = rawGlucose == null
+            ? ''
+            : (settings?.usesMmolL == true
+                ? (rawGlucose / 18.018).toStringAsFixed(1)
+                : rawGlucose.toStringAsFixed(0));
         final bolusStr = entry.totalBolus?.toStringAsFixed(1) ?? '';
 
         if (entry.items.isEmpty) {

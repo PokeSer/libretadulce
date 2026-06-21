@@ -67,16 +67,29 @@ class FoodPhotoAnalyzerService {
   static const _privacyAcceptedPref = 'gemini_privacy_accepted';
   static const _photoTipDismissedPref = 'gemini_photo_tip_dismissed';
 
+  /// Reactive notifier — `true` when a non-empty API key is configured.
+  /// Widgets can use `ValueListenableBuilder` to rebuild automatically
+  /// when the key is saved or cleared, without FutureBuilder caching issues.
+  static final ValueNotifier<bool> apiKeyConfigured =
+      ValueNotifier<bool>(false);
+
+  /// Call once at app start to initialise [apiKeyConfigured] from storage.
+  static Future<void> initApiKeyStatus() async {
+    final key = await getApiKey();
+    apiKeyConfigured.value = key != null && key.isNotEmpty;
+  }
+
   /// Get the configured API key.
   static Future<String?> getApiKey() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_apiKeyPref);
   }
 
-  /// Save an API key.
+  /// Save an API key and immediately update [apiKeyConfigured].
   static Future<void> saveApiKey(String key) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_apiKeyPref, key.trim());
+    apiKeyConfigured.value = key.trim().isNotEmpty;
   }
 
   /// Check if user has accepted privacy notice.

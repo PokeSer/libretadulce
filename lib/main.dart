@@ -13,6 +13,7 @@ import 'core/theme/app_dimens.dart';
 import 'l10n/app_localizations.dart';
 import 'pages/login_page.dart';
 import 'pages/home_page.dart';
+import 'services/food_photo_analyzer_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +38,7 @@ void main() async {
     'cs_CZ',
   ];
   await Future.wait(locales.map((l) => initializeDateFormatting(l, null)));
+  await FoodPhotoAnalyzerService.initApiKeyStatus();
   runApp(AppSettingsScope(settings: appSettings, child: const MyApp()));
 }
 
@@ -186,7 +188,9 @@ class AuthWrapper extends StatelessWidget {
             body: Center(
               child: Semantics(
                 label: l10n.loadingApp,
-                child: const CircularProgressIndicator(color: Colors.teal),
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
           );
