@@ -1,4 +1,4 @@
-﻿{
+{
   "@@locale": "en",
   "appTitle": "Libreta Dulce",
 
@@ -408,5 +408,18 @@
   "photoBolusReminder": "This is an estimate. Always check your current blood glucose to apply the necessary correction and consult your doctor about your insulin regimen.",
   "profileGeminiKeyHint": "Paste your API key here",
   "profileGeminiKeyDesc": "Required for AI food analysis. Free at aistudio.google.com",
-  "profileGeminiKeySaved": "API key saved"
+  "profileGeminiKeySaved": "API key saved",
+
+  "historyAiAnalyzeButton": "Analyze with AI",
+  "historyAiAnalyzing": "Analyzing meal...",
+  "historyAiGlycemicProfile": "Glycemic profile",
+  "historyAiGlycemicHigh": "HIGH",
+  "historyAiGlycemicMedium": "MEDIUM",
+  "historyAiGlycemicLow": "LOW",
+  "historyAiInsulinTiming": "Insulin timing",
+  "historyAiTips": "Tips",
+  "historyAiPostMeal": "After the meal",
+  "historyAiDeleteAnalysis": "Delete analysis",
+  "historyAiError": "Could not analyze. Please try again.",
+  "historyAiNoKey": "Set up your Gemini key in Settings to use this feature."
 }

@@ -682,5 +682,18 @@
   "photoBolusReminder": "Este cálculo es orientativo. Verifica siempre tu glucemia actual para aplicar la corrección necesaria y consulta con tu médico cualquier duda sobre tu pauta de insulina.",
   "profileGeminiKeyHint": "Pega aquí tu clave API",
   "profileGeminiKeyDesc": "Necesaria para el análisis de alimentos con IA. Gratis en aistudio.google.com",
-  "profileGeminiKeySaved": "Clave API guardada"
+  "profileGeminiKeySaved": "Clave API guardada",
+
+  "historyAiAnalyzeButton": "Analizar con IA",
+  "historyAiAnalyzing": "Analizando comida...",
+  "historyAiGlycemicProfile": "Perfil glucémico",
+  "historyAiGlycemicHigh": "ALTO",
+  "historyAiGlycemicMedium": "MODERADO",
+  "historyAiGlycemicLow": "BAJO",
+  "historyAiInsulinTiming": "Timing de insulina",
+  "historyAiTips": "Consejos",
+  "historyAiPostMeal": "Después de comer",
+  "historyAiDeleteAnalysis": "Borrar análisis",
+  "historyAiError": "No se pudo analizar. Inténtalo de nuevo.",
+  "historyAiNoKey": "Configura tu clave Gemini en Ajustes para usar esta función."
 }

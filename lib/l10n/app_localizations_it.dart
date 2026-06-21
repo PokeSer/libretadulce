@@ -1224,4 +1224,41 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get profileGeminiKeySaved => 'Chiave API salvata';
+
+  @override
+  String get historyAiAnalyzeButton => 'Analizza con IA';
+
+  @override
+  String get historyAiAnalyzing => 'Analisi del pasto...';
+
+  @override
+  String get historyAiGlycemicProfile => 'Profilo glicemico';
+
+  @override
+  String get historyAiGlycemicHigh => 'ALTO';
+
+  @override
+  String get historyAiGlycemicMedium => 'MODERATO';
+
+  @override
+  String get historyAiGlycemicLow => 'BASSO';
+
+  @override
+  String get historyAiInsulinTiming => 'Timing insulina';
+
+  @override
+  String get historyAiTips => 'Consigli';
+
+  @override
+  String get historyAiPostMeal => 'Dopo il pasto';
+
+  @override
+  String get historyAiDeleteAnalysis => 'Elimina analisi';
+
+  @override
+  String get historyAiError => 'Analisi fallita. Riprovare.';
+
+  @override
+  String get historyAiNoKey =>
+      'Configura la tua chiave Gemini nelle impostazioni per usare questa funzione.';
 }

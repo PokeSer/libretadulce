@@ -394,5 +394,18 @@
   "profileGeminiKey": "Klucz API Gemini",
   "profileGeminiKeyHint": "Wklej tutaj swój klucz API",
   "profileGeminiKeyDesc": "Wymagany do analizy żywności AI. Darmowy na aistudio.google.com",
-  "profileGeminiKeySaved": "Klucz API zapisany"
+  "profileGeminiKeySaved": "Klucz API zapisany",
+
+  "historyAiAnalyzeButton": "Analizuj z AI",
+  "historyAiAnalyzing": "Analizowanie posiłku...",
+  "historyAiGlycemicProfile": "Profil glikemiczny",
+  "historyAiGlycemicHigh": "WYSOKI",
+  "historyAiGlycemicMedium": "ŚREDNI",
+  "historyAiGlycemicLow": "NISKI",
+  "historyAiInsulinTiming": "Czas podania insuliny",
+  "historyAiTips": "Wskazówki",
+  "historyAiPostMeal": "Po posiłku",
+  "historyAiDeleteAnalysis": "Usuń analizę",
+  "historyAiError": "Analiza nie powiodła się. Spróbuj ponownie.",
+  "historyAiNoKey": "Skonfiguruj klucz Gemini w ustawieniach, aby użyć tej funkcji."
 }

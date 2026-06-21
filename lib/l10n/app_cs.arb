@@ -394,5 +394,18 @@
   "profileGeminiKey": "Gemini API klíč",
   "profileGeminiKeyHint": "Vložte svůj API klíč",
   "profileGeminiKeyDesc": "Vyžadováno pro AI analýzu potravin. Zdarma na aistudio.google.com",
-  "profileGeminiKeySaved": "API klíč uložen"
+  "profileGeminiKeySaved": "API klíč uložen",
+
+  "historyAiAnalyzeButton": "Analyzovat s AI",
+  "historyAiAnalyzing": "Analyzuji jídlo...",
+  "historyAiGlycemicProfile": "Glykemický profil",
+  "historyAiGlycemicHigh": "VYSOKÝ",
+  "historyAiGlycemicMedium": "STŘEDNÍ",
+  "historyAiGlycemicLow": "NÍZKÝ",
+  "historyAiInsulinTiming": "Čas inzulinu",
+  "historyAiTips": "Tipy",
+  "historyAiPostMeal": "Po jídlě",
+  "historyAiDeleteAnalysis": "Smazat analýzu",
+  "historyAiError": "Analýzu se nepodařilo provést. Zkuste to znovu.",
+  "historyAiNoKey": "Nastavte klíč Gemini v nastavení pro použití této funkce."
 }

@@ -1221,4 +1221,42 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get profileGeminiKeySaved => 'API klíč uložen';
+
+  @override
+  String get historyAiAnalyzeButton => 'Analyzovat s AI';
+
+  @override
+  String get historyAiAnalyzing => 'Analyzuji jídlo...';
+
+  @override
+  String get historyAiGlycemicProfile => 'Glykemický profil';
+
+  @override
+  String get historyAiGlycemicHigh => 'VYSOKÝ';
+
+  @override
+  String get historyAiGlycemicMedium => 'STŘEDNÍ';
+
+  @override
+  String get historyAiGlycemicLow => 'NÍZKÝ';
+
+  @override
+  String get historyAiInsulinTiming => 'Čas inzulinu';
+
+  @override
+  String get historyAiTips => 'Tipy';
+
+  @override
+  String get historyAiPostMeal => 'Po jídlě';
+
+  @override
+  String get historyAiDeleteAnalysis => 'Smazat analýzu';
+
+  @override
+  String get historyAiError =>
+      'Analýzu se nepodařilo provést. Zkuste to znovu.';
+
+  @override
+  String get historyAiNoKey =>
+      'Nastavte klíč Gemini v nastavení pro použití této funkce.';
 }

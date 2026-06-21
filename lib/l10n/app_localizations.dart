@@ -2299,6 +2299,78 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Clave API guardada'**
   String get profileGeminiKeySaved;
+
+  /// No description provided for @historyAiAnalyzeButton.
+  ///
+  /// In es, this message translates to:
+  /// **'Analizar con IA'**
+  String get historyAiAnalyzeButton;
+
+  /// No description provided for @historyAiAnalyzing.
+  ///
+  /// In es, this message translates to:
+  /// **'Analizando comida...'**
+  String get historyAiAnalyzing;
+
+  /// No description provided for @historyAiGlycemicProfile.
+  ///
+  /// In es, this message translates to:
+  /// **'Perfil glucémico'**
+  String get historyAiGlycemicProfile;
+
+  /// No description provided for @historyAiGlycemicHigh.
+  ///
+  /// In es, this message translates to:
+  /// **'ALTO'**
+  String get historyAiGlycemicHigh;
+
+  /// No description provided for @historyAiGlycemicMedium.
+  ///
+  /// In es, this message translates to:
+  /// **'MODERADO'**
+  String get historyAiGlycemicMedium;
+
+  /// No description provided for @historyAiGlycemicLow.
+  ///
+  /// In es, this message translates to:
+  /// **'BAJO'**
+  String get historyAiGlycemicLow;
+
+  /// No description provided for @historyAiInsulinTiming.
+  ///
+  /// In es, this message translates to:
+  /// **'Timing de insulina'**
+  String get historyAiInsulinTiming;
+
+  /// No description provided for @historyAiTips.
+  ///
+  /// In es, this message translates to:
+  /// **'Consejos'**
+  String get historyAiTips;
+
+  /// No description provided for @historyAiPostMeal.
+  ///
+  /// In es, this message translates to:
+  /// **'Después de comer'**
+  String get historyAiPostMeal;
+
+  /// No description provided for @historyAiDeleteAnalysis.
+  ///
+  /// In es, this message translates to:
+  /// **'Borrar análisis'**
+  String get historyAiDeleteAnalysis;
+
+  /// No description provided for @historyAiError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo analizar. Inténtalo de nuevo.'**
+  String get historyAiError;
+
+  /// No description provided for @historyAiNoKey.
+  ///
+  /// In es, this message translates to:
+  /// **'Configura tu clave Gemini en Ajustes para usar esta función.'**
+  String get historyAiNoKey;
 }
 
 class _AppLocalizationsDelegate

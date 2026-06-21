@@ -394,5 +394,18 @@
   "profileGeminiKey": "Clé API Gemini",
   "profileGeminiKeyHint": "Collez votre clé API ici",
   "profileGeminiKeyDesc": "Nécessaire pour l'analyse IA des aliments. Gratuit sur aistudio.google.com",
-  "profileGeminiKeySaved": "Clé API enregistrée"
+  "profileGeminiKeySaved": "Clé API enregistrée",
+
+  "historyAiAnalyzeButton": "Analyser avec l'IA",
+  "historyAiAnalyzing": "Analyse du repas...",
+  "historyAiGlycemicProfile": "Profil glycémique",
+  "historyAiGlycemicHigh": "ÉLEVÉ",
+  "historyAiGlycemicMedium": "MODÉRÉ",
+  "historyAiGlycemicLow": "FAIBLE",
+  "historyAiInsulinTiming": "Timing de l'insuline",
+  "historyAiTips": "Conseils",
+  "historyAiPostMeal": "Après le repas",
+  "historyAiDeleteAnalysis": "Supprimer l'analyse",
+  "historyAiError": "Analyse échouée. Veuillez réessayer.",
+  "historyAiNoKey": "Configurez votre clé Gemini dans les paramètres pour utiliser cette fonction."
 }

@@ -394,5 +394,18 @@
   "profileGeminiKey": "Gemini API-Schlüssel",
   "profileGeminiKeyHint": "API-Schlüssel hier einfügen",
   "profileGeminiKeyDesc": "Erforderlich für KI-Lebensmittelanalyse. Kostenlos unter aistudio.google.com",
-  "profileGeminiKeySaved": "API-Schlüssel gespeichert"
+  "profileGeminiKeySaved": "API-Schlüssel gespeichert",
+
+  "historyAiAnalyzeButton": "Mit KI analysieren",
+  "historyAiAnalyzing": "Mahlzeit wird analysiert...",
+  "historyAiGlycemicProfile": "Glykämisches Profil",
+  "historyAiGlycemicHigh": "HOCH",
+  "historyAiGlycemicMedium": "MITTEL",
+  "historyAiGlycemicLow": "NIEDRIG",
+  "historyAiInsulinTiming": "Insulin-Timing",
+  "historyAiTips": "Tipps",
+  "historyAiPostMeal": "Nach dem Essen",
+  "historyAiDeleteAnalysis": "Analyse löschen",
+  "historyAiError": "Analyse fehlgeschlagen. Bitte erneut versuchen.",
+  "historyAiNoKey": "Richten Sie Ihren Gemini-Schlüssel in den Einstellungen ein."
 }
