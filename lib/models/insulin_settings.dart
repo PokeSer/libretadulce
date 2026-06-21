@@ -62,7 +62,7 @@ class InsulinSettings {
 
   double toMgdl(double value) => usesMmolL ? value * _mmolConversionFactor : value;
 
-  double toMmol(double value) => usesMmolL ? value : value / _mmolConversionFactor;
+  double toMmol(double value) => usesMmolL ? value / _mmolConversionFactor : value;
 
   double toStoredGlucoseUnit(double value) => usesMmolL ? value / _mmolConversionFactor : value;
 
