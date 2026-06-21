@@ -65,6 +65,31 @@ class MealHistoryService {
     });
   }
 
+  /// Save (or replace) the AI analysis for a meal entry without touching
+  /// any nutritional data — uses a partial Firestore update.
+  static Future<void> saveAiAnalysis(
+    String uid,
+    String entryId, {
+    required String aiAnalysisJson,
+  }) async {
+    await wrapServiceCall('MealHistoryService.saveAiAnalysis', () async {
+      await _history(uid).doc(entryId).update({
+        'aiAnalysis': aiAnalysisJson,
+        'aiAnalysisDate': FieldValue.serverTimestamp(),
+      });
+    });
+  }
+
+  /// Remove the AI analysis from a meal entry.
+  static Future<void> deleteAiAnalysis(String uid, String entryId) async {
+    await wrapServiceCall('MealHistoryService.deleteAiAnalysis', () async {
+      await _history(uid).doc(entryId).update({
+        'aiAnalysis': FieldValue.delete(),
+        'aiAnalysisDate': FieldValue.delete(),
+      });
+    });
+  }
+
   static Future<void> restoreEntry(String uid, MealEntry entry) async {
     await wrapServiceCall('MealHistoryService.restoreEntry', () async {
       await _history(uid).add({

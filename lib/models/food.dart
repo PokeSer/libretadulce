@@ -171,6 +171,10 @@ class MealEntry {
   final List<MealItem> items;
   final double? totalBolus;
   final double? glucose;
+  /// Serialized JSON from MealAiAdvisorService — persisted in Firestore.
+  final String? aiAnalysis;
+  /// When the AI analysis was generated.
+  final DateTime? aiAnalysisDate;
 
   const MealEntry({
     required this.id,
@@ -183,12 +187,45 @@ class MealEntry {
     required this.items,
     this.totalBolus,
     this.glucose,
+    this.aiAnalysis,
+    this.aiAnalysisDate,
   });
+
+  MealEntry copyWith({
+    String? id,
+    DateTime? timestamp,
+    MealType? mealType,
+    double? totalCarbs,
+    double? totalRations,
+    double? totalFats,
+    double? totalProteins,
+    List<MealItem>? items,
+    double? totalBolus,
+    double? glucose,
+    String? aiAnalysis,
+    DateTime? aiAnalysisDate,
+  }) {
+    return MealEntry(
+      id: id ?? this.id,
+      timestamp: timestamp ?? this.timestamp,
+      mealType: mealType ?? this.mealType,
+      totalCarbs: totalCarbs ?? this.totalCarbs,
+      totalRations: totalRations ?? this.totalRations,
+      totalFats: totalFats ?? this.totalFats,
+      totalProteins: totalProteins ?? this.totalProteins,
+      items: items ?? this.items,
+      totalBolus: totalBolus ?? this.totalBolus,
+      glucose: glucose ?? this.glucose,
+      aiAnalysis: aiAnalysis ?? this.aiAnalysis,
+      aiAnalysisDate: aiAnalysisDate ?? this.aiAnalysisDate,
+    );
+  }
 
   factory MealEntry.fromFirestore(String docId, Map<String, dynamic> data) {
     final ts = data['timestamp'] as Timestamp?;
     final rawItems =
         List<Map<String, dynamic>>.from(data['items'] ?? []);
+    final aiDate = data['aiAnalysisDate'] as Timestamp?;
     return MealEntry(
       id: docId,
       timestamp: ts?.toDate() ?? DateTime.now(),
@@ -204,6 +241,8 @@ class MealEntry {
           ? (data['glucose'] as num).toDouble()
           : null,
       items: rawItems.map(MealItem.fromMap).toList(),
+      aiAnalysis: data['aiAnalysis'] as String?,
+      aiAnalysisDate: aiDate?.toDate(),
     );
   }
 }
