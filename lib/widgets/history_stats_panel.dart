@@ -46,7 +46,7 @@ class HistoryStatsPanel extends StatelessWidget {
           StatCard(
             title: l10n.historyTotalCarbs,
             value: '${totalCarbs.toStringAsFixed(1)}g',
-            color: Colors.teal,
+            color: Theme.of(context).colorScheme.primary,
             isDark: isDark,
           ),
         ],

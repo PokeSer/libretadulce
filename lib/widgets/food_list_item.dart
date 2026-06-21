@@ -38,7 +38,7 @@ class FoodListItem extends StatelessWidget {
         leading: CircleAvatar(
           backgroundColor: food.isFavorite
               ? Colors.amber.withValues(alpha: 0.2)
-              : Colors.teal.withValues(alpha: 0.1),
+              : AppColors.primary(context).withValues(alpha: 0.1),
           child: Icon(
             food.isFavorite ? Icons.star : Icons.restaurant,
             semanticLabel: food.isFavorite
@@ -46,7 +46,7 @@ class FoodListItem extends StatelessWidget {
                 : l10n.foodsFoodAccessibility,
             color: food.isFavorite
                 ? Colors.amber.shade600
-                : Colors.teal.shade600,
+                : AppColors.primary(context),
           ),
         ),
         title: Text(

@@ -66,10 +66,10 @@ class CalculatorFavoritesRow extends StatelessWidget {
                     ),
                     onSelected: (_) => onFoodSelected(food),
                     backgroundColor: AppColors.surfaceAlt(context),
-                    selectedColor: Colors.teal.withValues(alpha: 0.25),
-                    checkmarkColor: Colors.teal,
+                    selectedColor: AppColors.primary(context).withValues(alpha: 0.25),
+                    checkmarkColor: AppColors.primary(context),
                     side: BorderSide(
-                      color: isSelected ? Colors.teal : Colors.transparent,
+                      color: isSelected ? AppColors.primary(context) : Colors.transparent,
                     ),
                   ),
                 ),

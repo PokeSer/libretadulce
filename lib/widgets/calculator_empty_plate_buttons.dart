@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/theme/app_colors.dart';
 import '../l10n/app_localizations.dart';
 
 /// Row of action buttons shown when the meal plate is empty:
@@ -26,8 +27,8 @@ class CalculatorEmptyPlateButtons extends StatelessWidget {
             label: Text(l10n.calcRepeatLastMealTooltip),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              foregroundColor: Colors.teal,
-              side: const BorderSide(color: Colors.teal),
+              foregroundColor: AppColors.primary(context),
+              side: BorderSide(color: AppColors.primary(context)),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -42,8 +43,8 @@ class CalculatorEmptyPlateButtons extends StatelessWidget {
             label: Text(l10n.calcLoadTemplate),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 12),
-              foregroundColor: Colors.teal,
-              side: const BorderSide(color: Colors.teal),
+              foregroundColor: AppColors.primary(context),
+              side: BorderSide(color: AppColors.primary(context)),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),

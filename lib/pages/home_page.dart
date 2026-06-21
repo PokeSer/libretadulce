@@ -181,19 +181,20 @@ class _HomePageState extends State<HomePage> {
   Future<void> _downloadUpdate(UpdateInfo update) async {
     final l10n = AppLocalizations.of(context);
     final primary = AppColors.primary(context);
-    double progress = 0;
+    final progressNotifier = ValueNotifier<double>(0);
 
     if (!mounted) return;
 
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setDialogState) => AlertDialog(
-          content: Semantics(
-            liveRegion: true,
-            label: l10n.updateDownloading,
-            child: Column(
+      builder: (ctx) => AlertDialog(
+        content: Semantics(
+          liveRegion: true,
+          label: l10n.updateDownloading,
+          child: ValueListenableBuilder<double>(
+            valueListenable: progressNotifier,
+            builder: (ctx, progress, _) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ExcludeSemantics(
@@ -227,13 +228,10 @@ class _HomePageState extends State<HomePage> {
 
     final success = await UpdateService.downloadAndInstall(
       update.downloadUrl,
-      onProgress: (p) {
-        progress = p;
-        if (mounted) {
-          (context as Element).markNeedsBuild();
-        }
-      },
+      onProgress: (p) => progressNotifier.value = p,
     );
+
+    progressNotifier.dispose();
 
     if (mounted) {
       Navigator.of(context, rootNavigator: true).pop();

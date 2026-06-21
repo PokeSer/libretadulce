@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/theme/app_colors.dart';
 import '../l10n/app_localizations.dart';
 
 /// Header row for the "My Plate" section: title + save template + clear.
@@ -21,16 +22,16 @@ class CalculatorPlateHeader extends StatelessWidget {
       children: [
         Text(
           l10n.calcMyPlate,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Colors.teal,
+            color: AppColors.primary(context),
           ),
         ),
         Row(
           children: [
             IconButton(
-              icon: const Icon(Icons.bookmark_add_outlined, color: Colors.teal),
+              icon: Icon(Icons.bookmark_add_outlined, color: AppColors.primary(context)),
               tooltip: l10n.calcSaveAsTemplate,
               onPressed: onSaveAsTemplate,
             ),

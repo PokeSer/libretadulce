@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
@@ -160,7 +161,7 @@ class _EditMealSheetState extends State<EditMealSheet> {
           controller: scrollController, padding: AppDimens.screenPadding,
           child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(l10n.historyEditTitle, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.teal)),
+              Text(l10n.historyEditTitle, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.primary(context))),
               IconButton(icon: const Icon(Icons.close), tooltip: MaterialLocalizations.of(ctx).closeButtonLabel, onPressed: () => Navigator.of(ctx).pop()),
             ]),
             const SizedBox(height: 20),
@@ -171,10 +172,10 @@ class _EditMealSheetState extends State<EditMealSheet> {
             DateTimePickerTile(selectedTime: _selectedTime, onChanged: (dt) => setState(() => _selectedTime = dt), mode: PickerMode.time, label: l10n.calcTimeLabel),
             const SizedBox(height: 20),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Text(l10n.calcMyPlate, style: AppTextStyles.sectionTitle.copyWith(color: Colors.teal)),
+              Text(l10n.calcMyPlate, style: AppTextStyles.sectionTitle.copyWith(color: AppColors.primary(context))),
               Semantics(button: true, label: l10n.calcAddToPlate, child: TextButton.icon(
-                onPressed: _addFood, icon: const Icon(Icons.add_circle_outline, color: Colors.teal),
-                label: Text(l10n.calcAddToPlate, style: const TextStyle(color: Colors.teal, fontSize: 13)))),
+                onPressed: _addFood, icon: Icon(Icons.add_circle_outline, color: AppColors.primary(context)),
+                label: Text(l10n.calcAddToPlate, style: TextStyle(color: AppColors.primary(context), fontSize: 13)))),
             ]),
             const SizedBox(height: 8),
             ..._editableItems.asMap().entries.map((e) {
@@ -201,7 +202,7 @@ class _EditMealSheetState extends State<EditMealSheet> {
                       keyboardType: const TextInputType.numberWithOptions(decimal: true), controller: _gramsControllers[idx],
                       onChanged: (v) { final val = double.tryParse(v); if (val != null && val > 0) setState(() => _editableItems[idx]['grams'] = val); })),
                     const SizedBox(width: 10),
-                    _macroPill(l10n.calcHC(carbs.toStringAsFixed(1)), Colors.teal, isDark),
+                    _macroPill(l10n.calcHC(carbs.toStringAsFixed(1)), AppColors.primary(context), isDark),
                   ])),
                 ])),
               ));
@@ -213,13 +214,13 @@ class _EditMealSheetState extends State<EditMealSheet> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
               Expanded(child: StatCard(title: l10n.calcRations, value: _totalRations.toStringAsFixed(1), color: Colors.amber.shade800, isDark: isDark)),
               const SizedBox(width: 12),
-              Expanded(child: StatCard(title: l10n.calcGramsHC, value: '${_totalCarbs.toStringAsFixed(1)}g', color: Colors.teal, isDark: isDark)),
+              Expanded(child: StatCard(title: l10n.calcGramsHC, value: '${_totalCarbs.toStringAsFixed(1)}g', color: AppColors.primary(context), isDark: isDark)),
             ]),
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: (_editableItems.isEmpty || _saving) ? null : _save,
               icon: const Icon(Icons.save), label: Text(l10n.historyEditSave, style: AppTextStyles.sectionTitle),
-              style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16), backgroundColor: Colors.teal,
+              style: FilledButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16), backgroundColor: AppColors.primary(context),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)))),
             const SizedBox(height: 16),
           ]),

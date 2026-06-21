@@ -49,11 +49,13 @@ class MealSummaryCard extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
           decoration: BoxDecoration(
             color: isDark
-                ? Colors.teal.withValues(alpha: 0.1)
-                : Colors.teal.shade50,
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+                : Theme.of(context).colorScheme.primaryContainer.withValues(alpha: 0.35),
             borderRadius: BorderRadius.circular(AppDimens.radiusCard),
             border: Border.all(
-              color: isDark ? Colors.teal.shade800 : Colors.teal.shade200,
+              color: isDark
+                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.4)
+                  : Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
             ),
           ),
           child: Column(
@@ -62,14 +64,14 @@ class MealSummaryCard extends StatelessWidget {
               // Row 1: icon + title + rations
               Row(
                 children: [
-                  const Icon(Icons.summarize, color: Colors.teal, size: 20),
+                  Icon(Icons.summarize, color: Theme.of(context).colorScheme.primary, size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       l10n.calcTotalPlate,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        color: Colors.teal,
+                        color: Theme.of(context).colorScheme.primary,
                         fontSize: 16,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -81,9 +83,7 @@ class MealSummaryCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
-                      color: isDark
-                          ? Colors.teal.shade200
-                          : Colors.teal.shade800,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ],
@@ -96,7 +96,7 @@ class MealSummaryCard extends StatelessWidget {
                 children: [
                   _macroPill(
                     l10n.calcTotalHC(totalCarbs.toStringAsFixed(1)),
-                    Colors.teal,
+                    Theme.of(context).colorScheme.primary,
                     isDark,
                   ),
                   if (totalFats > 0)
@@ -126,7 +126,7 @@ class MealSummaryCard extends StatelessWidget {
               color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
               border: Border.all(
-                color: Colors.teal.withValues(alpha: 0.3),
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
               ),
             ),
             child: Column(
@@ -134,16 +134,16 @@ class MealSummaryCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const ExcludeSemantics(
-                      child: Icon(Icons.water_drop, color: Colors.teal, size: 20),
+                    ExcludeSemantics(
+                      child: Icon(Icons.water_drop, color: Theme.of(context).colorScheme.primary, size: 20),
                     ),
                     const SizedBox(width: 8),
                     Text(
                       l10n.calcBolusTitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
-                        color: Colors.teal,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],

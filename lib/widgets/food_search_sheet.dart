@@ -56,10 +56,10 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                 children: [
                   Text(
                     l10n.foodSearchTitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.teal,
+                      color: AppColors.primary(context),
                     ),
                   ),
                   IconButton(
@@ -134,7 +134,7 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                         leading: CircleAvatar(
                           backgroundColor: food.isFavorite
                               ? Colors.amber.withValues(alpha: 0.2)
-                              : Colors.teal.withValues(alpha: 0.1),
+                              : AppColors.primary(context).withValues(alpha: 0.1),
                           child: Icon(
                             food.isFavorite
                                 ? Icons.star
@@ -144,7 +144,7 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                                 : l10n.foodsFoodAccessibility,
                             color: food.isFavorite
                                 ? Colors.amber.shade600
-                                : Colors.teal,
+                                : AppColors.primary(context),
                           ),
                         ),
                         title: Text(
@@ -161,8 +161,8 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                           style:
                               TextStyle(color: AppColors.textMuted(context)),
                         ),
-                        trailing: const ExcludeSemantics(child: Icon(Icons.chevron_right,
-                            color: Colors.teal)),
+                        trailing: ExcludeSemantics(child: Icon(Icons.chevron_right,
+                            color: AppColors.primary(context))),
                         onTap: () => Navigator.pop(context, food),
                       );
                     },

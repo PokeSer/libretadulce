@@ -449,10 +449,10 @@ class _AdminPageState extends State<AdminPage> {
               ),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Colors.teal.withValues(alpha: 0.1),
-                  child: const Icon(
+                  backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  child: Icon(
                     Icons.public,
-                    color: Colors.teal,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 title: Text(
@@ -551,7 +551,7 @@ class _AdminPageState extends State<AdminPage> {
           bottom: TabBar(
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
-            indicatorColor: Colors.tealAccent,
+            indicatorColor: Colors.white,
             tabs: [
               Tab(icon: const Icon(Icons.inbox), text: l10n.adminTabRequests),
               Tab(icon: const Icon(Icons.public), text: l10n.adminTabGlobal),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../l10n/app_localizations.dart';
 import 'confirm_delete_dialog.dart';
@@ -135,7 +136,7 @@ class FoodItemRow extends StatelessWidget {
                     children: [
                       _macroPill(
                         l10n.calcHC(carbs.toStringAsFixed(1)),
-                        Colors.teal,
+                        AppColors.primary(context),
                         isDark,
                       ),
                       if (fats != null && fats! > 0)

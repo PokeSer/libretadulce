@@ -72,23 +72,23 @@ class CalculatorActionBar extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.teal.withValues(alpha: 0.4),
+                  color: AppColors.primary(context).withValues(alpha: 0.4),
                 ),
                 borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                color: Colors.teal.withValues(alpha: 0.05),
+                color: AppColors.primary(context).withValues(alpha: 0.05),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const ExcludeSemantics(
-                    child: Icon(Icons.camera_alt, color: Colors.teal, size: 22),
+                  ExcludeSemantics(
+                    child: Icon(Icons.camera_alt, color: AppColors.primary(context), size: 22),
                   ),
                   const SizedBox(width: 10),
                   Flexible(
                     child: Text(
                       l10n.photoCameraButton,
-                      style: const TextStyle(
-                        color: Colors.teal,
+                      style: TextStyle(
+                        color: AppColors.primary(context),
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ),

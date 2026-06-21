@@ -203,7 +203,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return l10n.insulinRatioRequired;
-                  if (double.tryParse(v.trim()) == null) return l10n.insulinInvalidNumber;
+                  if (parseSpanishDecimal(v.trim()) == null) return l10n.insulinInvalidNumber;
                   return null;
                 },
               ),
@@ -294,7 +294,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return l10n.insulinFactorRequired;
-                  final val = double.tryParse(v.trim());
+                  final val = parseSpanishDecimal(v.trim());
                   if (val == null) return l10n.insulinInvalidNumber;
                   if (val <= 0) return l10n.insulinMustBePositive;
                   return null;
@@ -314,7 +314,7 @@ class _InsulinSettingsPageState extends State<InsulinSettingsPage> {
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) return l10n.insulinGlucoseTargetRequired;
-                  final val = double.tryParse(v.trim());
+                  final val = parseSpanishDecimal(v.trim());
                   if (val == null) return l10n.insulinInvalidNumber;
                   if (val <= 0) return l10n.insulinMustBePositive;
                   return null;

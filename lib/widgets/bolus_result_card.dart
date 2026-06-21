@@ -41,7 +41,7 @@ class BolusResultCard extends StatelessWidget {
               mealBolusLabel,
               mealBolusValue,
               unitSuffix,
-              Colors.teal,
+              Theme.of(context).colorScheme.primary,
               isDark,
             ),
           ),

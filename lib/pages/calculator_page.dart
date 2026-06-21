@@ -267,6 +267,8 @@ class _CalculatorPageState extends State<CalculatorPage>
           'grams': item.grams,
           'carbs': item.carbs,
           'raciones': item.raciones,
+          'fats': item.fats,
+          'proteins': item.proteins,
         });
       }
       _selectedMealType ??= lastMeal.mealType;
@@ -768,8 +770,8 @@ class _CalculatorPageState extends State<CalculatorPage>
                     label: Text(l10n.calcAddToPlate, style: AppTextStyles.sectionTitle),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Colors.teal.shade600,
-                      foregroundColor: Colors.white,
+                      backgroundColor: AppColors.primary(context),
+                      foregroundColor: AppColors.onPrimary(context),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppDimens.radiusCard),
                       ),
@@ -873,7 +875,7 @@ class _CalculatorPageState extends State<CalculatorPage>
                       label: Text(l10n.calcSaveHistory, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.teal,
+                        backgroundColor: AppColors.primary(context),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusCard)),
                       ),
                     ),

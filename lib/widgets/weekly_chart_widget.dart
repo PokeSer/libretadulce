@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
 import '../models/food.dart';
 import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
@@ -72,7 +73,7 @@ class WeeklyChartWidget extends StatelessWidget {
                 child: BarChart(BarChartData(
                   maxY: maxTotal, minY: 0, alignment: BarChartAlignment.spaceAround,
                   barGroups: entries.asMap().entries.map((e) => BarChartGroupData(x: e.key, barRods: [
-                    BarChartRodData(toY: e.value.value, color: Colors.teal, width: 22, borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
+                    BarChartRodData(toY: e.value.value, color: AppColors.primary(context), width: 22, borderRadius: const BorderRadius.vertical(top: Radius.circular(6)),
                       backDrawRodData: BackgroundBarChartRodData(show: true, toY: maxTotal, color: Colors.grey.withValues(alpha: 0.08))),
                   ])).toList(),
                   gridData: FlGridData(show: true, drawVerticalLine: false, horizontalInterval: interval,
@@ -149,8 +150,11 @@ class WeeklyChartWidget extends StatelessWidget {
   }
 
   String _weekdayLabel(DateTime date) {
-    const labels = ['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do'];
-    return labels[date.weekday - 1];
+    // Use locale-aware abbreviation (2 chars) instead of hardcoded Spanish
+    final locale = WidgetsBinding.instance.platformDispatcher.locale.toString();
+    final label = DateFormat('EEE', locale).format(date);
+    // Trim to 2 chars max for chart readability
+    return label.length > 2 ? label.substring(0, 2) : label;
   }
 
   String _buildChartSemanticsLabel(List<MapEntry<String, double>> entries, AppLocalizations l10n) {

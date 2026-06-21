@@ -22,9 +22,9 @@ class CalculatorSelectedFoodInfo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.teal.withValues(alpha: 0.08),
+        color: AppColors.primary(context).withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-        border: Border.all(color: Colors.teal.withValues(alpha: 0.2)),
+        border: Border.all(color: AppColors.primary(context).withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [

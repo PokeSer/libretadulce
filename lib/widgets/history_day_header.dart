@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../core/theme/app_colors.dart';
 
 /// Date separator row shown between day groups in history.
 class HistoryDayHeader extends StatelessWidget {
@@ -28,15 +29,15 @@ class HistoryDayHeader extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(
         children: [
-          const Icon(Icons.calendar_today, size: 16, color: Colors.teal),
+          Icon(Icons.calendar_today, size: 16, color: AppColors.primary(context)),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               dateStr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 13,
-                color: Colors.teal,
+                color: AppColors.primary(context),
               ),
             ),
           ),

@@ -164,7 +164,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
           title: Row(
             children: [
               const ExcludeSemantics(
-                child: Icon(Icons.tips_and_updates, color: Colors.teal),
+                child: Icon(Icons.tips_and_updates),
               ),
               const SizedBox(width: 8),
               Flexible(child: Text(l10n.photoTipTitle)),
@@ -179,13 +179,13 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.teal.withValues(alpha: 0.06),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.checklist, color: Colors.teal, size: 18),
+                    Icon(Icons.checklist, color: Theme.of(context).colorScheme.primary, size: 18),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -245,7 +245,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
                 }
                 Navigator.pop(ctx, true);
               },
-              style: FilledButton.styleFrom(backgroundColor: Colors.teal),
+              style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
               child: Text(l10n.photoTipContinue),
             ),
           ],
@@ -270,7 +270,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
-            style: FilledButton.styleFrom(backgroundColor: Colors.teal),
+            style: FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary),
             child: Text(l10n.photoPrivacyAccept),
           ),
         ],
@@ -341,10 +341,10 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
                 children: [
                   Text(
                     l10n.photoTitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.teal,
+                      color: AppColors.primary(context),
                     ),
                   ),
                   IconButton(
@@ -401,7 +401,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
               },
               icon: const Icon(Icons.settings),
               label: Text(l10n.photoConfigureKey),
-              style: FilledButton.styleFrom(backgroundColor: Colors.teal),
+              style: FilledButton.styleFrom(backgroundColor: AppColors.primary(context)),
             ),
           ],
         ),
@@ -416,7 +416,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
         children: [
           Semantics(
             label: l10n.photoAnalyzing,
-            child: const CircularProgressIndicator(color: Colors.teal),
+            child: CircularProgressIndicator(color: AppColors.primary(context)),
           ),
           const SizedBox(height: 24),
           Text(
@@ -464,7 +464,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
               onPressed: _retry,
               icon: const Icon(Icons.camera_alt),
               label: Text(l10n.photoRetry),
-              style: FilledButton.styleFrom(backgroundColor: Colors.teal),
+              style: FilledButton.styleFrom(backgroundColor: AppColors.primary(context)),
             ),
           ],
         ),
@@ -503,7 +503,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
               icon: const Icon(Icons.camera_alt),
               label: Text(l10n.photoTakeButton),
               style: FilledButton.styleFrom(
-                backgroundColor: Colors.teal,
+                backgroundColor: AppColors.primary(context),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 16,
@@ -520,8 +520,8 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
               icon: const Icon(Icons.photo_library_outlined),
               label: Text(l10n.photoGalleryButton),
               style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.teal,
-                side: const BorderSide(color: Colors.teal),
+                foregroundColor: AppColors.primary(context),
+                side: BorderSide(color: AppColors.primary(context)),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 16,
@@ -563,18 +563,18 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.teal.withValues(alpha: isDark ? 0.08 : 0.05),
+                color: AppColors.primary(context).withValues(alpha: isDark ? 0.08 : 0.05),
                 borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                border: Border.all(color: Colors.teal.withValues(alpha: 0.2)),
+                border: Border.all(color: AppColors.primary(context).withValues(alpha: 0.2)),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 2),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
                     child: Icon(
                       Icons.auto_awesome,
-                      color: Colors.teal,
+                      color: AppColors.primary(context),
                       size: 20,
                     ),
                   ),
@@ -710,7 +710,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
                               : l10n.photoAddAllToPlate,
                         ),
                         style: FilledButton.styleFrom(
-                          backgroundColor: Colors.teal,
+                          backgroundColor: AppColors.primary(context),
                           disabledBackgroundColor: Colors.green.withValues(
                             alpha: 0.15,
                           ),
@@ -829,7 +829,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
                   l10n.photoTableCarbs,
                   '${carbsServing.toStringAsFixed(1)}g',
                   Icons.grain,
-                  Colors.teal,
+                  Theme.of(context).colorScheme.primary,
                   subtitle:
                       '${rations.toStringAsFixed(1)} ${l10n.photoTableRations}',
                   isDark: isDark,
@@ -923,16 +923,16 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.add_circle_outline,
-                        color: Colors.teal,
+                        color: AppColors.primary(context),
                         size: 18,
                       ),
                       const SizedBox(width: 6),
                       Text(
                         l10n.photoAddToPlate(item.name),
-                        style: const TextStyle(
-                          color: Colors.teal,
+                        style: TextStyle(
+                          color: AppColors.primary(context),
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
                         ),
@@ -1091,13 +1091,13 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.teal.withValues(alpha: isDark ? 0.1 : 0.06),
+        color: AppColors.primary(context).withValues(alpha: isDark ? 0.1 : 0.06),
         borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-        border: Border.all(color: Colors.teal.withValues(alpha: 0.25)),
+        border: Border.all(color: AppColors.primary(context).withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
-          const Icon(Icons.summarize, color: Colors.teal, size: 18),
+          Icon(Icons.summarize, color: AppColors.primary(context), size: 18),
           const SizedBox(width: 10),
           Text(
             l10n.photoTableTotal,
@@ -1113,20 +1113,20 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
             children: [
               Text(
                 '${totalCarbs.toStringAsFixed(1)}g HC',
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 14,
-                  color: Colors.teal,
+                  color: AppColors.primary(context),
                 ),
               ),
               Text(
                 '${totalRations.toStringAsFixed(1)} ${l10n.photoTableRations}',
-                style: TextStyle(fontSize: 12, color: Colors.teal.shade700),
+                style: TextStyle(fontSize: 12, color: AppColors.primary(context).withValues(alpha: 0.8)),
               ),
               if (totalKcal > 0)
                 Text(
                   '${totalKcal.toStringAsFixed(0)} kcal',
-                  style: TextStyle(fontSize: 11, color: Colors.teal.shade600),
+                  style: TextStyle(fontSize: 11, color: AppColors.primary(context).withValues(alpha: 0.65)),
                 ),
             ],
           ),
