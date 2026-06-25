@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
+import '../core/utils/ai_error_localizer.dart';
 import '../core/utils/meal_type_localizer.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
@@ -86,7 +87,7 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
       if (mounted) {
         setState(() {
           _isAnalyzing = false;
-          _errorMessage = e.toString().replaceFirst('Exception: ', '');
+          _errorMessage = aiErrorMessage(context, e);
         });
       }
     }
@@ -428,7 +429,7 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
             visualDensity: VisualDensity.compact,
           ),
           child: Text(
-            'Retry',
+            l10n.commonRetry,
             style: TextStyle(
                 fontSize: 12, color: AppColors.primary(context)),
           ),

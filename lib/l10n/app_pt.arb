@@ -407,5 +407,19 @@
   "historyAiPostMeal": "Após a refeição",
   "historyAiDeleteAnalysis": "Apagar análise",
   "historyAiError": "Não foi possível analisar. Tente novamente.",
-  "historyAiNoKey": "Configure a sua chave Gemini nas definições para usar esta função."
+  "historyAiNoKey": "Configure a sua chave Gemini nas definições para usar esta função.",
+  "commonRetry": "Tentar novamente",
+  "aiErrorNoApiKey": "Nenhuma chave de API Gemini configurada. Adicione uma nas definições.",
+  "aiErrorImageTooLarge": "Imagem demasiado grande. Use uma foto mais pequena.",
+  "aiErrorInvalidApiKey": "Chave de API inválida. Verifique a sua chave nas definições.",
+  "aiErrorQuotaExceeded": "Limite diário de pedidos atingido. Tente novamente amanhã.",
+  "aiErrorNoModelAccess": "A sua chave de API não tem acesso a este modelo. Consulte aistudio.google.com.",
+  "aiErrorServiceUnavailable": "Serviço temporariamente indisponível. Tente novamente dentro de momentos.",
+  "aiErrorTimeout": "A análise está a demorar demasiado. Tente novamente.",
+  "aiErrorNetwork": "Erro de rede. Verifique a sua ligação e tente novamente.",
+  "aiErrorBlockedContent": "Não foi possível analisar a foto. Certifique-se de que mostra comida, não pessoas ou conteúdo sensível.",
+  "aiErrorNoFood": "Não foram detetados alimentos. Tente uma foto mais nítida do prato completo visto de cima.",
+  "aiErrorCouldNotProcess": "Não foi possível processar o resultado. Tente novamente com uma foto mais nítida.",
+  "aiErrorEmptyResponse": "Não foi recebida resposta. Tente novamente.",
+  "aiErrorUnknown": "Ocorreu um erro. Tente novamente."
 }

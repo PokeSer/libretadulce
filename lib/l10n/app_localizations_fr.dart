@@ -1268,4 +1268,59 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get historyAiNoKey =>
       'Configurez votre clé Gemini dans les paramètres pour utiliser cette fonction.';
+
+  @override
+  String get commonRetry => 'Réessayer';
+
+  @override
+  String get aiErrorNoApiKey =>
+      'Aucune clé API Gemini configurée. Ajoutez-en une dans les paramètres.';
+
+  @override
+  String get aiErrorImageTooLarge =>
+      'Image trop grande. Utilisez une photo plus petite.';
+
+  @override
+  String get aiErrorInvalidApiKey =>
+      'Clé API non valide. Vérifiez votre clé dans les paramètres.';
+
+  @override
+  String get aiErrorQuotaExceeded =>
+      'Limite quotidienne de requêtes atteinte. Réessayez demain.';
+
+  @override
+  String get aiErrorNoModelAccess =>
+      'Votre clé API n\'a pas accès à ce modèle. Consultez aistudio.google.com.';
+
+  @override
+  String get aiErrorServiceUnavailable =>
+      'Service temporairement indisponible. Réessayez dans un instant.';
+
+  @override
+  String get aiErrorTimeout =>
+      'L\'analyse prend trop de temps. Veuillez réessayer.';
+
+  @override
+  String get aiErrorNetwork =>
+      'Erreur réseau. Vérifiez votre connexion et réessayez.';
+
+  @override
+  String get aiErrorBlockedContent =>
+      'La photo n\'a pas pu être analysée. Assurez-vous qu\'elle montre de la nourriture, pas des personnes ni du contenu sensible.';
+
+  @override
+  String get aiErrorNoFood =>
+      'Aucun aliment détecté. Essayez une photo plus nette de l\'assiette entière vue de dessus.';
+
+  @override
+  String get aiErrorCouldNotProcess =>
+      'Impossible de traiter le résultat. Réessayez avec une photo plus nette.';
+
+  @override
+  String get aiErrorEmptyResponse =>
+      'Aucune réponse reçue. Veuillez réessayer.';
+
+  @override
+  String get aiErrorUnknown =>
+      'Une erreur s\'est produite. Veuillez réessayer.';
 }

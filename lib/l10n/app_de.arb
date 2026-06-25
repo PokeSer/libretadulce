@@ -407,5 +407,19 @@
   "historyAiPostMeal": "Nach dem Essen",
   "historyAiDeleteAnalysis": "Analyse löschen",
   "historyAiError": "Analyse fehlgeschlagen. Bitte erneut versuchen.",
-  "historyAiNoKey": "Richten Sie Ihren Gemini-Schlüssel in den Einstellungen ein."
+  "historyAiNoKey": "Richten Sie Ihren Gemini-Schlüssel in den Einstellungen ein.",
+  "commonRetry": "Erneut versuchen",
+  "aiErrorNoApiKey": "Kein Gemini-API-Schlüssel konfiguriert. Füge einen in den Einstellungen hinzu.",
+  "aiErrorImageTooLarge": "Bild zu groß. Bitte verwende ein kleineres Foto.",
+  "aiErrorInvalidApiKey": "Ungültiger API-Schlüssel. Bitte überprüfe deinen Schlüssel in den Einstellungen.",
+  "aiErrorQuotaExceeded": "Tägliches Anfragelimit erreicht. Bitte versuche es morgen erneut.",
+  "aiErrorNoModelAccess": "Dein API-Schlüssel hat keinen Zugriff auf dieses Modell. Siehe aistudio.google.com.",
+  "aiErrorServiceUnavailable": "Dienst vorübergehend nicht verfügbar. Bitte versuche es gleich noch einmal.",
+  "aiErrorTimeout": "Die Analyse dauert zu lange. Bitte versuche es erneut.",
+  "aiErrorNetwork": "Netzwerkfehler. Überprüfe deine Verbindung und versuche es erneut.",
+  "aiErrorBlockedContent": "Das Foto konnte nicht analysiert werden. Stelle sicher, dass es Essen zeigt, keine Personen oder sensiblen Inhalte.",
+  "aiErrorNoFood": "Keine Lebensmittel erkannt. Versuche ein schärferes Foto des ganzen Tellers von oben.",
+  "aiErrorCouldNotProcess": "Ergebnis konnte nicht verarbeitet werden. Bitte versuche es mit einem schärferen Foto erneut.",
+  "aiErrorEmptyResponse": "Keine Antwort erhalten. Bitte versuche es erneut.",
+  "aiErrorUnknown": "Etwas ist schiefgelaufen. Bitte versuche es erneut."
 }

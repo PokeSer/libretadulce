@@ -1261,4 +1261,58 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get historyAiNoKey =>
       'Configure a sua chave Gemini nas definições para usar esta função.';
+
+  @override
+  String get commonRetry => 'Tentar novamente';
+
+  @override
+  String get aiErrorNoApiKey =>
+      'Nenhuma chave de API Gemini configurada. Adicione uma nas definições.';
+
+  @override
+  String get aiErrorImageTooLarge =>
+      'Imagem demasiado grande. Use uma foto mais pequena.';
+
+  @override
+  String get aiErrorInvalidApiKey =>
+      'Chave de API inválida. Verifique a sua chave nas definições.';
+
+  @override
+  String get aiErrorQuotaExceeded =>
+      'Limite diário de pedidos atingido. Tente novamente amanhã.';
+
+  @override
+  String get aiErrorNoModelAccess =>
+      'A sua chave de API não tem acesso a este modelo. Consulte aistudio.google.com.';
+
+  @override
+  String get aiErrorServiceUnavailable =>
+      'Serviço temporariamente indisponível. Tente novamente dentro de momentos.';
+
+  @override
+  String get aiErrorTimeout =>
+      'A análise está a demorar demasiado. Tente novamente.';
+
+  @override
+  String get aiErrorNetwork =>
+      'Erro de rede. Verifique a sua ligação e tente novamente.';
+
+  @override
+  String get aiErrorBlockedContent =>
+      'Não foi possível analisar a foto. Certifique-se de que mostra comida, não pessoas ou conteúdo sensível.';
+
+  @override
+  String get aiErrorNoFood =>
+      'Não foram detetados alimentos. Tente uma foto mais nítida do prato completo visto de cima.';
+
+  @override
+  String get aiErrorCouldNotProcess =>
+      'Não foi possível processar o resultado. Tente novamente com uma foto mais nítida.';
+
+  @override
+  String get aiErrorEmptyResponse =>
+      'Não foi recebida resposta. Tente novamente.';
+
+  @override
+  String get aiErrorUnknown => 'Ocorreu um erro. Tente novamente.';
 }

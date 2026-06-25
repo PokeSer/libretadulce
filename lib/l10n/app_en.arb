@@ -421,5 +421,19 @@
   "historyAiPostMeal": "After the meal",
   "historyAiDeleteAnalysis": "Delete analysis",
   "historyAiError": "Could not analyze. Please try again.",
-  "historyAiNoKey": "Set up your Gemini key in Settings to use this feature."
+  "historyAiNoKey": "Set up your Gemini key in Settings to use this feature.",
+  "commonRetry": "Retry",
+  "aiErrorNoApiKey": "No Gemini API key configured. Add one in Settings.",
+  "aiErrorImageTooLarge": "Image too large. Please use a smaller photo.",
+  "aiErrorInvalidApiKey": "Invalid API key. Please check your key in Settings.",
+  "aiErrorQuotaExceeded": "Daily request limit reached. Please try again tomorrow.",
+  "aiErrorNoModelAccess": "Your API key doesn't have access to this model. Check aistudio.google.com.",
+  "aiErrorServiceUnavailable": "Service temporarily unavailable. Please try again in a moment.",
+  "aiErrorTimeout": "The analysis is taking too long. Please try again.",
+  "aiErrorNetwork": "Network error. Check your connection and try again.",
+  "aiErrorBlockedContent": "The photo couldn't be analyzed. Make sure it shows food, not people or sensitive content.",
+  "aiErrorNoFood": "No food items could be detected. Try a clearer photo of the full plate from above.",
+  "aiErrorCouldNotProcess": "Couldn't process the result. Please try again with a clearer photo.",
+  "aiErrorEmptyResponse": "No response received. Please try again.",
+  "aiErrorUnknown": "Something went wrong. Please try again."
 }

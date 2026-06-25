@@ -407,5 +407,19 @@
   "historyAiPostMeal": "Po jídlě",
   "historyAiDeleteAnalysis": "Smazat analýzu",
   "historyAiError": "Analýzu se nepodařilo provést. Zkuste to znovu.",
-  "historyAiNoKey": "Nastavte klíč Gemini v nastavení pro použití této funkce."
+  "historyAiNoKey": "Nastavte klíč Gemini v nastavení pro použití této funkce.",
+  "commonRetry": "Zkusit znovu",
+  "aiErrorNoApiKey": "Není nastaven žádný klíč API Gemini. Přidejte jej v nastavení.",
+  "aiErrorImageTooLarge": "Obrázek je příliš velký. Použijte menší fotku.",
+  "aiErrorInvalidApiKey": "Neplatný klíč API. Zkontrolujte svůj klíč v nastavení.",
+  "aiErrorQuotaExceeded": "Denní limit požadavků byl vyčerpán. Zkuste to zítra.",
+  "aiErrorNoModelAccess": "Váš klíč API nemá přístup k tomuto modelu. Viz aistudio.google.com.",
+  "aiErrorServiceUnavailable": "Služba je dočasně nedostupná. Zkuste to za chvíli znovu.",
+  "aiErrorTimeout": "Analýza trvá příliš dlouho. Zkuste to znovu.",
+  "aiErrorNetwork": "Chyba sítě. Zkontrolujte připojení a zkuste to znovu.",
+  "aiErrorBlockedContent": "Fotku nelze analyzovat. Ujistěte se, že zobrazuje jídlo, ne osoby nebo citlivý obsah.",
+  "aiErrorNoFood": "Nebyly rozpoznány žádné potraviny. Zkuste ostřejší fotku celého talíře shora.",
+  "aiErrorCouldNotProcess": "Výsledek nelze zpracovat. Zkuste to znovu s ostřejší fotkou.",
+  "aiErrorEmptyResponse": "Nebyla přijata žádná odpověď. Zkuste to znovu.",
+  "aiErrorUnknown": "Něco se pokazilo. Zkuste to znovu."
 }

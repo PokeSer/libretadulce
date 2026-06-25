@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'ai_service_exception.dart';
+import 'gemini_rest_client.dart';
 
 /// Result from Gemini food photo analysis.
 class GeminiFoodItem {
@@ -63,9 +66,17 @@ class GeminiAnalysisResult {
 
 /// Service for analyzing food photos using Gemini 2.5 Flash.
 class FoodPhotoAnalyzerService {
+  /// Storage key for the Gemini API key. Used both as the secure-storage key
+  /// and as the legacy `SharedPreferences` key for one-time migration.
   static const _apiKeyPref = 'gemini_api_key';
   static const _privacyAcceptedPref = 'gemini_privacy_accepted';
   static const _photoTipDismissedPref = 'gemini_photo_tip_dismissed';
+
+  /// Encrypted storage for the API key (Android Keystore / iOS Keychain).
+  /// The API key is a credential, so it must not live in plaintext
+  /// `SharedPreferences`. v10+ encrypts Android data with custom ciphers
+  /// backed by the Keystore by default.
+  static const _secureStorage = FlutterSecureStorage();
 
   /// Reactive notifier — `true` when a non-empty API key is configured.
   /// Widgets can use `ValueListenableBuilder` to rebuild automatically
@@ -74,22 +85,49 @@ class FoodPhotoAnalyzerService {
       ValueNotifier<bool>(false);
 
   /// Call once at app start to initialise [apiKeyConfigured] from storage.
+  /// Also migrates any key previously stored in plaintext `SharedPreferences`
+  /// into encrypted secure storage.
   static Future<void> initApiKeyStatus() async {
+    await _migrateLegacyKeyIfNeeded();
     final key = await getApiKey();
     apiKeyConfigured.value = key != null && key.isNotEmpty;
   }
 
-  /// Get the configured API key.
-  static Future<String?> getApiKey() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_apiKeyPref);
+  /// Moves an API key stored by older app versions in plaintext
+  /// `SharedPreferences` into encrypted secure storage, then removes the
+  /// plaintext copy. Runs at most once (no-op afterwards).
+  static Future<void> _migrateLegacyKeyIfNeeded() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final legacyKey = prefs.getString(_apiKeyPref);
+      if (legacyKey == null) return; // nothing to migrate
+      if (legacyKey.isNotEmpty) {
+        final existing = await _secureStorage.read(key: _apiKeyPref);
+        if (existing == null || existing.isEmpty) {
+          await _secureStorage.write(key: _apiKeyPref, value: legacyKey);
+        }
+      }
+      // Remove the plaintext copy regardless, so it never lingers.
+      await prefs.remove(_apiKeyPref);
+    } catch (e) {
+      debugPrint('[FoodPhotoAnalyzerService] Key migration skipped: $e');
+    }
   }
 
-  /// Save an API key and immediately update [apiKeyConfigured].
+  /// Get the configured API key from encrypted storage.
+  static Future<String?> getApiKey() async {
+    return _secureStorage.read(key: _apiKeyPref);
+  }
+
+  /// Save an API key (or clear it when empty) and update [apiKeyConfigured].
   static Future<void> saveApiKey(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_apiKeyPref, key.trim());
-    apiKeyConfigured.value = key.trim().isNotEmpty;
+    final trimmed = key.trim();
+    if (trimmed.isEmpty) {
+      await _secureStorage.delete(key: _apiKeyPref);
+    } else {
+      await _secureStorage.write(key: _apiKeyPref, value: trimmed);
+    }
+    apiKeyConfigured.value = trimmed.isNotEmpty;
   }
 
   /// Check if user has accepted privacy notice.
@@ -125,13 +163,13 @@ class FoodPhotoAnalyzerService {
   }) async {
     final apiKey = await getApiKey();
     if (apiKey == null || apiKey.isEmpty) {
-      throw Exception('No Gemini API key configured.');
+      throw const AiServiceException(AiErrorType.noApiKey);
     }
 
     // Safety: validate file size (max 5 MB)
     final fileSize = await imageFile.length();
     if (fileSize > 5 * 1024 * 1024) {
-      throw Exception('Image too large. Please use a smaller photo.');
+      throw const AiServiceException(AiErrorType.imageTooLarge);
     }
 
     final languageNames = {
@@ -158,15 +196,7 @@ class FoodPhotoAnalyzerService {
     };
     final gi = giLabels[locale] ?? giLabels['en']!;
 
-    final model = GenerativeModel(
-      model: 'gemini-3.5-flash',
-      apiKey: apiKey,
-      generationConfig: GenerationConfig(
-        temperature: 0.1,
-        maxOutputTokens: 2048,
-        responseMimeType: 'application/json',
-      ),
-      systemInstruction: Content.text(
+    final systemInstruction =
         'You are a professional clinical nutritionist AI specialized in diabetes management and glycemic control. '
         'You analyze food photos to help people with diabetes make informed dietary decisions.\n\n'
         'LANGUAGE: You MUST write ALL response text (summary, notes, food names, glycemic index labels) '
@@ -200,53 +230,52 @@ class FoodPhotoAnalyzerService {
         '- If you cannot confidently identify an item, OMIT it rather than guessing.\n'
         '- Take into account visible cooking methods: fried foods have more fat, boiled/steamed foods retain more water weight.\n'
         '- For the glycemicIndex field: "${gi.low}" = GI ≤55, "${gi.mid}" = GI 56-69, "${gi.high}" = GI ≥70.\n'
-        '- Do NOT include any text, explanation, or markdown outside the JSON object.',
-      ),
-    );
+        '- Do NOT include any text, explanation, or markdown outside the JSON object.';
 
     final imageBytes = await imageFile.readAsBytes();
-    final content = Content.multi([
-      TextPart(
-        'Analyze this food plate photo. '
-        'Respond ONLY with a JSON object (not an array). '
-        'Write everything in $langName language.',
-      ),
-      DataPart('image/jpeg', imageBytes),
-    ]);
 
-    final GenerateContentResponse response;
+    final String text;
     try {
-      response = await model.generateContent([content]);
-    } on GenerativeAIException catch (e) {
+      text = await GeminiRestClient.generateContent(
+        apiKey: apiKey,
+        models: const ['gemini-3.5-flash', 'gemini-2.5-flash'],
+        systemInstruction: systemInstruction,
+        temperature: 0.1,
+        maxOutputTokens: 2048,
+        parts: [
+          {
+            'text': 'Analyze this food plate photo. '
+                'Respond ONLY with a JSON object (not an array). '
+                'Write everything in $langName language.',
+          },
+          {
+            'inlineData': {
+              'mimeType': 'image/jpeg',
+              'data': base64Encode(imageBytes),
+            },
+          },
+        ],
+      );
+    } on GeminiBlockedException catch (e) {
+      debugPrint('[FoodPhotoAnalyzerService] Blocked: $e');
+      throw const AiServiceException(AiErrorType.blockedContent);
+    } on GeminiApiException catch (e) {
       debugPrint('[FoodPhotoAnalyzerService] Gemini API error: $e');
-      throw Exception(_userFriendlyGeminiError(e.message));
+      throw AiServiceException(_geminiErrorType(e));
+    } on TimeoutException {
+      throw const AiServiceException(AiErrorType.timeout);
     } catch (e) {
       debugPrint('[FoodPhotoAnalyzerService] Error: $e');
-      if (e.toString().contains('Timeout')) {
-        throw Exception('The analysis is taking too long. Please try again.');
-      }
-      throw Exception('Network error. Check your connection and try again.');
+      throw const AiServiceException(AiErrorType.network);
     }
 
-    final text = response.text;
-
-    if (text == null || text.isEmpty) {
-      // Check if blocked/filtered
-      final candidates = response.candidates;
-      if (candidates.isNotEmpty &&
-          candidates.first.finishReason == FinishReason.safety) {
-        throw Exception(
-          'The photo could not be analyzed. Make sure it shows food, not people or sensitive content.',
-        );
-      }
-      throw Exception('No response from Gemini. Please try again.');
+    if (text.isEmpty) {
+      throw const AiServiceException(AiErrorType.emptyResponse);
     }
 
     // Detect Gemini error messages in the text (API overload, quota, etc.)
     if (_isGeminiErrorText(text)) {
-      throw Exception(
-        'The AI service is currently overloaded. Please wait a moment and try again.',
-      );
+      throw const AiServiceException(AiErrorType.serviceUnavailable);
     }
 
     // Parse the JSON response
@@ -260,17 +289,7 @@ class FoodPhotoAnalyzerService {
       json = jsonDecode(cleaned) as Map<String, dynamic>;
     } catch (e) {
       debugPrint('[FoodPhotoAnalyzerService] JSON parse error: $e\nRaw: $text');
-      // If text looks like an error message, pass it through
-      if (text.length < 500 &&
-          (text.contains('error') ||
-              text.contains('sorry') ||
-              text.contains('unable') ||
-              text.contains('cannot'))) {
-        throw Exception(text.trim());
-      }
-      throw Exception(
-        'Could not process the analysis result. Please take another photo with better lighting and a clear view of the plate.',
-      );
+      throw const AiServiceException(AiErrorType.couldNotProcess);
     }
 
     // Parse items
@@ -288,9 +307,7 @@ class FoodPhotoAnalyzerService {
 
     // Safety: ensure we got at least 1 valid item
     if (items.isEmpty) {
-      throw Exception(
-        'No food items could be detected. Try a clearer photo showing the full plate from above.',
-      );
+      throw const AiServiceException(AiErrorType.noFood);
     }
 
     return GeminiAnalysisResult(summary: summary, notes: notes, items: items);
@@ -314,18 +331,18 @@ class FoodPhotoAnalyzerService {
     return errorPatterns.any((p) => lower.contains(p));
   }
 
-  /// Translate technical Gemini errors into user-friendly messages.
-  static String _userFriendlyGeminiError(String message) {
-    final lower = message.toLowerCase();
+  /// Map a Gemini API error to a localizable [AiErrorType].
+  static AiErrorType _geminiErrorType(GeminiApiException e) {
+    final lower = e.message.toLowerCase();
     if (lower.contains('quota') || lower.contains('rate limit')) {
-      return 'Daily request limit reached. Please try again tomorrow.';
+      return AiErrorType.quotaExceeded;
     }
     if (lower.contains('invalid') || lower.contains('api key')) {
-      return 'Invalid API key. Please check your key in Settings.';
+      return AiErrorType.invalidApiKey;
     }
     if (lower.contains('permission') || lower.contains('access')) {
-      return 'Your API key does not have access to this model. Check aistudio.google.com.';
+      return AiErrorType.noModelAccess;
     }
-    return 'Service temporarily unavailable. Please try again in a moment.';
+    return AiErrorType.serviceUnavailable;
   }
 }

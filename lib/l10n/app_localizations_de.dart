@@ -1268,4 +1268,59 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get historyAiNoKey =>
       'Richten Sie Ihren Gemini-Schlüssel in den Einstellungen ein.';
+
+  @override
+  String get commonRetry => 'Erneut versuchen';
+
+  @override
+  String get aiErrorNoApiKey =>
+      'Kein Gemini-API-Schlüssel konfiguriert. Füge einen in den Einstellungen hinzu.';
+
+  @override
+  String get aiErrorImageTooLarge =>
+      'Bild zu groß. Bitte verwende ein kleineres Foto.';
+
+  @override
+  String get aiErrorInvalidApiKey =>
+      'Ungültiger API-Schlüssel. Bitte überprüfe deinen Schlüssel in den Einstellungen.';
+
+  @override
+  String get aiErrorQuotaExceeded =>
+      'Tägliches Anfragelimit erreicht. Bitte versuche es morgen erneut.';
+
+  @override
+  String get aiErrorNoModelAccess =>
+      'Dein API-Schlüssel hat keinen Zugriff auf dieses Modell. Siehe aistudio.google.com.';
+
+  @override
+  String get aiErrorServiceUnavailable =>
+      'Dienst vorübergehend nicht verfügbar. Bitte versuche es gleich noch einmal.';
+
+  @override
+  String get aiErrorTimeout =>
+      'Die Analyse dauert zu lange. Bitte versuche es erneut.';
+
+  @override
+  String get aiErrorNetwork =>
+      'Netzwerkfehler. Überprüfe deine Verbindung und versuche es erneut.';
+
+  @override
+  String get aiErrorBlockedContent =>
+      'Das Foto konnte nicht analysiert werden. Stelle sicher, dass es Essen zeigt, keine Personen oder sensiblen Inhalte.';
+
+  @override
+  String get aiErrorNoFood =>
+      'Keine Lebensmittel erkannt. Versuche ein schärferes Foto des ganzen Tellers von oben.';
+
+  @override
+  String get aiErrorCouldNotProcess =>
+      'Ergebnis konnte nicht verarbeitet werden. Bitte versuche es mit einem schärferen Foto erneut.';
+
+  @override
+  String get aiErrorEmptyResponse =>
+      'Keine Antwort erhalten. Bitte versuche es erneut.';
+
+  @override
+  String get aiErrorUnknown =>
+      'Etwas ist schiefgelaufen. Bitte versuche es erneut.';
 }

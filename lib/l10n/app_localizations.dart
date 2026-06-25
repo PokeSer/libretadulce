@@ -2371,6 +2371,90 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Configura tu clave Gemini en Ajustes para usar esta función.'**
   String get historyAiNoKey;
+
+  /// No description provided for @commonRetry.
+  ///
+  /// In es, this message translates to:
+  /// **'Reintentar'**
+  String get commonRetry;
+
+  /// No description provided for @aiErrorNoApiKey.
+  ///
+  /// In es, this message translates to:
+  /// **'No hay clave de API de Gemini configurada. Añade una en Ajustes.'**
+  String get aiErrorNoApiKey;
+
+  /// No description provided for @aiErrorImageTooLarge.
+  ///
+  /// In es, this message translates to:
+  /// **'La imagen es demasiado grande. Usa una foto más pequeña.'**
+  String get aiErrorImageTooLarge;
+
+  /// No description provided for @aiErrorInvalidApiKey.
+  ///
+  /// In es, this message translates to:
+  /// **'Clave de API no válida. Revisa tu clave en Ajustes.'**
+  String get aiErrorInvalidApiKey;
+
+  /// No description provided for @aiErrorQuotaExceeded.
+  ///
+  /// In es, this message translates to:
+  /// **'Has alcanzado el límite diario de peticiones. Inténtalo mañana.'**
+  String get aiErrorQuotaExceeded;
+
+  /// No description provided for @aiErrorNoModelAccess.
+  ///
+  /// In es, this message translates to:
+  /// **'Tu clave de API no tiene acceso a este modelo. Revisa aistudio.google.com.'**
+  String get aiErrorNoModelAccess;
+
+  /// No description provided for @aiErrorServiceUnavailable.
+  ///
+  /// In es, this message translates to:
+  /// **'Servicio no disponible temporalmente. Inténtalo de nuevo en un momento.'**
+  String get aiErrorServiceUnavailable;
+
+  /// No description provided for @aiErrorTimeout.
+  ///
+  /// In es, this message translates to:
+  /// **'El análisis está tardando demasiado. Inténtalo de nuevo.'**
+  String get aiErrorTimeout;
+
+  /// No description provided for @aiErrorNetwork.
+  ///
+  /// In es, this message translates to:
+  /// **'Error de red. Comprueba tu conexión e inténtalo de nuevo.'**
+  String get aiErrorNetwork;
+
+  /// No description provided for @aiErrorBlockedContent.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo analizar la foto. Asegúrate de que muestra comida, no personas ni contenido sensible.'**
+  String get aiErrorBlockedContent;
+
+  /// No description provided for @aiErrorNoFood.
+  ///
+  /// In es, this message translates to:
+  /// **'No se detectaron alimentos. Prueba con una foto más clara del plato completo desde arriba.'**
+  String get aiErrorNoFood;
+
+  /// No description provided for @aiErrorCouldNotProcess.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo procesar el resultado. Inténtalo de nuevo con una foto más clara.'**
+  String get aiErrorCouldNotProcess;
+
+  /// No description provided for @aiErrorEmptyResponse.
+  ///
+  /// In es, this message translates to:
+  /// **'No se recibió respuesta. Inténtalo de nuevo.'**
+  String get aiErrorEmptyResponse;
+
+  /// No description provided for @aiErrorUnknown.
+  ///
+  /// In es, this message translates to:
+  /// **'Algo salió mal. Inténtalo de nuevo.'**
+  String get aiErrorUnknown;
 }
 
 class _AppLocalizationsDelegate

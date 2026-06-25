@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
+import '../core/utils/ai_error_localizer.dart';
 import '../l10n/app_localizations.dart';
 import '../models/insulin_settings.dart';
 import '../pages/settings_page.dart';
@@ -148,7 +149,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
       if (mounted) {
         setState(() {
           _isAnalyzing = false;
-          _errorMessage = e.toString().replaceFirst('Exception: ', '');
+          _errorMessage = aiErrorMessage(context, e);
         });
       }
     }

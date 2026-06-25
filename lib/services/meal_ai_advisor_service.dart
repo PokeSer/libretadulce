@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:google_generative_ai/google_generative_ai.dart';
 import '../models/food.dart';
+import 'ai_service_exception.dart';
 import 'food_photo_analyzer_service.dart';
+import 'gemini_rest_client.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data model
@@ -116,7 +118,7 @@ class MealAiAdvisorService {
   }) async {
     final apiKey = await FoodPhotoAnalyzerService.getApiKey();
     if (apiKey == null || apiKey.isEmpty) {
-      throw Exception('No Gemini API key configured.');
+      throw const AiServiceException(AiErrorType.noApiKey);
     }
 
     final langName = _languageNames[locale] ?? 'English';
@@ -124,15 +126,7 @@ class MealAiAdvisorService {
     // ── Build a readable meal description for the prompt ──
     final mealDesc = _buildMealDescription(entry);
 
-    final model = GenerativeModel(
-      model: 'gemini-2.5-flash',
-      apiKey: apiKey,
-      generationConfig: GenerationConfig(
-        temperature: 0.2,
-        maxOutputTokens: 2048,
-        responseMimeType: 'application/json',
-      ),
-      systemInstruction: Content.text(
+    final systemInstruction =
         'You are a professional clinical dietitian and diabetes educator. '
         'Your role is to analyze the nutritional content of meals logged by people with type 1 or type 2 diabetes '
         'and provide practical, evidence-based dietary advice tailored to glycemic control.\n\n'
@@ -161,30 +155,39 @@ class MealAiAdvisorService {
         '- If insulin was already dosed (bolus data provided), acknowledge it but still give timing advice for future reference.\n'
         '- Keep all tips concise, practical, and encouraging — never alarmist.\n'
         '- Do NOT include any markdown, explanation, or text outside the JSON object.\n'
-        '- JSON VALIDITY: The output must be strictly valid JSON. String values (like glycemicSummary) must NOT contain raw, literal line breaks or newlines. If you must use multiple sentences, keep them on a single line separated by spaces. Absolutely no literal newlines inside double quotes.',
-      ),
-    );
+        '- JSON VALIDITY: The output must be strictly valid JSON. String values (like glycemicSummary) must NOT contain raw, literal line breaks or newlines. If you must use multiple sentences, keep them on a single line separated by spaces. Absolutely no literal newlines inside double quotes.';
 
-    final content = Content.text(
-      'Analyze this diabetes meal log and provide dietary advice. '
-      'Respond ONLY in $langName with the JSON format specified.\n\n'
-      '$mealDesc',
-    );
-
-    final GenerateContentResponse response;
+    final String text;
     try {
-      response = await model.generateContent([content]);
-    } on GenerativeAIException catch (e) {
+      text = await GeminiRestClient.generateContent(
+        apiKey: apiKey,
+        models: const ['gemini-2.5-flash'],
+        systemInstruction: systemInstruction,
+        temperature: 0.2,
+        maxOutputTokens: 2048,
+        parts: [
+          {
+            'text': 'Analyze this diabetes meal log and provide dietary advice. '
+                'Respond ONLY in $langName with the JSON format specified.\n\n'
+                '$mealDesc',
+          },
+        ],
+      );
+    } on GeminiBlockedException catch (e) {
+      debugPrint('[MealAiAdvisorService] Blocked: $e');
+      throw const AiServiceException(AiErrorType.couldNotProcess);
+    } on GeminiApiException catch (e) {
       debugPrint('[MealAiAdvisorService] Gemini API error: $e');
-      throw Exception(_userFriendlyError(e.message));
+      throw AiServiceException(_geminiErrorType(e));
+    } on TimeoutException {
+      throw const AiServiceException(AiErrorType.timeout);
     } catch (e) {
       debugPrint('[MealAiAdvisorService] Error: $e');
-      throw Exception('Network error. Check your connection and try again.');
+      throw const AiServiceException(AiErrorType.network);
     }
 
-    final text = response.text;
-    if (text == null || text.isEmpty) {
-      throw Exception('No response from Gemini. Please try again.');
+    if (text.isEmpty) {
+      throw const AiServiceException(AiErrorType.emptyResponse);
     }
 
     // Parse JSON
@@ -199,7 +202,7 @@ class MealAiAdvisorService {
       return MealAiAnalysis.fromJson(json);
     } catch (e) {
       debugPrint('[MealAiAdvisorService] JSON parse error: $e\nRaw: $text');
-      throw Exception('Could not process the analysis. Please try again.');
+      throw const AiServiceException(AiErrorType.couldNotProcess);
     }
   }
 
@@ -248,15 +251,18 @@ class MealAiAdvisorService {
     return buf.toString();
   }
 
-  static String _userFriendlyError(String message) {
-    final lower = message.toLowerCase();
+  static AiErrorType _geminiErrorType(GeminiApiException e) {
+    final lower = e.message.toLowerCase();
     if (lower.contains('quota') || lower.contains('rate limit')) {
-      return 'Daily request limit reached. Please try again tomorrow.';
+      return AiErrorType.quotaExceeded;
     }
     if (lower.contains('invalid') || lower.contains('api key')) {
-      return 'Invalid API key. Please check your key in Settings.';
+      return AiErrorType.invalidApiKey;
     }
-    return 'Service temporarily unavailable. Please try again in a moment.';
+    if (lower.contains('permission') || lower.contains('access')) {
+      return AiErrorType.noModelAccess;
+    }
+    return AiErrorType.serviceUnavailable;
   }
 
   /// Replaces raw unescaped newlines inside JSON string fields with spaces.

@@ -1259,4 +1259,57 @@ class AppLocalizationsCs extends AppLocalizations {
   @override
   String get historyAiNoKey =>
       'Nastavte klíč Gemini v nastavení pro použití této funkce.';
+
+  @override
+  String get commonRetry => 'Zkusit znovu';
+
+  @override
+  String get aiErrorNoApiKey =>
+      'Není nastaven žádný klíč API Gemini. Přidejte jej v nastavení.';
+
+  @override
+  String get aiErrorImageTooLarge =>
+      'Obrázek je příliš velký. Použijte menší fotku.';
+
+  @override
+  String get aiErrorInvalidApiKey =>
+      'Neplatný klíč API. Zkontrolujte svůj klíč v nastavení.';
+
+  @override
+  String get aiErrorQuotaExceeded =>
+      'Denní limit požadavků byl vyčerpán. Zkuste to zítra.';
+
+  @override
+  String get aiErrorNoModelAccess =>
+      'Váš klíč API nemá přístup k tomuto modelu. Viz aistudio.google.com.';
+
+  @override
+  String get aiErrorServiceUnavailable =>
+      'Služba je dočasně nedostupná. Zkuste to za chvíli znovu.';
+
+  @override
+  String get aiErrorTimeout => 'Analýza trvá příliš dlouho. Zkuste to znovu.';
+
+  @override
+  String get aiErrorNetwork =>
+      'Chyba sítě. Zkontrolujte připojení a zkuste to znovu.';
+
+  @override
+  String get aiErrorBlockedContent =>
+      'Fotku nelze analyzovat. Ujistěte se, že zobrazuje jídlo, ne osoby nebo citlivý obsah.';
+
+  @override
+  String get aiErrorNoFood =>
+      'Nebyly rozpoznány žádné potraviny. Zkuste ostřejší fotku celého talíře shora.';
+
+  @override
+  String get aiErrorCouldNotProcess =>
+      'Výsledek nelze zpracovat. Zkuste to znovu s ostřejší fotkou.';
+
+  @override
+  String get aiErrorEmptyResponse =>
+      'Nebyla přijata žádná odpověď. Zkuste to znovu.';
+
+  @override
+  String get aiErrorUnknown => 'Něco se pokazilo. Zkuste to znovu.';
 }

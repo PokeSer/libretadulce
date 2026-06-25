@@ -407,5 +407,19 @@
   "historyAiPostMeal": "Après le repas",
   "historyAiDeleteAnalysis": "Supprimer l'analyse",
   "historyAiError": "Analyse échouée. Veuillez réessayer.",
-  "historyAiNoKey": "Configurez votre clé Gemini dans les paramètres pour utiliser cette fonction."
+  "historyAiNoKey": "Configurez votre clé Gemini dans les paramètres pour utiliser cette fonction.",
+  "commonRetry": "Réessayer",
+  "aiErrorNoApiKey": "Aucune clé API Gemini configurée. Ajoutez-en une dans les paramètres.",
+  "aiErrorImageTooLarge": "Image trop grande. Utilisez une photo plus petite.",
+  "aiErrorInvalidApiKey": "Clé API non valide. Vérifiez votre clé dans les paramètres.",
+  "aiErrorQuotaExceeded": "Limite quotidienne de requêtes atteinte. Réessayez demain.",
+  "aiErrorNoModelAccess": "Votre clé API n'a pas accès à ce modèle. Consultez aistudio.google.com.",
+  "aiErrorServiceUnavailable": "Service temporairement indisponible. Réessayez dans un instant.",
+  "aiErrorTimeout": "L'analyse prend trop de temps. Veuillez réessayer.",
+  "aiErrorNetwork": "Erreur réseau. Vérifiez votre connexion et réessayez.",
+  "aiErrorBlockedContent": "La photo n'a pas pu être analysée. Assurez-vous qu'elle montre de la nourriture, pas des personnes ni du contenu sensible.",
+  "aiErrorNoFood": "Aucun aliment détecté. Essayez une photo plus nette de l'assiette entière vue de dessus.",
+  "aiErrorCouldNotProcess": "Impossible de traiter le résultat. Réessayez avec une photo plus nette.",
+  "aiErrorEmptyResponse": "Aucune réponse reçue. Veuillez réessayer.",
+  "aiErrorUnknown": "Une erreur s'est produite. Veuillez réessayer."
 }
