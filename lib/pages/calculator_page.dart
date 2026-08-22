@@ -59,7 +59,7 @@ class _CalculatorPageState extends State<CalculatorPage>
   double _totalFats = 0.0;
   double _totalProteins = 0.0;
 
-  final List<Map<String, dynamic>> _mealItems = [];
+  final List<_PlateItem> _mealItems = [];
   int _mealItemCounter = 0;
   MealType? _selectedMealType;
   DateTime _selectedTime = DateTime.now();
@@ -149,6 +149,12 @@ class _CalculatorPageState extends State<CalculatorPage>
       _calculatedGrams >= 0 &&
       _inputController.text.isNotEmpty;
 
+  /// Adds a [MealItem] to the current plate, assigning it an ephemeral UI id.
+  /// Must be called inside a [setState].
+  void _addPlateItem(MealItem item) {
+    _mealItems.add(_PlateItem(id: 'meal_${_mealItemCounter++}', item: item));
+  }
+
   void _addToMeal() {
     if (_canAddToMeal) {
       if (!MediaQuery.of(context).disableAnimations) {
@@ -156,15 +162,16 @@ class _CalculatorPageState extends State<CalculatorPage>
       }
       _inputFocusNode.unfocus();
       setState(() {
-        _mealItems.add({
-          'id': 'meal_${_mealItemCounter++}',
-          'name': _selectedFoodName,
-          'grams': _calculatedGrams,
-          'carbs': _totalCarbs,
-          'raciones': _totalRaciones,
-          'fats': _totalFats,
-          'proteins': _totalProteins,
-        });
+        _addPlateItem(
+          MealItem(
+            name: _selectedFoodName!,
+            grams: _calculatedGrams,
+            carbs: _totalCarbs,
+            raciones: _totalRaciones,
+            fats: _totalFats,
+            proteins: _totalProteins,
+          ),
+        );
         _inputController.clear();
         _calculateMacros();
       });
@@ -173,7 +180,7 @@ class _CalculatorPageState extends State<CalculatorPage>
 
   void _clearMeal() {
     final l10n = AppLocalizations.of(context);
-    final savedItems = List<Map<String, dynamic>>.from(_mealItems);
+    final savedItems = List<_PlateItem>.from(_mealItems);
     final savedMealType = _selectedMealType;
     _inputFocusNode.unfocus();
     setState(() {
@@ -205,7 +212,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(l10n.calcItemRemoved(removedItem['name'])),
+        content: Text(l10n.calcItemRemoved(removedItem.item.name)),
         action: SnackBarAction(
           label: l10n.calcUndo,
           onPressed: () {
@@ -220,39 +227,40 @@ class _CalculatorPageState extends State<CalculatorPage>
   }
 
   double get _mealTotalRaciones =>
-      CalculationService.sumMealItems(_mealItems, 'raciones');
+      _mealItems.fold(0.0, (sum, p) => sum + p.item.raciones);
   double get _mealTotalCarbs =>
-      CalculationService.sumMealItems(_mealItems, 'carbs');
+      _mealItems.fold(0.0, (sum, p) => sum + p.item.carbs);
   double get _mealTotalFats =>
-      CalculationService.sumMealItems(_mealItems, 'fats');
+      _mealItems.fold(0.0, (sum, p) => sum + (p.item.fats ?? 0.0));
   double get _mealTotalProteins =>
-      CalculationService.sumMealItems(_mealItems, 'proteins');
+      _mealItems.fold(0.0, (sum, p) => sum + (p.item.proteins ?? 0.0));
   // ── Repeat last meal ──────────────────────────────────────────
 
   Future<void> _repeatLastMeal() async {
     if (user == null) return;
     final l10n = AppLocalizations.of(context);
 
-    // Fetch recent meals and find one matching current meal type
-    final entries = await MealHistoryService.fetchAll(user!.uid);
+    // Fetch only the most recent meals (newest first) instead of the whole
+    // history, then find one matching the current meal type.
+    final entries = await MealHistoryService.fetchRecent(user!.uid);
     if (entries.isEmpty) return;
 
     final targetType = _selectedMealType;
     MealEntry? lastMeal;
 
     if (targetType != null) {
-      // Find last meal of the same type
-      for (final e in entries.reversed) {
+      // Find the most recent meal of the same type
+      for (final e in entries) {
         if (e.mealType == targetType && e.items.isNotEmpty) {
           lastMeal = e;
           break;
         }
       }
     }
-    // Fallback: last meal of any type
-    lastMeal ??= entries.lastWhere(
+    // Fallback: most recent meal of any type
+    lastMeal ??= entries.firstWhere(
       (e) => e.items.isNotEmpty,
-      orElse: () => entries.last,
+      orElse: () => entries.first,
     );
 
     if (!mounted || lastMeal.items.isEmpty) return;
@@ -261,15 +269,7 @@ class _CalculatorPageState extends State<CalculatorPage>
     setState(() {
       _mealItems.clear();
       for (final item in lastMeal!.items) {
-        _mealItems.add({
-          'id': 'meal_${_mealItemCounter++}',
-          'name': item.name,
-          'grams': item.grams,
-          'carbs': item.carbs,
-          'raciones': item.raciones,
-          'fats': item.fats,
-          'proteins': item.proteins,
-        });
+        _addPlateItem(item);
       }
       _selectedMealType ??= lastMeal.mealType;
     });
@@ -333,11 +333,11 @@ class _CalculatorPageState extends State<CalculatorPage>
     if (saved == true && mounted) {
       final items = _mealItems
           .map(
-            (item) => {
-              'name': item['name'],
-              'grams': item['grams'],
-              'carbs': item['carbs'],
-              'raciones': item['raciones'],
+            (p) => {
+              'name': p.item.name,
+              'grams': p.item.grams,
+              'carbs': p.item.carbs,
+              'raciones': p.item.raciones,
             },
           )
           .toList();
@@ -396,9 +396,9 @@ class _CalculatorPageState extends State<CalculatorPage>
                             '${t.items.length} items · ${carbs.toStringAsFixed(0)}g HC',
                           ),
                           trailing: IconButton(
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.delete_outline,
-                              color: Colors.redAccent,
+                              color: AppColors.error(context),
                             ),
                             tooltip: l10n.calcDeleteTemplate,
                             onPressed: () async {
@@ -435,13 +435,7 @@ class _CalculatorPageState extends State<CalculatorPage>
       setState(() {
         _mealItems.clear();
         for (final item in templates.items) {
-          _mealItems.add({
-            'id': 'meal_${_mealItemCounter++}',
-            'name': item['name'],
-            'grams': item['grams'],
-            'carbs': item['carbs'],
-            'raciones': item['raciones'],
-          });
+          _addPlateItem(MealItem.fromMap(item));
         }
         if (templates.mealType != null && _selectedMealType == null) {
           _selectedMealType = MealType.fromString(templates.mealType!);
@@ -482,22 +476,25 @@ class _CalculatorPageState extends State<CalculatorPage>
       backgroundColor: Colors.transparent,
       builder: (_) => FoodPhotoAnalyzerSheet(
         onAddToPlate: (result) {
-          final carbs = result.grams * result.carbsPer100g / 100;
-          final raciones = carbs / 10.0;
-          final fats = result.fatsPer100g != null ? result.grams * result.fatsPer100g! / 100 : 0.0;
-          final proteins = result.proteinsPer100g != null ? result.grams * result.proteinsPer100g! / 100 : 0.0;
+          final carbs =
+              CalculationService.carbsFromGrams(result.carbsPer100g, result.grams);
+          final item = MealItem(
+            name: result.name,
+            grams: result.grams,
+            carbs: carbs,
+            raciones: CalculationService.rationsFromCarbs(carbs),
+            fats: result.fatsPer100g != null
+                ? CalculationService.macroFromGrams(
+                    result.fatsPer100g!, result.grams)
+                : 0.0,
+            proteins: result.proteinsPer100g != null
+                ? CalculationService.macroFromGrams(
+                    result.proteinsPer100g!, result.grams)
+                : 0.0,
+          );
 
-          setState(() {
-            _mealItems.add({
-              'id': 'meal_${_mealItemCounter++}',
-              'name': result.name,
-              'grams': result.grams,
-              'carbs': carbs,
-              'raciones': raciones,
-              'fats': fats,
-              'proteins': proteins,
-            });
-          });
+          if (!mounted) return;
+          setState(() => _addPlateItem(item));
         },
       ),
     );
@@ -564,7 +561,7 @@ class _CalculatorPageState extends State<CalculatorPage>
           totalRations: _mealTotalRaciones,
           totalFats: _mealTotalFats,
           totalProteins: _mealTotalProteins,
-          items: _mealItems,
+          items: _mealItems.map((p) => p.item.toMap()).toList(),
           totalBolus: totalBolus,
           glucose: glucoseMgdl,
           timestamp: _selectedTime,
@@ -801,15 +798,15 @@ class _CalculatorPageState extends State<CalculatorPage>
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: _mealItems.length,
                       itemBuilder: (context, index) {
-                        final item = _mealItems[index];
+                        final plate = _mealItems[index];
                         return FoodItemRow(
-                          itemId: item['id'] as String,
-                          foodName: item['name'] as String,
-                          grams: (item['grams'] as num).toDouble(),
-                          carbs: (item['carbs'] as num).toDouble(),
-                          rations: (item['raciones'] as num).toDouble(),
-                          fats: item['fats'] as double?,
-                          proteins: item['proteins'] as double?,
+                          itemId: plate.id,
+                          foodName: plate.item.name,
+                          grams: plate.item.grams,
+                          carbs: plate.item.carbs,
+                          rations: plate.item.raciones,
+                          fats: plate.item.fats,
+                          proteins: plate.item.proteins,
                           onDelete: () => _removeMealItem(index),
                         );
                       },
@@ -889,4 +886,15 @@ class _CalculatorPageState extends State<CalculatorPage>
       ], // outer Column children
     ); // Column
   }
+}
+
+/// Pairs a persistable [MealItem] with an ephemeral UI id.
+///
+/// The id is used only for widget list keys and undo operations; it is never
+/// persisted to Firestore. The nutritional data lives in [item].
+class _PlateItem {
+  const _PlateItem({required this.id, required this.item});
+
+  final String id;
+  final MealItem item;
 }

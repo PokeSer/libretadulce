@@ -37,10 +37,10 @@ class CalculatorPlateHeader extends StatelessWidget {
             ),
             TextButton.icon(
               onPressed: onClear,
-              icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+              icon: Icon(Icons.delete_outline, color: AppColors.error(context)),
               label: Text(
                 l10n.calcClear,
-                style: const TextStyle(color: Colors.redAccent),
+                style: TextStyle(color: AppColors.error(context)),
               ),
             ),
           ],

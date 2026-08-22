@@ -44,8 +44,9 @@ class MealTypeChipSelector extends StatelessWidget {
                 label: Text(mealTypeLocalizedLabel(type, l10n),
                     style: const TextStyle(fontSize: 12)),
                 selected: isSelected,
-                selectedColor: AppColors.primary(context).withValues(alpha: 0.3),
-                checkmarkColor: AppColors.primary(context),
+                selectedColor: Theme.of(context).colorScheme.primaryContainer,
+                checkmarkColor:
+                    Theme.of(context).colorScheme.onPrimaryContainer,
                 visualDensity: VisualDensity.standard,
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 onSelected: (_) => onChanged(type),

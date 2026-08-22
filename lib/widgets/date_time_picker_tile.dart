@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 
 /// Tile reutilizable para seleccionar fecha u hora.
@@ -22,8 +23,6 @@ class DateTimePickerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Semantics(
       button: true,
       label: label,
@@ -33,9 +32,7 @@ class DateTimePickerTile extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
-            border: Border.all(
-              color: isDark ? Colors.grey.shade700 : Colors.grey.shade400,
-            ),
+            border: Border.all(color: AppColors.hairline(context)),
             borderRadius: BorderRadius.circular(AppDimens.radiusCard),
           ),
           child: Row(
@@ -51,7 +48,7 @@ class DateTimePickerTile extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 14,
-                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                  color: AppColors.textSecondary(context),
                 ),
               ),
               const Spacer(),
@@ -59,15 +56,16 @@ class DateTimePickerTile extends StatelessWidget {
                 mode == PickerMode.date
                     ? DateFormat.yMMMd().format(selectedTime)
                     : DateFormat.Hm().format(selectedTime),
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                  fontWeight: FontWeight.w600,
                 ),
                 overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(width: 4),
-              const ExcludeSemantics(
-                child: Icon(Icons.arrow_drop_down, color: Colors.grey),
+              ExcludeSemantics(
+                child: Icon(Icons.arrow_drop_down, color: AppColors.textMuted(context)),
               ),
             ],
           ),

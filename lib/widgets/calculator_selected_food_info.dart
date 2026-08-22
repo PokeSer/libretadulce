@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 
 /// Displays the currently selected food with its name and carbs/100g info.
@@ -17,7 +18,6 @@ class CalculatorSelectedFoodInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -49,9 +49,10 @@ class CalculatorSelectedFoodInfo extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   l10n.calcCarbsPer100g(carbsPer100g.toString()),
-                  style: TextStyle(
-                    color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-                    fontSize: 13,
+                  style: AppTextStyles.metric(
+                    context,
+                    color: AppColors.textSecondary(context),
+                    size: 13,
                   ),
                 ),
               ],

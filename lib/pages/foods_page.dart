@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +10,7 @@ import '../core/utils/formatters.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
 import '../services/food_repository.dart';
+import '../services/food_photo_service.dart';
 import '../services/food_request_repository.dart';
 import '../services/open_food_facts_service.dart';
 import '../widgets/food_list_item.dart';
@@ -146,10 +149,13 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
       context: context,
       builder: (context) {
         return FoodFormSheet(
+          uid: user!.uid,
           onSave: (food) async {
-            await FoodRepository.addFood(user!.uid, food);
-            if (context.mounted) {
-              _clearFoodControllers();
+            try {
+              return await FoodRepository.addFood(user!.uid, food);
+            } catch (e) {
+              debugPrint('[FoodsPage._showAddFoodDialog] Error: $e');
+              return null;
             }
           },
           onScanTap: (nameCtrl, brandCtrl, carbsCtrl, kcalCtrl, proteinsCtrl, fatsCtrl) =>
@@ -166,17 +172,11 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
     );
   }
 
-  void _clearFoodControllers() {
-    _nameController.clear();
-    _brandController.clear();
-    _carbsController.clear();
-    _kcalController.clear();
-    _proteinsController.clear();
-    _fatsController.clear();
-  }
-
   void _deleteFood(Food food) async {
     await FoodRepository.deleteFood(user!.uid, food.id);
+    // Photos are local-first with a mirrored thumb: remove every trace. If
+    // the user undoes, the food returns without its photo.
+    await FoodPhotoService.deleteAll(user!.uid, food.id);
     if (mounted) {
       final l10n = AppLocalizations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -349,6 +349,16 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
 
               final foods = snapshot.data ?? [];
 
+              // Self-heal thumbnails that never reached Firestore (saves
+              // made before the rules existed). One pass per session; free
+              // when every local photo is already mirrored.
+              unawaited(
+                FoodPhotoService.syncMissingThumbs(
+                  user!.uid,
+                  foods.map((f) => f.id),
+                ),
+              );
+
               if (foods.isEmpty) {
                 return Center(
                   child: Column(
@@ -423,6 +433,7 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
                     onDismissed: (direction) => _deleteFood(food),
                     child: FoodListItem(
                       food: food,
+                      uid: user!.uid,
                       trailing: Wrap(
                         spacing: 8,
                         children: [
@@ -457,7 +468,7 @@ class _FoodsPageState extends State<FoodsPage> with TickerProviderStateMixin {
                           ),
                         ],
                       ),
-                      onTap: () => showDialog(context: context, builder: (_) => FoodDetailDialog(food: food)),
+                      onTap: () => showDialog(context: context, builder: (_) => FoodDetailDialog(food: food, uid: user!.uid)),
                     ),
                   );
                 },

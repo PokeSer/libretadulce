@@ -68,28 +68,21 @@ class StatCard extends StatelessWidget {
     return Container(
       padding: AppDimens.cardPadding,
       decoration: BoxDecoration(
-        color: AppColors.surfaceBg(context),
-        borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
-        border:
-            Border.all(color: color.withValues(alpha: isDark ? 0.3 : 0.2)),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: AppColors.cardBg(context),
+        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+        border: Border.all(color: AppColors.hairline(context)),
       ),
       child: Semantics(
         label: '$title: $value',
         child: Column(
         children: [
           Text(
-            title,
+            title.toUpperCase(),
             style: TextStyle(
               color: AppColors.textSecondary(context),
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+              fontSize: 10,
+              letterSpacing: 1.2,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 8),
@@ -97,8 +90,10 @@ class StatCard extends StatelessWidget {
             value,
             style: TextStyle(
               color: color,
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
+              fontSize: 26,
+              height: 1.05,
+              fontFeatures: const [FontFeature.tabularFigures()],
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

@@ -106,8 +106,9 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             Row(
               children: [
-                const ExcludeSemantics(
-                  child: Icon(Icons.key, color: Colors.orange, size: 20),
+                ExcludeSemantics(
+                  child: Icon(Icons.key,
+                      color: AppColors.accentFavorite(context), size: 20),
                 ),
                 const SizedBox(width: 8),
                 Text(l10n.profileGeminiKey, style: AppTextStyles.cardTitle),

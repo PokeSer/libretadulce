@@ -9,7 +9,6 @@ import 'package:share_plus/share_plus.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
-import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
 import '../models/insulin_settings.dart';
@@ -33,11 +32,19 @@ class _HistoryPageState extends State<HistoryPage> {
   final User? user = FirebaseAuth.instance.currentUser;
   late DateTime _selectedDate;
   int _viewMode = 0; // 0 = diario, 1 = semanal
+  InsulinSettings? _settings;
 
   @override
   void initState() {
     super.initState();
     _selectedDate = DateTime.now();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    if (user == null) return;
+    final settings = await InsulinSettingsService.getSettings(user!.uid);
+    if (mounted) setState(() => _settings = settings);
   }
 
   void _changeDate(int days) {
@@ -86,7 +93,11 @@ class _HistoryPageState extends State<HistoryPage> {
                       'EEEE, d MMMM',
                       Localizations.localeOf(context).toString(),
                     ).format(_selectedDate).toUpperCase(),
-                    style: AppTextStyles.sectionTitle,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                    ),
                   ),
                   if (startOfDay
                           .difference(
@@ -98,12 +109,24 @@ class _HistoryPageState extends State<HistoryPage> {
                           )
                           .inDays ==
                       0)
-                    Text(
-                      l10n.historyToday,
-                      style: TextStyle(
-                        color: AppColors.primary(context),
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                    Container(
+                      margin: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(AppDimens.radiusPill),
+                      ),
+                      child: Text(
+                        l10n.historyToday,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 11,
+                          letterSpacing: 0.8,
+                        ),
                       ),
                     ),
                 ],
@@ -131,8 +154,9 @@ class _HistoryPageState extends State<HistoryPage> {
                   label: Text(l10n.historyDaily),
                   selected: _viewMode == 0,
                   onSelected: (_) => setState(() => _viewMode = 0),
-                  selectedColor: AppColors.primary(context).withValues(alpha: 0.25),
-                  checkmarkColor: AppColors.primary(context),
+                  selectedColor: Theme.of(context).colorScheme.primaryContainer,
+                  checkmarkColor:
+                      Theme.of(context).colorScheme.onPrimaryContainer,
                   visualDensity: VisualDensity.standard,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -148,8 +172,9 @@ class _HistoryPageState extends State<HistoryPage> {
                   label: Text(l10n.historyWeekly),
                   selected: _viewMode == 1,
                   onSelected: (_) => setState(() => _viewMode = 1),
-                  selectedColor: AppColors.primary(context).withValues(alpha: 0.25),
-                  checkmarkColor: AppColors.primary(context),
+                  selectedColor: Theme.of(context).colorScheme.primaryContainer,
+                  checkmarkColor:
+                      Theme.of(context).colorScheme.onPrimaryContainer,
                   visualDensity: VisualDensity.standard,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -178,7 +203,9 @@ class _HistoryPageState extends State<HistoryPage> {
         ),
 
         if (_viewMode == 1)
-          Expanded(child: WeeklyChartWidget(uid: user!.uid))
+          Expanded(
+            child: WeeklyChartWidget(uid: user!.uid, settings: _settings),
+          )
         else
           Expanded(
             child: StreamBuilder<List<MealEntry>>(
@@ -206,18 +233,18 @@ class _HistoryPageState extends State<HistoryPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const ExcludeSemantics(
+                        ExcludeSemantics(
                           child: Icon(
                             Icons.restaurant_menu,
                             size: 64,
-                            color: Colors.grey,
+                            color: AppColors.hintColor(context),
                           ),
                         ),
                         const SizedBox(height: 16),
                         Text(
                           l10n.historyNoRecords,
-                          style: const TextStyle(
-                            color: Colors.grey,
+                          style: TextStyle(
+                            color: AppColors.textSecondary(context),
                             fontSize: 18,
                           ),
                         ),
@@ -256,10 +283,10 @@ class _HistoryPageState extends State<HistoryPage> {
                               ),
                               alignment: Alignment.centerLeft,
                               padding: const EdgeInsets.only(left: 20),
-                              child: const ExcludeSemantics(
+                              child: ExcludeSemantics(
                                 child: Icon(
                                   Icons.edit,
-                                  color: Colors.white,
+                                  color: AppColors.onPrimary(context),
                                   size: 30,
                                 ),
                               ),
@@ -267,17 +294,17 @@ class _HistoryPageState extends State<HistoryPage> {
                             secondaryBackground: Container(
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
-                                color: Colors.redAccent,
+                                color: AppColors.error(context),
                                 borderRadius: BorderRadius.circular(
                                   AppDimens.radiusDialog,
                                 ),
                               ),
                               alignment: Alignment.centerRight,
                               padding: const EdgeInsets.only(right: 20),
-                              child: const ExcludeSemantics(
+                              child: ExcludeSemantics(
                                 child: Icon(
                                   Icons.delete,
-                                  color: Colors.white,
+                                  color: AppColors.onError(context),
                                   size: 30,
                                 ),
                               ),
@@ -293,25 +320,42 @@ class _HistoryPageState extends State<HistoryPage> {
                                 content: l10n.historyDeleteConfirm,
                               );
                             },
-                            onDismissed: (direction) {
+                            onDismissed: (direction) async {
                               if (direction == DismissDirection.startToEnd) {
                                 return;
                               }
+                              final messenger =
+                                  ScaffoldMessenger.of(context);
                               final deletedEntry = entry;
-                              MealHistoryService.deleteEntry(
-                                user!.uid,
-                                entry.id,
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
+                              try {
+                                await MealHistoryService.deleteEntry(
+                                  user!.uid,
+                                  entry.id,
+                                );
+                              } catch (_) {
+                                messenger.showSnackBar(
+                                  SnackBar(content: Text(l10n.serviceError)),
+                                );
+                                return;
+                              }
+                              messenger.showSnackBar(
                                 SnackBar(
                                   content: Text(l10n.historyDeleteSuccess),
                                   action: SnackBarAction(
                                     label: l10n.calcUndo,
-                                    onPressed: () {
-                                      MealHistoryService.restoreEntry(
-                                        user!.uid,
-                                        deletedEntry,
-                                      );
+                                    onPressed: () async {
+                                      try {
+                                        await MealHistoryService.restoreEntry(
+                                          user!.uid,
+                                          deletedEntry,
+                                        );
+                                      } catch (_) {
+                                        messenger.showSnackBar(
+                                          SnackBar(
+                                            content: Text(l10n.serviceError),
+                                          ),
+                                        );
+                                      }
                                     },
                                   ),
                                   duration: const Duration(seconds: 5),
@@ -321,6 +365,7 @@ class _HistoryPageState extends State<HistoryPage> {
                             child: HistoryEntryCard(
                               entry: entry,
                               uid: user!.uid,
+                              settings: _settings,
                               onEdit: () => _showEditDialog(entry),
                               onDelete: () async {
                                 final messenger = ScaffoldMessenger.of(context);
@@ -331,20 +376,39 @@ class _HistoryPageState extends State<HistoryPage> {
                                 );
                                 if (confirmed == true && mounted) {
                                   final deletedEntry = entry;
-                                  MealHistoryService.deleteEntry(
-                                    user!.uid,
-                                    entry.id,
-                                  );
+                                  try {
+                                    await MealHistoryService.deleteEntry(
+                                      user!.uid,
+                                      entry.id,
+                                    );
+                                  } catch (_) {
+                                    messenger.showSnackBar(
+                                      SnackBar(
+                                        content: Text(l10n.serviceError),
+                                      ),
+                                    );
+                                    return;
+                                  }
                                   messenger.showSnackBar(
                                     SnackBar(
                                       content: Text(l10n.historyDeleteSuccess),
                                       action: SnackBarAction(
                                         label: l10n.calcUndo,
-                                        onPressed: () {
-                                          MealHistoryService.restoreEntry(
-                                            user!.uid,
-                                            deletedEntry,
-                                          );
+                                        onPressed: () async {
+                                          try {
+                                            await MealHistoryService
+                                                .restoreEntry(
+                                              user!.uid,
+                                              deletedEntry,
+                                            );
+                                          } catch (_) {
+                                            messenger.showSnackBar(
+                                              SnackBar(
+                                                content:
+                                                    Text(l10n.serviceError),
+                                              ),
+                                            );
+                                          }
                                         },
                                       ),
                                       duration: const Duration(seconds: 5),
@@ -419,15 +483,15 @@ class _HistoryPageState extends State<HistoryPage> {
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  leading: const Icon(
+                  leading: Icon(
                     Icons.picture_as_pdf,
-                    color: Colors.redAccent,
+                    color: AppColors.error(ctx),
                     size: 28,
                   ),
                   title: Text(l10n.historyPdfExportOption),
                   subtitle: Text(
                     l10n.historyPdfExportSubtitle,
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 12, color: AppColors.textMuted(ctx)),
                   ),
                   onTap: () {
                     Navigator.pop(ctx);
@@ -438,13 +502,13 @@ class _HistoryPageState extends State<HistoryPage> {
                 ListTile(
                   leading: Icon(
                     Icons.table_chart_outlined,
-                    color: AppColors.primary(context),
+                    color: AppColors.primary(ctx),
                     size: 28,
                   ),
                   title: Text(l10n.historyCsvExportOption),
                   subtitle: Text(
                     l10n.historyCsvExportSubtitle,
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 12, color: AppColors.textMuted(ctx)),
                   ),
                   onTap: () {
                     Navigator.pop(ctx);
@@ -482,8 +546,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 ListTile(
                   leading: Icon(Icons.calendar_today,
                       color: AppColors.primary(context)),
-                  title: Text(l10n.historyPdfFrom),
-                  subtitle: Text(DateFormat('dd/MM/yyyy', locale)
+                  title: Text(l10n.historyPdfFrom),                  subtitle: Text(DateFormat('dd/MM/yyyy', locale)
                       .format(fromDate)),
                   onTap: () async {
                     final picked = await showDatePicker(
@@ -499,8 +562,8 @@ class _HistoryPageState extends State<HistoryPage> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.calendar_today,
-                      color: Colors.orange),
+                  leading: Icon(Icons.calendar_today,
+                      color: AppColors.accentFavorite(context)),
                   title: Text(l10n.historyPdfTo),
                   subtitle: Text(DateFormat('dd/MM/yyyy', locale)
                       .format(toDate)),
@@ -591,12 +654,13 @@ class _HistoryPageState extends State<HistoryPage> {
       for (final entry in entries) {
         final dateStr = DateFormat('yyyy-MM-dd').format(entry.timestamp);
         final timeStr = DateFormat('HH:mm').format(entry.timestamp);
-        // Glucose stored in mg/dL; convert to display unit if needed
+        // Glucose is stored in mg/dL; convert to the user's display unit.
         final rawGlucose = entry.glucose;
         final glucoseStr = rawGlucose == null
             ? ''
-            : (settings?.usesMmolL == true
-                ? (rawGlucose / 18.018).toStringAsFixed(1)
+            : (settings != null
+                ? settings.formatGlucose(
+                    settings.fromStoredGlucoseUnit(rawGlucose))
                 : rawGlucose.toStringAsFixed(0));
         final bolusStr = entry.totalBolus?.toStringAsFixed(1) ?? '';
 

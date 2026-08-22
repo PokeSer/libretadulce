@@ -56,7 +56,8 @@ class MacroSummaryRow extends StatelessWidget {
           Text(
             value,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
+              fontFeatures: const [FontFeature.tabularFigures()],
               color: color,
             ),
           ),

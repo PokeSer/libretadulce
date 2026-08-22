@@ -3,10 +3,12 @@ import 'package:intl/intl.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../core/utils/ai_error_localizer.dart';
 import '../core/utils/meal_type_localizer.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
+import '../models/insulin_settings.dart';
 import '../services/meal_ai_advisor_service.dart';
 import '../services/meal_history_service.dart';
 import '../services/food_photo_analyzer_service.dart';
@@ -17,6 +19,7 @@ import '../services/food_photo_analyzer_service.dart';
 class HistoryEntryCard extends StatefulWidget {
   final MealEntry entry;
   final String uid;
+  final InsulinSettings? settings;
   final VoidCallback? onDelete;
   final VoidCallback? onEdit;
 
@@ -24,6 +27,7 @@ class HistoryEntryCard extends StatefulWidget {
     super.key,
     required this.entry,
     required this.uid,
+    this.settings,
     this.onDelete,
     this.onEdit,
   });
@@ -102,6 +106,15 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
     }
   }
 
+  /// Formats a glucose value (stored in mg/dL) into the user's display unit,
+  /// falling back to mg/dL when settings are unavailable.
+  String _formatGlucose(double mgdl) {
+    final settings = widget.settings;
+    if (settings == null) return '${mgdl.toStringAsFixed(0)} mg/dL';
+    return '${settings.formatGlucose(settings.fromStoredGlucoseUnit(mgdl))} '
+        '${settings.glucoseLabel()}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -113,10 +126,6 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppDimens.radiusDialog),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -139,8 +148,9 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
                           mealTypeLocalizedLabel(_entry.mealType, l10n)
                               .toUpperCase(),
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                            letterSpacing: 1.2,
                             color: Theme.of(context).colorScheme.primary,
                           ),
                           overflow: TextOverflow.ellipsis,
@@ -153,7 +163,11 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
                   children: [
                     Text(
                       DateFormat('HH:mm').format(date),
-                      style: const TextStyle(color: Colors.grey),
+                      style: AppTextStyles.metric(
+                        context,
+                        color: AppColors.textMuted(context),
+                        size: 13,
+                      ),
                     ),
                     if (widget.onEdit != null) ...[
                       const SizedBox(width: 4),
@@ -169,9 +183,9 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
                     ],
                     if (widget.onDelete != null) ...[
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.delete_outline,
-                          color: Colors.redAccent,
+                          color: AppColors.error(context),
                           size: 20,
                         ),
                         tooltip: l10n.historyDeleteTooltip(
@@ -204,8 +218,11 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
                     ),
                     Text(
                       l10n.historyRacShort(item.raciones.toStringAsFixed(1)),
-                      style:
-                          const TextStyle(color: Colors.grey, fontSize: 13),
+                      style: AppTextStyles.metric(
+                        context,
+                        color: AppColors.textMuted(context),
+                        size: 13,
+                      ),
                     ),
                   ],
                 ),
@@ -234,9 +251,12 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
                 children: [
                   Flexible(
                     child: Text(
-                      l10n.historySubtotal,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 12),
+                      l10n.historySubtotal.toUpperCase(),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11,
+                          letterSpacing: 1,
+                          color: AppColors.textSecondary(context)),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -246,9 +266,10 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
                       _entry.totalRations.toStringAsFixed(1),
                       _entry.totalCarbs.toStringAsFixed(0),
                     ),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                    style: AppTextStyles.metric(
+                      context,
                       color: Theme.of(context).colorScheme.primary,
+                      size: 15,
                     ),
                   ),
                 ],
@@ -260,7 +281,7 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
               const SizedBox(height: 8),
               _macroBadge(context,
                   icon: Icons.opacity,
-                  color: Colors.orange,
+                  color: Theme.of(context).colorScheme.tertiary,
                   label: l10n.historyTotalFats,
                   value: '${_entry.totalFats!.toStringAsFixed(1)}g'),
             ],
@@ -271,7 +292,7 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
               const SizedBox(height: 8),
               _macroBadge(context,
                   icon: Icons.fitness_center,
-                  color: Colors.blue,
+                  color: Theme.of(context).colorScheme.secondary,
                   label: l10n.historyTotalProteins,
                   value: '${_entry.totalProteins!.toStringAsFixed(1)}g'),
             ],
@@ -281,9 +302,9 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
               const SizedBox(height: 8),
               _macroBadge(context,
                   icon: Icons.monitor_heart,
-                  color: Colors.redAccent,
+                  color: AppColors.glucoseRange(context, _entry.glucose!),
                   label: l10n.calcGlucoseLabel,
-                  value: '${_entry.glucose!.toStringAsFixed(0)} mg/dL'),
+                  value: _formatGlucose(_entry.glucose!)),
             ],
 
             // ── Bolus badge (optional) ──
@@ -291,7 +312,7 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
               const SizedBox(height: 8),
               _macroBadge(context,
                   icon: Icons.water_drop,
-                  color: Colors.orange,
+                  color: Theme.of(context).colorScheme.secondary,
                   label: l10n.historyBolus,
                   value: _entry.totalBolus! ==
                           _entry.totalBolus!.roundToDouble()
@@ -314,7 +335,7 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
             else if (_isAnalyzing)
               _buildAnalyzingIndicator(l10n)
             else
-              _buildAnalyzeButton(l10n, isDark),
+              _buildAnalyzeButton(l10n),
 
             // Error message
             if (_errorMessage != null && !_isAnalyzing) ...[
@@ -327,7 +348,7 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
     );
   }
 
-  Widget _buildAnalyzeButton(AppLocalizations l10n, bool isDark) {
+  Widget _buildAnalyzeButton(AppLocalizations l10n) {
     return ValueListenableBuilder<bool>(
       valueListenable: FoodPhotoAnalyzerService.apiKeyConfigured,
       builder: (context, hasKey, _) {
@@ -412,13 +433,12 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
   Widget _buildErrorRow(AppLocalizations l10n) {
     return Row(
       children: [
-        const Icon(Icons.error_outline, size: 14, color: Colors.redAccent),
+        Icon(Icons.error_outline, size: 14, color: AppColors.error(context)),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
             _errorMessage ?? l10n.historyAiError,
-            style:
-                const TextStyle(fontSize: 12, color: Colors.redAccent),
+            style: TextStyle(fontSize: 12, color: AppColors.error(context)),
           ),
         ),
         TextButton(
@@ -467,7 +487,7 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
                   child: Text(
                     label,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 12,
                       color: color,
                     ),
@@ -479,7 +499,11 @@ class _HistoryEntryCardState extends State<HistoryEntryCard> {
           ),
           Text(
             value,
-            style: TextStyle(fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontFeatures: const [FontFeature.tabularFigures()],
+              color: color,
+            ),
           ),
         ],
       ),
@@ -506,16 +530,16 @@ class _AiAnalysisPanel extends StatelessWidget {
     required this.isDark,
   });
 
-  Color get _profileColor {
+  Color _profileColor(BuildContext context) {
     switch (analysis.glycemicProfile) {
       case GlycemicProfile.high:
-        return Colors.redAccent;
+        return AppColors.glucoseHigh(context);
       case GlycemicProfile.medium:
-        return Colors.orange;
+        return AppColors.glucoseLow(context);
       case GlycemicProfile.low:
-        return Colors.green;
+        return AppColors.glucoseInRange(context);
       case GlycemicProfile.unknown:
-        return Colors.grey;
+        return AppColors.textMuted(context);
     }
   }
 
@@ -554,6 +578,7 @@ class _AiAnalysisPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primary = AppColors.primary(context);
+    final profileColor = _profileColor(context);
     return Container(
       decoration: BoxDecoration(
         color: isDark
@@ -595,6 +620,7 @@ class _AiAnalysisPanel extends StatelessWidget {
                     DateFormat('d MMM HH:mm').format(analysisDate!),
                     style: TextStyle(
                         fontSize: 10,
+                        fontFeatures: const [FontFeature.tabularFigures()],
                         color: AppColors.textMuted(context)),
                   ),
                 ],
@@ -630,19 +656,19 @@ class _AiAnalysisPanel extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: _profileColor.withValues(
+                        color: profileColor.withValues(
                             alpha: isDark ? 0.18 : 0.10),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                             color:
-                                _profileColor.withValues(alpha: 0.35)),
+                                profileColor.withValues(alpha: 0.35)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ExcludeSemantics(
                             child: Icon(_profileIcon,
-                                size: 14, color: _profileColor),
+                                size: 14, color: profileColor),
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -650,7 +676,7 @@ class _AiAnalysisPanel extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
-                              color: _profileColor,
+                              color: profileColor,
                             ),
                           ),
                         ],
@@ -665,9 +691,7 @@ class _AiAnalysisPanel extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 13,
                       height: 1.45,
-                      color: isDark
-                          ? Colors.grey.shade200
-                          : Colors.grey.shade800,
+                      color: AppColors.textBody(context),
                     ),
                   ),
                 ],
@@ -679,8 +703,10 @@ class _AiAnalysisPanel extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 7),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withValues(
-                          alpha: isDark ? 0.12 : 0.07),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withValues(alpha: isDark ? 0.12 : 0.08),
                       borderRadius:
                           BorderRadius.circular(AppDimens.radiusInput),
                     ),
@@ -689,7 +715,8 @@ class _AiAnalysisPanel extends StatelessWidget {
                       children: [
                         ExcludeSemantics(
                           child: Icon(Icons.water_drop,
-                              size: 15, color: Colors.blue.shade400),
+                              size: 15,
+                              color: Theme.of(context).colorScheme.secondary),
                         ),
                         const SizedBox(width: 7),
                         Expanded(
@@ -704,7 +731,9 @@ class _AiAnalysisPanel extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.blue.shade400,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary,
                                     ),
                                   ),
                                   const SizedBox(width: 6),
@@ -712,7 +741,9 @@ class _AiAnalysisPanel extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 6, vertical: 1),
                                     decoration: BoxDecoration(
-                                      color: Colors.blue
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary
                                           .withValues(alpha: 0.15),
                                       borderRadius:
                                           BorderRadius.circular(8),
@@ -721,8 +752,13 @@ class _AiAnalysisPanel extends StatelessWidget {
                                       _formatTimingMinutes(),
                                       style: TextStyle(
                                         fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue.shade400,
+                                        fontFeatures: const [
+                                          FontFeature.tabularFigures()
+                                        ],
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary,
                                       ),
                                     ),
                                   ),
@@ -734,9 +770,7 @@ class _AiAnalysisPanel extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 12,
                                   height: 1.4,
-                                  color: isDark
-                                      ? Colors.grey.shade300
-                                      : Colors.grey.shade700,
+                                  color: AppColors.textSecondary(context),
                                 ),
                               ),
                             ],
@@ -751,12 +785,12 @@ class _AiAnalysisPanel extends StatelessWidget {
                 if (analysis.tips.isNotEmpty) ...[
                   const SizedBox(height: 10),
                   Text(
-                    l10n.historyAiTips,
+                    l10n.historyAiTips.toUpperCase(),
                     style: TextStyle(
                       fontSize: 11,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.textSecondary(context),
-                      letterSpacing: 0.3,
+                      letterSpacing: 1,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -776,9 +810,7 @@ class _AiAnalysisPanel extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 12,
                                   height: 1.4,
-                                  color: isDark
-                                      ? Colors.grey.shade200
-                                      : Colors.grey.shade800,
+                                  color: AppColors.textBody(context),
                                 ),
                               ),
                             ),
@@ -794,7 +826,7 @@ class _AiAnalysisPanel extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10, vertical: 7),
                     decoration: BoxDecoration(
-                      color: Colors.green.withValues(
+                      color: AppColors.glucoseInRange(context).withValues(
                           alpha: isDark ? 0.10 : 0.06),
                       borderRadius:
                           BorderRadius.circular(AppDimens.radiusInput),
@@ -804,7 +836,8 @@ class _AiAnalysisPanel extends StatelessWidget {
                       children: [
                         ExcludeSemantics(
                           child: Icon(Icons.tips_and_updates,
-                              size: 14, color: Colors.green.shade500),
+                              size: 14,
+                              color: AppColors.glucoseInRange(context)),
                         ),
                         const SizedBox(width: 7),
                         Expanded(
@@ -817,7 +850,7 @@ class _AiAnalysisPanel extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.green.shade500,
+                                  color: AppColors.glucoseInRange(context),
                                 ),
                               ),
                               const SizedBox(height: 3),
@@ -827,9 +860,7 @@ class _AiAnalysisPanel extends StatelessWidget {
                                   fontSize: 12,
                                   height: 1.4,
                                   fontStyle: FontStyle.italic,
-                                  color: isDark
-                                      ? Colors.grey.shade300
-                                      : Colors.grey.shade700,
+                                  color: AppColors.textSecondary(context),
                                 ),
                               ),
                             ],

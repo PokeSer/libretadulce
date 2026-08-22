@@ -4,7 +4,7 @@ import '../core/theme/app_dimens.dart';
 /// Displays the 3-part insulin bolus breakdown:
 /// Meal bolus | Correction | Total
 ///
-/// Extracted from calculator_page.dart to reduce widget size.
+/// One quiet panel divided by hairlines — a dose scale, not three boxes.
 class BolusResultCard extends StatelessWidget {
   final String mealBolusLabel;
   final String mealBolusValue;
@@ -29,92 +29,101 @@ class BolusResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final scheme = Theme.of(context).colorScheme;
 
     return Semantics(
       liveRegion: true,
       label: semanticsLabel,
-      child: Row(
-        children: [
-          Expanded(
-            child: _bolusItem(
-              mealBolusLabel,
-              mealBolusValue,
-              unitSuffix,
-              Theme.of(context).colorScheme.primary,
-              isDark,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+        decoration: BoxDecoration(
+          color: scheme.surfaceContainerLow,
+          borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+          border: Border.all(color: scheme.outlineVariant),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: _bolusItem(
+                context,
+                mealBolusLabel,
+                mealBolusValue,
+                scheme.onSurface,
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _bolusItem(
-              correctionLabel,
-              correctionValue,
-              unitSuffix,
-              Colors.orange,
-              isDark,
+            _divider(scheme),
+            Expanded(
+              child: _bolusItem(
+                context,
+                correctionLabel,
+                correctionValue,
+                scheme.tertiary,
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: _bolusItem(
-              totalLabel,
-              totalValue,
-              unitSuffix,
-              Colors.redAccent,
-              isDark,
+            _divider(scheme),
+            Expanded(
+              child: _bolusItem(
+                context,
+                totalLabel,
+                totalValue,
+                scheme.primary,
+                emphasized: true,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
+  Widget _divider(ColorScheme scheme) =>
+      Container(width: 1, height: 52, color: scheme.outlineVariant);
+
   Widget _bolusItem(
+    BuildContext context,
     String label,
     String value,
-    String unit,
-    Color color,
-    bool isDark,
-  ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: isDark ? 0.15 : 0.08),
-        borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              color: color,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
+    Color color, {
+    bool emphasized = false,
+  }) {
+    final scheme = Theme.of(context).colorScheme;
+    return Column(
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: TextStyle(
+            fontSize: 10,
+            letterSpacing: 1,
+            color: emphasized ? color : scheme.onSurfaceVariant,
+            fontWeight: FontWeight.w600,
           ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
-              color: color,
-            ),
-            textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: emphasized ? 26 : 22,
+            height: 1.1,
+            fontFeatures: const [FontFeature.tabularFigures()],
+            fontWeight: FontWeight.w600,
+            color: color,
           ),
-          Text(
-            unit,
-            style: TextStyle(
-              fontSize: 10,
-              color: color.withValues(alpha: 0.7),
-            ),
-            textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 2),
+        Text(
+          unitSuffix,
+          style: TextStyle(
+            fontSize: 10,
+            fontFeatures: const [FontFeature.tabularFigures()],
+            color: scheme.onSurfaceVariant.withValues(alpha: 0.8),
           ),
-        ],
-      ),
+          textAlign: TextAlign.center,
+        ),
+      ],
     );
   }
 }

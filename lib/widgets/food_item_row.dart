@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
+import '../core/theme/app_text_styles.dart';
 import '../l10n/app_localizations.dart';
 import 'confirm_delete_dialog.dart';
 
@@ -44,13 +45,13 @@ class FoodItemRow extends StatelessWidget {
       background: Container(
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: Colors.redAccent,
+          color: AppColors.error(context),
           borderRadius: BorderRadius.circular(AppDimens.radiusCard),
         ),
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
-        child: const ExcludeSemantics(
-          child: Icon(Icons.delete, color: Colors.white, size: 28),
+        child: ExcludeSemantics(
+          child: Icon(Icons.delete, color: AppColors.onError(context), size: 28),
         ),
       ),
       confirmDismiss: (direction) => showConfirmDeleteDialog(
@@ -95,16 +96,16 @@ class FoodItemRow extends StatelessWidget {
                     const SizedBox(width: 8),
                     Text(
                       l10n.calcRacShort(rations.toStringAsFixed(1)),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
+                      style: AppTextStyles.metric(
+                        context,
                         color: Theme.of(context).colorScheme.primary,
-                        fontSize: 16,
+                        size: 16,
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.delete_outline,
-                        color: Colors.redAccent,
+                        color: AppColors.error(context),
                         size: 20,
                       ),
                       tooltip: l10n.calcDeleteFromPlate,
@@ -118,11 +119,10 @@ class FoodItemRow extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 28, top: 2),
                   child: Text(
                     l10n.calcGramsConsumed(grams.toStringAsFixed(0)),
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: isDark
-                          ? Colors.grey.shade400
-                          : Colors.grey.shade600,
+                    style: AppTextStyles.metric(
+                      context,
+                      color: AppColors.textSecondary(context),
+                      size: 13,
                     ),
                   ),
                 ),
@@ -142,13 +142,13 @@ class FoodItemRow extends StatelessWidget {
                       if (fats != null && fats! > 0)
                         _macroPill(
                           l10n.calcFats(fats!.toStringAsFixed(1)),
-                          Colors.orange,
+                          Theme.of(context).colorScheme.tertiary,
                           isDark,
                         ),
                       if (proteins != null && proteins! > 0)
                         _macroPill(
                           l10n.calcProteins(proteins!.toStringAsFixed(1)),
-                          Colors.blue,
+                          Theme.of(context).colorScheme.secondary,
                           isDark,
                         ),
                     ],

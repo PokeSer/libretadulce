@@ -186,14 +186,14 @@ class _EditMealSheetState extends State<EditMealSheet> {
               final carbs = grams * carbsPer100 / 100;
               final rations = carbs / _hcPerRation;
               return Padding(padding: const EdgeInsets.only(bottom: 8), child: Container(
-                decoration: BoxDecoration(color: isDark ? Colors.grey.shade900 : Colors.grey.shade50, borderRadius: BorderRadius.circular(AppDimens.radiusCard),
-                  border: Border.all(color: isDark ? Colors.grey.shade700 : Colors.grey.shade200)), clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(color: AppColors.cardBg(context), borderRadius: BorderRadius.circular(AppDimens.radiusCard),
+                  border: Border.all(color: AppColors.hairline(context))), clipBehavior: Clip.antiAlias,
                 child: Padding(padding: const EdgeInsets.fromLTRB(12, 10, 4, 10), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Row(children: [
                     Icon(Icons.check_circle, size: 18, color: Theme.of(context).colorScheme.primary), const SizedBox(width: 8),
                     Expanded(child: Text(item['name'] as String, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14), overflow: TextOverflow.ellipsis)),
-                    Text(l10n.calcRacShort(rations.toStringAsFixed(1)), style: TextStyle(fontWeight: FontWeight.w900, color: Theme.of(context).colorScheme.primary, fontSize: 15)),
-                    IconButton(icon: const Icon(Icons.delete_outline, color: Colors.redAccent, size: 20), tooltip: l10n.calcDeleteFromPlate, visualDensity: VisualDensity.compact, onPressed: () => _removeItem(idx)),
+                    Text(l10n.calcRacShort(rations.toStringAsFixed(1)), style: TextStyle(fontWeight: FontWeight.w600, fontFeatures: const [FontFeature.tabularFigures()], color: Theme.of(context).colorScheme.primary, fontSize: 15)),
+                    IconButton(icon: Icon(Icons.delete_outline, color: AppColors.error(context), size: 20), tooltip: l10n.calcDeleteFromPlate, visualDensity: VisualDensity.compact, onPressed: () => _removeItem(idx)),
                   ]),
                   Padding(padding: const EdgeInsets.only(left: 26, top: 2), child: Row(children: [
                     SizedBox(width: 100, child: TextField(
@@ -212,7 +212,7 @@ class _EditMealSheetState extends State<EditMealSheet> {
               onChanged: (v) { final val = double.tryParse(v); if (val != null) setState(() => _editedGlucose = widget.settings?.toStoredGlucoseUnit(val) ?? val); }),
             const SizedBox(height: 24),
             Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-              Expanded(child: StatCard(title: l10n.calcRations, value: _totalRations.toStringAsFixed(1), color: Colors.amber.shade800, isDark: isDark)),
+              Expanded(child: StatCard(title: l10n.calcRations, value: _totalRations.toStringAsFixed(1), color: Theme.of(context).colorScheme.tertiary, isDark: isDark)),
               const SizedBox(width: 12),
               Expanded(child: StatCard(title: l10n.calcGramsHC, value: '${_totalCarbs.toStringAsFixed(1)}g', color: AppColors.primary(context), isDark: isDark)),
             ]),

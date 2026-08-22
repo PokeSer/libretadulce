@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/theme/app_colors.dart';
 import '../l10n/app_localizations.dart';
 
 Future<bool> showConfirmDeleteDialog(
@@ -20,7 +21,9 @@ Future<bool> showConfirmDeleteDialog(
         ),
         FilledButton(
           onPressed: () => Navigator.of(ctx).pop(true),
-          style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
+          style: FilledButton.styleFrom(
+            backgroundColor: AppColors.error(ctx),
+          ),
           child: Text(l10n.confirmDeleteButton),
         ),
       ],

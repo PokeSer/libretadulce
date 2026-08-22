@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/extensions/context_extensions.dart';
+import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../l10n/app_localizations.dart';
 import '../models/insulin_settings.dart';
@@ -102,13 +103,13 @@ class MealSummaryCard extends StatelessWidget {
                   if (totalFats > 0)
                     _macroPill(
                       l10n.calcTotalFats(totalFats.toStringAsFixed(1)),
-                      Colors.orange,
+                      Theme.of(context).colorScheme.tertiary,
                       isDark,
                     ),
                   if (totalProteins > 0)
                     _macroPill(
                       l10n.calcTotalProteins(totalProteins.toStringAsFixed(1)),
-                      Colors.blue,
+                      Theme.of(context).colorScheme.secondary,
                       isDark,
                     ),
                 ],
@@ -156,7 +157,7 @@ class MealSummaryCard extends StatelessWidget {
                   onChanged: onGlucoseChanged,
                 ),
                 const SizedBox(height: 16),
-                _buildBolusResult(l10n, insulinSettings!),
+                _buildBolusResult(context, l10n, insulinSettings!),
               ],
             ),
           ),
@@ -171,15 +172,16 @@ class MealSummaryCard extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  const ExcludeSemantics(
-                    child: Icon(Icons.water_drop, color: Colors.grey, size: 28),
+                  ExcludeSemantics(
+                    child: Icon(Icons.water_drop,
+                        color: AppColors.textMuted(context), size: 28),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
                       l10n.calcConfigureMessage,
                       style: TextStyle(
-                        color: Colors.grey.shade600,
+                        color: AppColors.textSecondary(context),
                         fontSize: 13,
                       ),
                     ),
@@ -196,11 +198,18 @@ class MealSummaryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildBolusResult(AppLocalizations l10n, InsulinSettings settings) {
+  Widget _buildBolusResult(
+    BuildContext context,
+    AppLocalizations l10n,
+    InsulinSettings settings,
+  ) {
     if (mealBolus == null) {
       return Text(
         l10n.calcCalculating,
-        style: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+        style: TextStyle(
+          color: AppColors.textMuted(context),
+          fontSize: 13,
+        ),
       );
     }
 

@@ -48,12 +48,12 @@ class CalculatorActionBar extends StatelessWidget {
                       l10n.calcSearchFood,
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.grey.shade600,
+                        color: AppColors.textSecondary(context),
                       ),
                     ),
                   ),
-                  const ExcludeSemantics(
-                    child: Icon(Icons.search, color: Colors.grey),
+                  ExcludeSemantics(
+                    child: Icon(Icons.search, color: AppColors.textMuted(context)),
                   ),
                 ],
               ),

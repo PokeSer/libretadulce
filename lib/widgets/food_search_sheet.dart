@@ -63,7 +63,7 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.close, color: Colors.grey),
+                    icon: Icon(Icons.close, color: AppColors.textMuted(context)),
                     tooltip: l10n.foodSearchClose,
                     onPressed: () => Navigator.pop(context),
                   ),
@@ -133,7 +133,7 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundColor: food.isFavorite
-                              ? Colors.amber.withValues(alpha: 0.2)
+                              ? AppColors.accentFavorite(context).withValues(alpha: 0.15)
                               : AppColors.primary(context).withValues(alpha: 0.1),
                           child: Icon(
                             food.isFavorite
@@ -143,7 +143,7 @@ class _FoodSearchSheetState extends State<FoodSearchSheet> {
                                 ? l10n.foodsFavoriteAccessibility
                                 : l10n.foodsFoodAccessibility,
                             color: food.isFavorite
-                                ? Colors.amber.shade600
+                                ? AppColors.accentFavorite(context)
                                 : AppColors.primary(context),
                           ),
                         ),

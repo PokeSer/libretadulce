@@ -46,7 +46,8 @@ class HistoryDayHeader extends StatelessWidget {
               '${dailyTotalCarbs!.toStringAsFixed(0)}g HC',
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey.shade600,
+                fontFeatures: const [FontFeature.tabularFigures()],
+                color: AppColors.textSecondary(context),
               ),
             ),
           ],
@@ -56,7 +57,8 @@ class HistoryDayHeader extends StatelessWidget {
               '$dailyMealCount comidas',
               style: TextStyle(
                 fontSize: 12,
-                color: Colors.grey.shade600,
+                fontFeatures: const [FontFeature.tabularFigures()],
+                color: AppColors.textSecondary(context),
               ),
             ),
           ],
