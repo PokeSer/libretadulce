@@ -16,6 +16,7 @@ class AppSettings extends ChangeNotifier {
     } catch (e) {
       debugPrint('[AppSettings.init] Error loading theme: $e');
       _themeMode = ThemeMode.system;
+      notifyListeners();
     }
   }
 
