@@ -1,14 +1,24 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../core/theme/app_colors.dart';
+import '../core/theme/app_dimens.dart';
 import '../core/utils/formatters.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
+import '../services/food_photo_service.dart';
 
 /// Bottom sheet for adding or editing a food.
 /// [initial] is null for add mode, non-null for edit mode.
+///
+/// Photos stay on the device: [onSave] returns the saved document id and the
+/// sheet stores the picked image locally under it (see [FoodPhotoService]).
 class FoodFormSheet extends StatefulWidget {
   final Food? initial;
-  final ValueChanged<Food> onSave;
+  final String uid;
+  final Future<String?> Function(Food food) onSave;
   final Future<void> Function(
     TextEditingController nameCtrl,
     TextEditingController brandCtrl,
@@ -21,6 +31,7 @@ class FoodFormSheet extends StatefulWidget {
   const FoodFormSheet({
     super.key,
     this.initial,
+    required this.uid,
     required this.onSave,
     this.onScanTap,
   });
@@ -36,6 +47,11 @@ class _FoodFormSheetState extends State<FoodFormSheet> {
   late final TextEditingController _kcalController;
   late final TextEditingController _proteinsController;
   late final TextEditingController _fatsController;
+
+  XFile? _pickedPhoto;
+  File? _existingPhoto;
+  bool _photoRemoved = false;
+  bool _isSaving = false;
 
   bool get _isEditMode => widget.initial != null;
 
@@ -57,6 +73,10 @@ class _FoodFormSheetState extends State<FoodFormSheet> {
     _fatsController = TextEditingController(
       text: food?.fatsPer100g?.toStringAsFixed(1) ?? '',
     );
+    if (food != null) {
+      FoodPhotoService.getPhoto(food.id)
+          .then((file) => mounted ? setState(() => _existingPhoto = file) : null);
+    }
   }
 
   @override
@@ -70,7 +90,31 @@ class _FoodFormSheetState extends State<FoodFormSheet> {
     super.dispose();
   }
 
-  void _handleSave() {
+  Future<void> _pickPhoto(ImageSource source) async {
+    final l10n = AppLocalizations.of(context);
+    try {
+      final picked = await FoodPhotoService.picker.pickImage(
+        source: source,
+        imageQuality: FoodPhotoService.pickImageQuality,
+        maxWidth: FoodPhotoService.pickMaxDimension,
+      );
+      if (picked == null) return;
+      setState(() {
+        _pickedPhoto = picked;
+        _existingPhoto = null;
+        _photoRemoved = false;
+      });
+    } catch (e) {
+      debugPrint('[FoodFormSheet._pickPhoto] Error: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.serviceError)),
+        );
+      }
+    }
+  }
+
+  Future<void> _handleSave() async {
     final l10n = AppLocalizations.of(context);
 
     if (_nameController.text.isEmpty) {
@@ -108,7 +152,37 @@ class _FoodFormSheetState extends State<FoodFormSheet> {
       fatsPer100g: fats,
     );
 
-    widget.onSave(food);
+    setState(() => _isSaving = true);
+    String? savedId;
+    try {
+      savedId = await widget.onSave(food);
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+
+    if (savedId == null || savedId.isEmpty) return;
+
+    if (_photoRemoved) {
+      await FoodPhotoService.deleteAll(widget.uid, savedId);
+      return;
+    }
+
+    final picked = _pickedPhoto;
+    if (picked != null) {
+      final savedFile = await FoodPhotoService.savePhoto(savedId, picked);
+      if (savedFile != null) {
+        // Mirror a tiny thumb so other devices see the photo too. A failed
+        // mirror never fails the save: the full photo is already local.
+        final thumbBytes = await FoodPhotoService.generateThumbBytes(savedFile);
+        if (thumbBytes != null) {
+          await FoodPhotoService.saveLocalThumb(savedId, thumbBytes);
+          if (await FoodPhotoService.uploadThumb(widget.uid, savedId, thumbBytes)) {
+            await FoodPhotoService.markSynced(savedId);
+          }
+        }
+      }
+      FoodPhotoService.forget(widget.uid, savedId);
+    }
   }
 
   @override
@@ -138,82 +212,86 @@ class _FoodFormSheetState extends State<FoodFormSheet> {
             ),
         ],
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _nameController,
-            autofocus: true,
-            textCapitalization: TextCapitalization.sentences,
-            autofillHints: const [AutofillHints.name],
-            decoration: InputDecoration(
-              labelText: l10n.foodsNameLabel,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.apple),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildPhotoSection(l10n),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _nameController,
+              autofocus: true,
+              textCapitalization: TextCapitalization.sentences,
+              autofillHints: const [AutofillHints.name],
+              decoration: InputDecoration(
+                labelText: l10n.foodsNameLabel,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.apple),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _brandController,
-            textCapitalization: TextCapitalization.words,
-            decoration: InputDecoration(
-              labelText: l10n.foodsBrandLabel,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.storefront),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _brandController,
+              textCapitalization: TextCapitalization.words,
+              decoration: InputDecoration(
+                labelText: l10n.foodsBrandLabel,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.storefront),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _carbsController,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            decoration: InputDecoration(
-              labelText: l10n.foodsCarbsLabel,
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.scale),
-              suffixText: l10n.foodsCarbsSuffix,
+            const SizedBox(height: 16),
+            TextField(
+              controller: _carbsController,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              decoration: InputDecoration(
+                labelText: l10n.foodsCarbsLabel,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.scale),
+                suffixText: l10n.foodsCarbsSuffix,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _kcalController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    labelText: l10n.foodsKcalLabel,
-                    border: const OutlineInputBorder(),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _kcalController,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      labelText: l10n.foodsKcalLabel,
+                      border: const OutlineInputBorder(),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextField(
-                  controller: _proteinsController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    labelText: l10n.foodsProteinLabel,
-                    border: const OutlineInputBorder(),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    controller: _proteinsController,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      labelText: l10n.foodsProteinLabel,
+                      border: const OutlineInputBorder(),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: TextField(
-                  controller: _fatsController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                    labelText: l10n.foodsFatLabel,
-                    border: const OutlineInputBorder(),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    controller: _fatsController,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      labelText: l10n.foodsFatLabel,
+                      border: const OutlineInputBorder(),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -223,20 +301,134 @@ class _FoodFormSheetState extends State<FoodFormSheet> {
             style: TextStyle(color: AppColors.textMuted(context)),
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            _handleSave();
-            Navigator.pop(context);
+        FilledButton(
+          onPressed: _isSaving ? null : () async {
+            await _handleSave();
+            if (context.mounted) Navigator.pop(context);
           },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColors.primary(context),
+          child: _isSaving
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(
+                  l10n.foodsSave,
+                  style: TextStyle(color: AppColors.onPrimary(context)),
+                ),
+        ),
+      ],
+    );
+  }
+
+  /// Photo section: preview + camera/gallery actions, all ≥48 dp targets
+  /// with labels announced to screen readers.
+  Widget _buildPhotoSection(AppLocalizations l10n) {
+    final scheme = Theme.of(context).colorScheme;
+    final hasPhoto = _pickedPhoto != null || _existingPhoto != null;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Semantics(
+          label: hasPhoto ? l10n.foodsPhotoRemove : l10n.foodsPhotoAdd,
+          child: Container(
+            width: 76,
+            height: 76,
+            decoration: BoxDecoration(
+              color: scheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(AppDimens.radiusInput),
+              border: Border.all(color: AppColors.hairline(context)),
+            ),
+            child: _buildPreview(),
           ),
-          child: Text(
-            l10n.foodsSave,
-            style: TextStyle(color: AppColors.onPrimary(context)),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              OutlinedButton.icon(
+                onPressed: () => _pickPhoto(ImageSource.camera),
+                icon: const Icon(Icons.photo_camera_outlined, size: 20),
+                label: Text(l10n.foodsPhotoCamera),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(44),
+                  foregroundColor: AppColors.primary(context),
+                  side: BorderSide(
+                    color: AppColors.primary(context).withValues(alpha: 0.5),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () => _pickPhoto(ImageSource.gallery),
+                icon: const Icon(Icons.photo_library_outlined, size: 20),
+                label: Text(l10n.foodsPhotoGallery),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size.fromHeight(44),
+                  foregroundColor: AppColors.primary(context),
+                  side: BorderSide(
+                    color: AppColors.primary(context).withValues(alpha: 0.5),
+                  ),
+                ),
+              ),
+              if (hasPhoto) ...[
+                const SizedBox(height: 8),
+                TextButton.icon(
+                  onPressed: () => setState(() {
+                    _pickedPhoto = null;
+                    _existingPhoto = null;
+                    _photoRemoved = true;
+                  }),
+                  icon: Icon(Icons.delete_outline,
+                      size: 18, color: AppColors.error(context)),
+                  label: Text(
+                    l10n.foodsPhotoRemove,
+                    style: TextStyle(color: AppColors.error(context)),
+                  ),
+                  style: TextButton.styleFrom(
+                    minimumSize: const Size.fromHeight(36),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  ),
+                ),
+              ],
+            ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildPreview() {
+    if (_pickedPhoto != null) {
+      return ExcludeSemantics(
+        child: Image.file(
+          File(_pickedPhoto!.path),
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          gaplessPlayback: true,
+        ),
+      );
+    }
+    if (_existingPhoto != null) {
+      return ExcludeSemantics(
+        child: Image.file(
+          _existingPhoto!,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+          gaplessPlayback: true,
+        ),
+      );
+    }
+    return ExcludeSemantics(
+      child: Icon(
+        Icons.add_a_photo_outlined,
+        size: 30,
+        color: AppColors.textMuted(context),
+      ),
     );
   }
 }

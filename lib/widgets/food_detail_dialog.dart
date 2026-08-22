@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../models/food.dart';
+import 'food_photo_thumbnail.dart';
 
 /// Alert dialog showing nutrition details for a food.
 class FoodDetailDialog extends StatelessWidget {
   final Food food;
-  const FoodDetailDialog({super.key, required this.food});
+  final String uid;
+  const FoodDetailDialog({super.key, required this.food, required this.uid});
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +16,7 @@ class FoodDetailDialog extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.radiusDialog)),
       title: Row(children: [
-        ExcludeSemantics(child: Container(padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(color: AppColors.primary(context).withValues(alpha: isDark ? 0.15 : 0.1), shape: BoxShape.circle),
-          child: Icon(Icons.restaurant, color: AppColors.primary(context), size: 22))),
+        FoodPhotoThumbnail(foodId: food.id, uid: uid, size: 44),
         const SizedBox(width: 12),
         Expanded(child: Text(food.displayName, style: const TextStyle(fontSize: 18))),
       ]),
@@ -24,9 +24,9 @@ class FoodDetailDialog extends StatelessWidget {
         Text('Nutrition', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: AppColors.textSecondary(context), letterSpacing: 0.5)),
         const SizedBox(height: 16),
         _nutritionRow(Icons.grain, AppColors.primary(context), '${food.carbsPer100g}g carbs / 100g', isDark),
-        if (food.kcalPer100g != null) ...[const SizedBox(height: 10), _nutritionRow(Icons.local_fire_department, Colors.deepOrange, '${food.kcalPer100g} kcal', isDark)],
-        if (food.proteinsPer100g != null) ...[const SizedBox(height: 10), _nutritionRow(Icons.fitness_center, Colors.indigo, '${food.proteinsPer100g}g protein', isDark)],
-        if (food.fatsPer100g != null) ...[const SizedBox(height: 10), _nutritionRow(Icons.water_drop, Colors.amber.shade700, '${food.fatsPer100g}g fat', isDark)],
+        if (food.kcalPer100g != null) ...[const SizedBox(height: 10), _nutritionRow(Icons.local_fire_department, AppColors.error(context), '${food.kcalPer100g} kcal', isDark)],
+        if (food.proteinsPer100g != null) ...[const SizedBox(height: 10), _nutritionRow(Icons.fitness_center, Theme.of(context).colorScheme.secondary, '${food.proteinsPer100g}g protein', isDark)],
+        if (food.fatsPer100g != null) ...[const SizedBox(height: 10), _nutritionRow(Icons.water_drop, AppColors.accentFavorite(context), '${food.fatsPer100g}g fat', isDark)],
       ]),
       actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text('Close', style: TextStyle(color: AppColors.primary(context))))],
     );

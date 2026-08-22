@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import '../core/extensions/context_extensions.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_dimens.dart';
 import '../models/food.dart';
 import '../l10n/app_localizations.dart';
+import 'food_photo_thumbnail.dart';
 
 class FoodListItem extends StatelessWidget {
   final Food food;
+  final String uid;
   final VoidCallback? onTap;
   final Widget? trailing;
 
   const FoodListItem({
     super.key,
     required this.food,
+    required this.uid,
     this.onTap,
     this.trailing,
   });
@@ -20,34 +22,27 @@ class FoodListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isDark = context.isDarkMode;
 
     return Card(
       margin: AppDimens.cardMargin,
-      elevation: 1,
       shape: RoundedRectangleBorder(
         side: food.isFavorite
-            ? BorderSide(color: Colors.amber.shade400, width: 2)
-            : (isDark
-                ? BorderSide(color: Colors.grey.shade800)
-                : BorderSide.none),
+            ? BorderSide(
+                color: AppColors.accentFavorite(context).withValues(alpha: 0.6),
+                width: 1.5)
+            : BorderSide(color: AppColors.hairline(context)),
         borderRadius: BorderRadius.circular(AppDimens.radiusCard),
       ),
       child: ListTile(
-        contentPadding: AppDimens.listTileContent,
-        leading: CircleAvatar(
-          backgroundColor: food.isFavorite
-              ? Colors.amber.withValues(alpha: 0.2)
-              : AppColors.primary(context).withValues(alpha: 0.1),
-          child: Icon(
-            food.isFavorite ? Icons.star : Icons.restaurant,
-            semanticLabel: food.isFavorite
-                ? l10n.foodsFavoriteAccessibility
-                : l10n.foodsFoodAccessibility,
-            color: food.isFavorite
-                ? Colors.amber.shade600
-                : AppColors.primary(context),
-          ),
+        contentPadding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+        leading: FoodPhotoThumbnail(
+          foodId: food.id,
+          uid: uid,
+          size: 52,
+          fallbackIcon: food.isFavorite ? Icons.star : Icons.restaurant,
+          fallbackIconColor: food.isFavorite
+              ? AppColors.accentFavorite(context)
+              : AppColors.primary(context),
         ),
         title: Text(
           food.displayName,

@@ -25,6 +25,14 @@ service cloud.firestore {
         && request.resource.data.name.size() > 0
         && request.resource.data.carbsPer100g is number;
       allow delete: if request.auth != null && request.auth.uid == userId;
+
+      // Local-first photo thumbnails (~10-20KB base64) mirrored per food.
+      match /photos/{photoId} {
+        allow read, delete: if request.auth != null && request.auth.uid == userId;
+        allow create, update: if request.auth != null && request.auth.uid == userId
+          && request.resource.data.data is string
+          && request.resource.data.data.size() < 40000;
+      }
     }
 
     match /users/{userId}/history/{mealId} {

@@ -30,9 +30,10 @@ class FoodRepository {
     });
   }
 
-  static Future<void> addFood(String uid, Food food) async {
-    await wrapServiceCall('FoodRepository.addFood', () async {
-      await _foods(uid).add(food.toFirestore());
+  static Future<String> addFood(String uid, Food food) async {
+    return wrapServiceCall('FoodRepository.addFood', () async {
+      final doc = await _foods(uid).add(food.toFirestore());
+      return doc.id;
     });
   }
 
