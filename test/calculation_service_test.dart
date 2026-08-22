@@ -129,25 +129,5 @@ void main() {
         expect(result, isNull);
       });
     });
-
-    // ── sumMealItems ──
-    group('sumMealItems', () {
-      test('sums a numeric field across items', () {
-        final items = [
-          {'carbs': 25.0, 'name': 'Rice'},
-          {'carbs': 15.0, 'name': 'Chicken'},
-          {'carbs': 10.0, 'name': 'Salad'},
-        ];
-        expect(CalculationService.sumMealItems(items, 'carbs'), 50.0);
-      });
-
-      test('handles missing fields as 0', () {
-        final items = [
-          {'name': 'Rice'},
-          {'carbs': 15.0},
-        ];
-        expect(CalculationService.sumMealItems(items, 'carbs'), 15.0);
-      });
-    });
   });
 }

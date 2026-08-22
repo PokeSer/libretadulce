@@ -42,19 +42,6 @@ class CalculationService {
     return (per100g / 100) * grams;
   }
 
-  // ── Meal totals ──────────────────────────────────────────────────
-
-  /// Sum a numeric field across all meal items.
-  static double sumMealItems(
-    List<Map<String, dynamic>> items,
-    String field,
-  ) {
-    return items.fold(
-      0.0,
-      (sum, item) => sum + (item[field] as double? ?? 0.0),
-    );
-  }
-
   // ── Bolus calculations (delegates to InsulinSettings) ────────────
 
   /// Calculate total insulin bolus = meal bolus + correction, then rounded.
