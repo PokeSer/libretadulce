@@ -156,4 +156,24 @@ class MealHistoryService {
           .toList();
     });
   }
+
+  /// Fetches the most recent [limit] meal entries, newest first.
+  ///
+  /// Lightweight alternative to [fetchAll] for lookups that only need the
+  /// latest few entries (e.g. "repeat last meal"). Uses a single `orderBy` on
+  /// `timestamp`, so it does not require a composite index.
+  static Future<List<MealEntry>> fetchRecent(
+    String uid, {
+    int limit = 20,
+  }) async {
+    return wrapServiceCall('MealHistoryService.fetchRecent', () async {
+      final snapshot = await _history(uid)
+          .orderBy('timestamp', descending: true)
+          .limit(limit)
+          .get();
+      return snapshot.docs
+          .map((doc) => MealEntry.fromFirestore(doc.id, doc.data()))
+          .toList();
+    });
+  }
 }

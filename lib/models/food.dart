@@ -1,5 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'insulin_settings.dart';
 import 'meal_type.dart';
+
+/// Blood glucose readings below this value (in mg/dL) are physiologically
+/// impossible. Historically, a unit-conversion bug stored a user's mmol/L
+/// reading divided by the conversion factor (instead of multiplied), producing
+/// tiny values (< ~1.8). [_repairLegacyGlucose] restores such values to their
+/// intended mg/dL magnitude on read. This is a non-destructive, read-time fix:
+/// stored data is left untouched and self-heals if the entry is edited/re-saved.
+const double _kLegacyGlucoseCorruptionThresholdMgdl = 2.0;
+
+double? _repairLegacyGlucose(double? storedMgdl) {
+  if (storedMgdl == null || storedMgdl <= 0) return storedMgdl;
+  if (storedMgdl < _kLegacyGlucoseCorruptionThresholdMgdl) {
+    // The buggy write stored (mmol ÷ factor); the correct value is
+    // (mmol × factor), so multiply by factor² to recover the mg/dL magnitude.
+    const f = InsulinSettings.mmolConversionFactor;
+    return storedMgdl * f * f;
+  }
+  return storedMgdl;
+}
 
 class Food {
   final String id;
@@ -237,9 +257,9 @@ class MealEntry {
       totalBolus: data['totalBolus'] != null
           ? (data['totalBolus'] as num).toDouble()
           : null,
-      glucose: data['glucose'] != null
-          ? (data['glucose'] as num).toDouble()
-          : null,
+      glucose: _repairLegacyGlucose(
+        data['glucose'] != null ? (data['glucose'] as num).toDouble() : null,
+      ),
       items: rawItems.map(MealItem.fromMap).toList(),
       aiAnalysis: data['aiAnalysis'] as String?,
       aiAnalysisDate: aiDate?.toDate(),

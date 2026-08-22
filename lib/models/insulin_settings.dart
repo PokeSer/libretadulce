@@ -14,7 +14,8 @@ class InsulinSettings {
   final bool roundBolusDown;
   final bool usesMmolL;
 
-  static const double _mmolConversionFactor = 18.018;
+  /// mg/dL per mmol/L. Single source of truth for glucose unit conversion.
+  static const double mmolConversionFactor = 18.018;
 
   const InsulinSettings({
     required this.ratioBase,
@@ -60,13 +61,25 @@ class InsulinSettings {
     return (glucosaActual - glucosaObjetivo) / factorCorreccion;
   }
 
-  double toMgdl(double value) => usesMmolL ? value * _mmolConversionFactor : value;
+  /// Converts a glucose [value] expressed in mg/dL to the user's display unit
+  /// (mg/dL → mmol/L when [usesMmolL] is true; identity otherwise).
+  double toMmol(double value) => usesMmolL ? value / mmolConversionFactor : value;
 
-  double toMmol(double value) => usesMmolL ? value / _mmolConversionFactor : value;
+  /// Converts a glucose [value] expressed in the user's display unit to mg/dL
+  /// (mmol/L → mg/dL when [usesMmolL] is true; identity otherwise).
+  double toMgdl(double value) => usesMmolL ? value * mmolConversionFactor : value;
 
-  double toStoredGlucoseUnit(double value) => usesMmolL ? value / _mmolConversionFactor : value;
+  /// Converts a glucose value entered by the user (in their display unit) into
+  /// the canonical unit persisted in Firestore, which is **always mg/dL**.
+  ///
+  /// This is the inverse of [fromStoredGlucoseUnit].
+  double toStoredGlucoseUnit(double displayValue) => toMgdl(displayValue);
 
-  double fromStoredGlucoseUnit(double value) => usesMmolL ? value * _mmolConversionFactor : value;
+  /// Converts a glucose value read from Firestore (canonical **mg/dL**) back
+  /// into the user's display unit for presentation and editing.
+  ///
+  /// This is the inverse of [toStoredGlucoseUnit].
+  double fromStoredGlucoseUnit(double storedMgdl) => toMmol(storedMgdl);
 
   String glucoseLabel() => usesMmolL ? 'mmol/L' : 'mg/dL';
 

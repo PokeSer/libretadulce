@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import '../l10n/app_localizations.dart';
 import '../models/food.dart';
 import '../core/utils/meal_type_localizer.dart';
+import '../services/insulin_settings_service.dart';
 import '../services/meal_history_service.dart';
 
 /// Thrown when the date range has no entries.
@@ -31,6 +32,13 @@ class PdfReportService {
   }) async {
     final toEnd = DateTime(to.year, to.month, to.day + 1);
     final entries = await MealHistoryService.fetchAll(uid);
+
+    // Glucose is stored in mg/dL; present it in the user's display unit.
+    final settings = await InsulinSettingsService.getSettings(uid);
+    final glucoseUnit = settings?.glucoseLabel() ?? 'mg/dL';
+    String fmtGlucose(double mgdl) => settings != null
+        ? settings.formatGlucose(settings.fromStoredGlucoseUnit(mgdl))
+        : mgdl.toStringAsFixed(0);
 
     // Filter by date range
     final filtered = entries
@@ -168,7 +176,7 @@ class PdfReportService {
                   if (avgGlucose != null)
                     _statCell(
                       l10n.historyPdfAvgGlucose,
-                      '${avgGlucose.toStringAsFixed(0)} mg/dL',
+                      '${fmtGlucose(avgGlucose)} $glucoseUnit',
                     ),
                   if (avgInsulin != null)
                     _statCell(
@@ -213,7 +221,7 @@ class PdfReportService {
                       _tableHeader(l10n.photoTableGrams),
                       _tableHeader(l10n.photoTableCarbs),
                       _tableHeader(l10n.photoTableRations),
-                      _tableHeader(l10n.historyPdfGlucose),
+                      _tableHeader('${l10n.historyPdfGlucose} ($glucoseUnit)'),
                     ],
                   ),
                 ];
@@ -227,7 +235,8 @@ class PdfReportService {
                     entry.mealType,
                     l10n,
                   );
-                  final glucose = entry.glucose?.toStringAsFixed(0) ?? '–';
+                  final glucose =
+                      entry.glucose != null ? fmtGlucose(entry.glucose!) : '–';
                   final bolus = entry.totalBolus;
                   final items = entry.items;
 

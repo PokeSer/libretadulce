@@ -142,7 +142,11 @@ void main() {
   });
 
   group('InsulinSettings glucose unit conversion', () {
-    test('should convert mg/dL to mmol/L when usesMmolL is true', () {
+    // Glucose is ALWAYS persisted in mg/dL. When the user works in mmol/L,
+    // input is converted to mg/dL on write (toStoredGlucoseUnit) and back to
+    // mmol/L on read (fromStoredGlucoseUnit).
+
+    test('converts mmol/L input to stored mg/dL when usesMmolL is true', () {
       const settings = InsulinSettings(
         ratioBase: 1.0,
         factorCorreccion: 50.0,
@@ -150,12 +154,11 @@ void main() {
         usesMmolL: true,
       );
 
-      // 180 mg/dL / 18.018 = ~9.99 mmol/L
-      final mmol = settings.toStoredGlucoseUnit(180.0);
-      expect(mmol, closeTo(9.99, 0.01));
+      // 10.0 mmol/L × 18.018 ≈ 180.18 mg/dL
+      expect(settings.toStoredGlucoseUnit(10.0), closeTo(180.18, 0.01));
     });
 
-    test('should not convert when usesMmolL is false', () {
+    test('does not convert when usesMmolL is false (already mg/dL)', () {
       const settings = InsulinSettings(
         ratioBase: 1.0,
         factorCorreccion: 50.0,
@@ -166,7 +169,7 @@ void main() {
       expect(settings.toStoredGlucoseUnit(180.0), 180.0);
     });
 
-    test('should convert stored value back to display', () {
+    test('reads stored mg/dL back into the mmol/L display unit', () {
       const settings = InsulinSettings(
         ratioBase: 1.0,
         factorCorreccion: 50.0,
@@ -174,10 +177,20 @@ void main() {
         usesMmolL: true,
       );
 
-      final stored = settings.toStoredGlucoseUnit(180.0);
-      final display = settings.fromStoredGlucoseUnit(stored);
+      // 180.18 mg/dL / 18.018 ≈ 10.0 mmol/L
+      expect(settings.fromStoredGlucoseUnit(180.18), closeTo(10.0, 0.01));
+    });
 
-      expect(display, closeTo(180.0, 0.1));
+    test('write then read round-trips to the original display value', () {
+      const settings = InsulinSettings(
+        ratioBase: 1.0,
+        factorCorreccion: 50.0,
+        glucosaObjetivo: 100.0,
+        usesMmolL: true,
+      );
+
+      final stored = settings.toStoredGlucoseUnit(7.5);
+      expect(settings.fromStoredGlucoseUnit(stored), closeTo(7.5, 0.001));
     });
   });
 
