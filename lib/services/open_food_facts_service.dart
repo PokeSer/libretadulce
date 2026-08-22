@@ -30,7 +30,7 @@ class OpenFoodFactsService {
   static Future<String?> scanBarcode(BuildContext context) async {
     try {
       final l10n = AppLocalizations.of(context);
-      return SimpleBarcodeScanner.scanBarcode(
+      return await SimpleBarcodeScanner.scanBarcode(
         context,
         barcodeAppBar: BarcodeAppBar(
           appBarTitle: l10n.barcodeTitle,
