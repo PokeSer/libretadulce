@@ -66,3 +66,6 @@ GoogleService-Info.plist
 .impeccable/
 skills-lock.json
 *.md
+
+# Android nested build output
+android/build/
