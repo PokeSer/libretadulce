@@ -63,4 +63,6 @@ GoogleService-Info.plist
 
 # Agent tools (not part of the app)
 .agents/
+.impeccable/
 skills-lock.json
+*.md
