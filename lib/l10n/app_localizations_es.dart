@@ -830,6 +830,18 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get foodsPhotoAdd => 'Añadir foto';
+
+  @override
+  String get foodsPhotoRemove => 'Eliminar foto';
+
+  @override
+  String get foodsPhotoCamera => 'Cámara';
+
+  @override
+  String get foodsPhotoGallery => 'Galería';
+
+  @override
   String get foodsDetailTitle => 'Valores por cada 100g:';
 
   @override

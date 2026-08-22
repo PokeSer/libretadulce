@@ -825,6 +825,18 @@ class AppLocalizationsCs extends AppLocalizations {
   }
 
   @override
+  String get foodsPhotoAdd => 'Přidat fotografii';
+
+  @override
+  String get foodsPhotoRemove => 'Odebrat fotografii';
+
+  @override
+  String get foodsPhotoCamera => 'Fotoaparát';
+
+  @override
+  String get foodsPhotoGallery => 'Galerie';
+
+  @override
   String get foodsDetailTitle => 'Hodnoty na 100g:';
 
   @override

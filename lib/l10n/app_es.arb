@@ -499,6 +499,10 @@
   "foodsAddToFavorites": "Marcar como favorito",
   "foodsRemoveFromFavorites": "Quitar de favoritos",
   "foodsDeleteTooltip": "Eliminar {name}",
+  "foodsPhotoAdd": "Añadir foto",
+  "foodsPhotoRemove": "Eliminar foto",
+  "foodsPhotoCamera": "Cámara",
+  "foodsPhotoGallery": "Galería",
   "@foodsDeleteTooltip": {
     "placeholders": {
       "name": {

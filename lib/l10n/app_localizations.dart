@@ -1574,6 +1574,30 @@ abstract class AppLocalizations {
   /// **'Eliminar {name}'**
   String foodsDeleteTooltip(String name);
 
+  /// No description provided for @foodsPhotoAdd.
+  ///
+  /// In es, this message translates to:
+  /// **'Añadir foto'**
+  String get foodsPhotoAdd;
+
+  /// No description provided for @foodsPhotoRemove.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar foto'**
+  String get foodsPhotoRemove;
+
+  /// No description provided for @foodsPhotoCamera.
+  ///
+  /// In es, this message translates to:
+  /// **'Cámara'**
+  String get foodsPhotoCamera;
+
+  /// No description provided for @foodsPhotoGallery.
+  ///
+  /// In es, this message translates to:
+  /// **'Galería'**
+  String get foodsPhotoGallery;
+
   /// No description provided for @foodsDetailTitle.
   ///
   /// In es, this message translates to:
