@@ -269,38 +269,19 @@ class _HistoryPageState extends State<HistoryPage> {
 
                           return Dismissible(
                             key: Key(entry.id),
-                            direction: DismissDirection.horizontal,
+                            direction: DismissDirection.endToStart,
                             dismissThresholds: const {
                               DismissDirection.endToStart: 0.25,
                             },
                             background: Container(
                               margin: const EdgeInsets.only(bottom: 16),
                               decoration: BoxDecoration(
-                                color: AppColors.primary(context),
-                                borderRadius: BorderRadius.circular(
-                                  AppDimens.radiusDialog,
-                                ),
-                              ),
-                              alignment: Alignment.centerLeft,
-                              padding: const EdgeInsets.only(left: 20),
-                              child: ExcludeSemantics(
-                                child: Icon(
-                                  Icons.edit,
-                                  color: AppColors.onPrimary(context),
-                                  size: 30,
-                                ),
-                              ),
-                            ),
-                            secondaryBackground: Container(
-                              margin: const EdgeInsets.only(bottom: 16),
-                              decoration: BoxDecoration(
                                 color: AppColors.error(context),
-                                borderRadius: BorderRadius.circular(
-                                  AppDimens.radiusDialog,
-                                ),
+                                borderRadius:
+                                    BorderRadius.circular(AppDimens.radiusCard),
                               ),
                               alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 20),
+                              padding: const EdgeInsets.only(right: 24),
                               child: ExcludeSemantics(
                                 child: Icon(
                                   Icons.delete,
@@ -309,11 +290,7 @@ class _HistoryPageState extends State<HistoryPage> {
                                 ),
                               ),
                             ),
-                            confirmDismiss: (direction) async {
-                              if (direction == DismissDirection.startToEnd) {
-                                _showEditDialog(entry);
-                                return false;
-                              }
+                            confirmDismiss: (direction) {
                               return showConfirmDeleteDialog(
                                 context,
                                 title: l10n.historyDeleteTitle,
@@ -321,11 +298,7 @@ class _HistoryPageState extends State<HistoryPage> {
                               );
                             },
                             onDismissed: (direction) async {
-                              if (direction == DismissDirection.startToEnd) {
-                                return;
-                              }
-                              final messenger =
-                                  ScaffoldMessenger.of(context);
+                              final messenger = ScaffoldMessenger.of(context);
                               final deletedEntry = entry;
                               try {
                                 await MealHistoryService.deleteEntry(
