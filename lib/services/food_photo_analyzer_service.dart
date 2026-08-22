@@ -238,7 +238,7 @@ class FoodPhotoAnalyzerService {
     try {
       text = await GeminiRestClient.generateContent(
         apiKey: apiKey,
-        models: const ['gemini-3.5-flash', 'gemini-2.5-flash'],
+        models: const ['gemini-2.5-flash', 'gemini-2.0-flash'],
         systemInstruction: systemInstruction,
         temperature: 0.1,
         maxOutputTokens: 2048,
