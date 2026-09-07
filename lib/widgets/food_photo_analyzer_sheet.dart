@@ -39,7 +39,7 @@ class PhotoAnalysisResult {
 /// Does NOT close the sheet — the sheet stays open for multiple additions.
 typedef OnAddFoodToPlate = void Function(PhotoAnalysisResult result);
 
-/// Bottom sheet: take photo → Gemini analyzes → professional result table.
+/// Bottom sheet: take photo → AI analyzes → professional result table.
 class FoodPhotoAnalyzerSheet extends StatefulWidget {
   /// Optional callback: when provided, tapping "Add to plate" calls this
   /// instead of popping the sheet, allowing the user to add multiple foods.
@@ -57,7 +57,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
   bool _isAnalyzing = false;
   bool _needsApiKey = false;
   String? _errorMessage;
-  GeminiAnalysisResult? _analysis;
+  FoodAnalysisResult? _analysis;
   InsulinSettings? _insulinSettings;
   final Set<String> _addedItems = {};
   ImageSource? _lastSource; // remember camera vs gallery for retry
@@ -281,7 +281,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
     return result ?? false;
   }
 
-  void _addToPlate(GeminiFoodItem item) {
+  void _addToPlate(FoodAnalysisItem item) {
     final result = PhotoAnalysisResult(
       name: item.name,
       grams: item.grams,
@@ -752,7 +752,7 @@ class _FoodPhotoAnalyzerSheetState extends State<FoodPhotoAnalyzerSheet> {
 
   /// Builds a professional food card with macro grid & glycemic index badge.
   Widget _buildFoodCard(
-    GeminiFoodItem item,
+    FoodAnalysisItem item,
     AppLocalizations l10n,
     bool isDark,
   ) {

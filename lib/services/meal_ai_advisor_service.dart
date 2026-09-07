@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import '../models/food.dart';
+import 'ai_client.dart';
+import 'ai_config.dart';
 import 'ai_service_exception.dart';
 import 'food_photo_analyzer_service.dart';
-import 'gemini_rest_client.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data model
@@ -18,6 +19,7 @@ class MealAiAnalysis {
   final GlycemicProfile glycemicProfile;
   final String glycemicSummary;
   final String insulinTiming;
+
   /// Negative = minutes BEFORE eating, positive = minutes AFTER.
   final int insulinTimingMinutes;
   final List<String> tips;
@@ -35,15 +37,22 @@ class MealAiAnalysis {
   factory MealAiAnalysis.fromJson(Map<String, dynamic> json) {
     final profileStr = (json['glycemicProfile'] as String? ?? '').toUpperCase();
     GlycemicProfile profile;
-    if (profileStr.contains('HIGH') || profileStr.contains('ALTO') ||
-        profileStr.contains('HAUT') || profileStr.contains('HOCH') ||
-        profileStr.contains('ALTO') || profileStr.contains('WYSOKI') ||
+    if (profileStr.contains('HIGH') ||
+        profileStr.contains('ALTO') ||
+        profileStr.contains('HAUT') ||
+        profileStr.contains('HOCH') ||
+        profileStr.contains('ALTO') ||
+        profileStr.contains('WYSOKI') ||
         profileStr.contains('VYSOKÝ')) {
       profile = GlycemicProfile.high;
-    } else if (profileStr.contains('LOW') || profileStr.contains('BAJO') ||
-        profileStr.contains('FAIBLE') || profileStr.contains('NIEDRIG') ||
-        profileStr.contains('BASSO') || profileStr.contains('BAIXO') ||
-        profileStr.contains('NISKI') || profileStr.contains('NÍZKÝ')) {
+    } else if (profileStr.contains('LOW') ||
+        profileStr.contains('BAJO') ||
+        profileStr.contains('FAIBLE') ||
+        profileStr.contains('NIEDRIG') ||
+        profileStr.contains('BASSO') ||
+        profileStr.contains('BAIXO') ||
+        profileStr.contains('NISKI') ||
+        profileStr.contains('NÍZKÝ')) {
       profile = GlycemicProfile.low;
     } else if (profileStr.isNotEmpty) {
       profile = GlycemicProfile.medium;
@@ -60,29 +69,28 @@ class MealAiAnalysis {
       glycemicProfile: profile,
       glycemicSummary: json['glycemicSummary'] as String? ?? '',
       insulinTiming: json['insulinTiming'] as String? ?? '',
-      insulinTimingMinutes: (json['insulinTimingMinutes'] as num?)?.toInt() ?? 0,
+      insulinTimingMinutes:
+          (json['insulinTimingMinutes'] as num?)?.toInt() ?? 0,
       tips: tips,
       postMealAdvice: json['postMealAdvice'] as String? ?? '',
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'glycemicProfile': glycemicProfile.name,
-        'glycemicSummary': glycemicSummary,
-        'insulinTiming': insulinTiming,
-        'insulinTimingMinutes': insulinTimingMinutes,
-        'tips': tips,
-        'postMealAdvice': postMealAdvice,
-      };
+    'glycemicProfile': glycemicProfile.name,
+    'glycemicSummary': glycemicSummary,
+    'insulinTiming': insulinTiming,
+    'insulinTimingMinutes': insulinTimingMinutes,
+    'tips': tips,
+    'postMealAdvice': postMealAdvice,
+  };
 
   String toJsonString() => jsonEncode(toJson());
 
   static MealAiAnalysis? tryParseJsonString(String? raw) {
     if (raw == null || raw.isEmpty) return null;
     try {
-      return MealAiAnalysis.fromJson(
-        jsonDecode(raw) as Map<String, dynamic>,
-      );
+      return MealAiAnalysis.fromJson(jsonDecode(raw) as Map<String, dynamic>);
     } catch (e) {
       debugPrint('[MealAiAdvisorService] Failed to parse cached analysis: $e');
       return null;
@@ -94,8 +102,8 @@ class MealAiAnalysis {
 // Service
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// Analyzes a saved meal entry using Gemini (text only, no image)
-/// and returns diabetes-specific dietary advice.
+/// Analyzes a saved meal entry using the configured AI provider (text only,
+/// no image) and returns diabetes-specific dietary advice.
 class MealAiAdvisorService {
   static const _languageNames = {
     'cs': 'Czech',
@@ -108,7 +116,7 @@ class MealAiAdvisorService {
     'pt': 'Portuguese',
   };
 
-  /// Call Gemini with the meal data and return structured advice.
+  /// Call the AI provider with the meal data and return structured advice.
   ///
   /// [entry]  The meal entry to analyze.
   /// [locale] Two-letter locale code of the app (e.g. "es", "en").
@@ -118,6 +126,15 @@ class MealAiAdvisorService {
   }) async {
     final apiKey = await FoodPhotoAnalyzerService.getApiKey();
     if (apiKey == null || apiKey.isEmpty) {
+      throw const AiServiceException(AiErrorType.noApiKey);
+    }
+
+    final model = AiConfig.currentModelId;
+    if (model.isEmpty) {
+      throw const AiServiceException(AiErrorType.modelNotSelected);
+    }
+    final baseUrl = AiConfig.baseUrl;
+    if (baseUrl.isEmpty) {
       throw const AiServiceException(AiErrorType.noApiKey);
     }
 
@@ -159,26 +176,24 @@ class MealAiAdvisorService {
 
     final String text;
     try {
-      text = await GeminiRestClient.generateContent(
+      text = await AiClient.chat(
+        baseUrl: baseUrl,
         apiKey: apiKey,
-        models: const ['gemini-2.5-flash'],
+        model: AiConfig.currentModelId,
         systemInstruction: systemInstruction,
+        userText:
+            'Analyze this diabetes meal log and provide dietary advice. '
+            'Respond ONLY in $langName with the JSON format specified.\n\n'
+            '$mealDesc',
         temperature: 0.2,
-        maxOutputTokens: 2048,
-        parts: [
-          {
-            'text': 'Analyze this diabetes meal log and provide dietary advice. '
-                'Respond ONLY in $langName with the JSON format specified.\n\n'
-                '$mealDesc',
-          },
-        ],
+        maxTokens: 2048,
       );
-    } on GeminiBlockedException catch (e) {
+    } on AiBlockedException catch (e) {
       debugPrint('[MealAiAdvisorService] Blocked: $e');
       throw const AiServiceException(AiErrorType.couldNotProcess);
-    } on GeminiApiException catch (e) {
-      debugPrint('[MealAiAdvisorService] Gemini API error: $e');
-      throw AiServiceException(_geminiErrorType(e));
+    } on AiApiException catch (e) {
+      debugPrint('[MealAiAdvisorService] AI API error: $e');
+      throw AiServiceException(_aiErrorType(e));
     } on TimeoutException {
       throw const AiServiceException(AiErrorType.timeout);
     } catch (e) {
@@ -211,24 +226,27 @@ class MealAiAdvisorService {
     final buf = StringBuffer();
     buf.writeln('Meal type: ${entry.mealType.rawValue}');
     buf.writeln(
-        'Timestamp: ${entry.timestamp.hour.toString().padLeft(2, '0')}:${entry.timestamp.minute.toString().padLeft(2, '0')}');
+      'Timestamp: ${entry.timestamp.hour.toString().padLeft(2, '0')}:${entry.timestamp.minute.toString().padLeft(2, '0')}',
+    );
     buf.writeln('Total carbohydrates: ${entry.totalCarbs.toStringAsFixed(1)}g');
     buf.writeln(
-        'Total rations (1 ration = 10g carbs): ${entry.totalRations.toStringAsFixed(1)}');
+      'Total rations (1 ration = 10g carbs): ${entry.totalRations.toStringAsFixed(1)}',
+    );
     if (entry.totalFats != null && entry.totalFats! > 0) {
       buf.writeln('Total fat: ${entry.totalFats!.toStringAsFixed(1)}g');
     }
     if (entry.totalProteins != null && entry.totalProteins! > 0) {
-      buf.writeln(
-          'Total protein: ${entry.totalProteins!.toStringAsFixed(1)}g');
+      buf.writeln('Total protein: ${entry.totalProteins!.toStringAsFixed(1)}g');
     }
     if (entry.glucose != null) {
       buf.writeln(
-          'Pre-meal blood glucose: ${entry.glucose!.toStringAsFixed(0)} mg/dL');
+        'Pre-meal blood glucose: ${entry.glucose!.toStringAsFixed(0)} mg/dL',
+      );
     }
     if (entry.totalBolus != null) {
       buf.writeln(
-          'Insulin bolus administered: ${entry.totalBolus!.toStringAsFixed(1)} units');
+        'Insulin bolus administered: ${entry.totalBolus!.toStringAsFixed(1)} units',
+      );
     }
 
     if (entry.items.isNotEmpty) {
@@ -251,7 +269,7 @@ class MealAiAdvisorService {
     return buf.toString();
   }
 
-  static AiErrorType _geminiErrorType(GeminiApiException e) {
+  static AiErrorType _aiErrorType(AiApiException e) {
     final lower = e.message.toLowerCase();
     if (lower.contains('quota') || lower.contains('rate limit')) {
       return AiErrorType.quotaExceeded;
@@ -260,6 +278,9 @@ class MealAiAdvisorService {
       return AiErrorType.invalidApiKey;
     }
     if (lower.contains('permission') || lower.contains('access')) {
+      return AiErrorType.noModelAccess;
+    }
+    if (e.statusCode == 404) {
       return AiErrorType.noModelAccess;
     }
     return AiErrorType.serviceUnavailable;

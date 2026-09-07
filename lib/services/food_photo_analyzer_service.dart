@@ -4,11 +4,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'ai_client.dart';
+import 'ai_config.dart';
 import 'ai_service_exception.dart';
-import 'gemini_rest_client.dart';
 
-/// Result from Gemini food photo analysis.
-class GeminiFoodItem {
+/// A single food item identified by the AI analysis.
+class FoodAnalysisItem {
   final String name;
   final double grams;
   final double carbsPer100g;
@@ -18,7 +19,7 @@ class GeminiFoodItem {
   final double? fiberPer100g;
   final String? glycemicIndex;
 
-  const GeminiFoodItem({
+  const FoodAnalysisItem({
     required this.name,
     required this.grams,
     required this.carbsPer100g,
@@ -29,8 +30,8 @@ class GeminiFoodItem {
     this.glycemicIndex,
   });
 
-  factory GeminiFoodItem.fromJson(Map<String, dynamic> json) {
-    return GeminiFoodItem(
+  factory FoodAnalysisItem.fromJson(Map<String, dynamic> json) {
+    return FoodAnalysisItem(
       name: json['name'] ?? '',
       grams: (json['grams'] as num?)?.toDouble() ?? 100.0,
       carbsPer100g: (json['carbsPer100g'] as num?)?.toDouble() ?? 0.0,
@@ -51,24 +52,29 @@ class GeminiFoodItem {
       carbsPer100g <= 100;
 }
 
-/// Complete analysis result from Gemini.
-class GeminiAnalysisResult {
+/// Complete analysis result from the AI.
+class FoodAnalysisResult {
   final String summary;
   final String notes;
-  final List<GeminiFoodItem> items;
+  final List<FoodAnalysisItem> items;
 
-  const GeminiAnalysisResult({
+  const FoodAnalysisResult({
     required this.summary,
     required this.notes,
     required this.items,
   });
 }
 
-/// Service for analyzing food photos using Gemini 2.5 Flash.
+/// Service for analyzing food photos with the configured AI provider.
 class FoodPhotoAnalyzerService {
-  /// Storage key for the Gemini API key. Used both as the secure-storage key
-  /// and as the legacy `SharedPreferences` key for one-time migration.
-  static const _apiKeyPref = 'gemini_api_key';
+  /// Storage key for the API key in secure storage. Used by any
+  /// OpenAI-compatible provider (only one provider is active at a time).
+  static const _apiKeyPref = 'ai_api_key';
+
+  /// Former secure-storage key (Gemini-only era), kept for one-time
+  /// migration to [_apiKeyPref].
+  static const _legacyApiKeyPref = 'gemini_api_key';
+
   static const _privacyAcceptedPref = 'gemini_privacy_accepted';
   static const _photoTipDismissedPref = 'gemini_photo_tip_dismissed';
 
@@ -81,34 +87,49 @@ class FoodPhotoAnalyzerService {
   /// Reactive notifier — `true` when a non-empty API key is configured.
   /// Widgets can use `ValueListenableBuilder` to rebuild automatically
   /// when the key is saved or cleared, without FutureBuilder caching issues.
-  static final ValueNotifier<bool> apiKeyConfigured =
-      ValueNotifier<bool>(false);
+  static final ValueNotifier<bool> apiKeyConfigured = ValueNotifier<bool>(
+    false,
+  );
 
   /// Call once at app start to initialise [apiKeyConfigured] from storage.
-  /// Also migrates any key previously stored in plaintext `SharedPreferences`
-  /// into encrypted secure storage.
+  /// Also migrates keys stored by older app versions (plaintext
+  /// `SharedPreferences` and the `gemini_api_key` secure-storage entry)
+  /// to the current [_apiKeyPref] location.
   static Future<void> initApiKeyStatus() async {
     await _migrateLegacyKeyIfNeeded();
     final key = await getApiKey();
     apiKeyConfigured.value = key != null && key.isNotEmpty;
   }
 
-  /// Moves an API key stored by older app versions in plaintext
-  /// `SharedPreferences` into encrypted secure storage, then removes the
-  /// plaintext copy. Runs at most once (no-op afterwards).
+  /// Moves API keys stored by older app versions to the current location:
+  /// the `gemini_api_key` secure-storage entry (multi-provider era key
+  /// rename), plus the even older plaintext `SharedPreferences` copy.
+  /// Runs at most once (no-op afterwards).
   static Future<void> _migrateLegacyKeyIfNeeded() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final legacyKey = prefs.getString(_apiKeyPref);
-      if (legacyKey == null) return; // nothing to migrate
-      if (legacyKey.isNotEmpty) {
+      // 1. Migrate the legacy secure-storage entry (key rename).
+      final legacySecure = await _secureStorage.read(key: _legacyApiKeyPref);
+      if (legacySecure != null && legacySecure.isNotEmpty) {
         final existing = await _secureStorage.read(key: _apiKeyPref);
         if (existing == null || existing.isEmpty) {
-          await _secureStorage.write(key: _apiKeyPref, value: legacyKey);
+          await _secureStorage.write(key: _apiKeyPref, value: legacySecure);
         }
+        await _secureStorage.delete(key: _legacyApiKeyPref);
       }
-      // Remove the plaintext copy regardless, so it never lingers.
-      await prefs.remove(_apiKeyPref);
+
+      // 2. Migrate the even older plaintext SharedPreferences copy.
+      final prefs = await SharedPreferences.getInstance();
+      final legacyPlain = prefs.getString(_legacyApiKeyPref);
+      if (legacyPlain != null) {
+        if (legacyPlain.isNotEmpty) {
+          final existing = await _secureStorage.read(key: _apiKeyPref);
+          if (existing == null || existing.isEmpty) {
+            await _secureStorage.write(key: _apiKeyPref, value: legacyPlain);
+          }
+        }
+        // Remove the plaintext copy regardless, so it never lingers.
+        await prefs.remove(_legacyApiKeyPref);
+      }
     } catch (e) {
       debugPrint('[FoodPhotoAnalyzerService] Key migration skipped: $e');
     }
@@ -154,15 +175,24 @@ class FoodPhotoAnalyzerService {
     await prefs.setBool(_photoTipDismissedPref, true);
   }
 
-  /// Analyze a food photo with Gemini 2.5 Flash.
+  /// Analyze a food photo with the configured AI provider and model.
   /// [locale] is the user's app language (e.g. "es", "en", "cs").
   /// Returns structured result with summary, notes, and items.
-  static Future<GeminiAnalysisResult> analyze(
+  static Future<FoodAnalysisResult> analyze(
     File imageFile, {
     required String locale,
   }) async {
     final apiKey = await getApiKey();
     if (apiKey == null || apiKey.isEmpty) {
+      throw const AiServiceException(AiErrorType.noApiKey);
+    }
+
+    final model = AiConfig.currentModelId;
+    if (model.isEmpty) {
+      throw const AiServiceException(AiErrorType.modelNotSelected);
+    }
+    final baseUrl = AiConfig.baseUrl;
+    if (baseUrl.isEmpty) {
       throw const AiServiceException(AiErrorType.noApiKey);
     }
 
@@ -185,14 +215,14 @@ class FoodPhotoAnalyzerService {
     final langName = languageNames[locale] ?? 'English';
 
     const giLabels = {
-      'en': (low: 'Low',     mid: 'Medium',  high: 'High'),
-      'es': (low: 'Bajo',    mid: 'Medio',   high: 'Alto'),
-      'fr': (low: 'Faible',  mid: 'Moyen',   high: 'Élevé'),
-      'it': (low: 'Basso',   mid: 'Medio',   high: 'Alto'),
-      'de': (low: 'Niedrig', mid: 'Mittel',  high: 'Hoch'),
-      'pt': (low: 'Baixo',   mid: 'Médio',   high: 'Alto'),
-      'pl': (low: 'Niski',   mid: 'Średni',  high: 'Wysoki'),
-      'cs': (low: 'Nízký',   mid: 'Střední', high: 'Vysoký'),
+      'en': (low: 'Low', mid: 'Medium', high: 'High'),
+      'es': (low: 'Bajo', mid: 'Medio', high: 'Alto'),
+      'fr': (low: 'Faible', mid: 'Moyen', high: 'Élevé'),
+      'it': (low: 'Basso', mid: 'Medio', high: 'Alto'),
+      'de': (low: 'Niedrig', mid: 'Mittel', high: 'Hoch'),
+      'pt': (low: 'Baixo', mid: 'Médio', high: 'Alto'),
+      'pl': (low: 'Niski', mid: 'Średni', high: 'Wysoki'),
+      'cs': (low: 'Nízký', mid: 'Střední', high: 'Vysoký'),
     };
     final gi = giLabels[locale] ?? giLabels['en']!;
 
@@ -236,32 +266,25 @@ class FoodPhotoAnalyzerService {
 
     final String text;
     try {
-      text = await GeminiRestClient.generateContent(
+      text = await AiClient.chat(
+        baseUrl: baseUrl,
         apiKey: apiKey,
-        models: const ['gemini-2.5-flash', 'gemini-2.0-flash'],
+        model: AiConfig.currentModelId,
         systemInstruction: systemInstruction,
+        userText:
+            'Analyze this food plate photo. '
+            'Respond ONLY with a JSON object (not an array). '
+            'Write everything in $langName language.',
+        imageBase64: base64Encode(imageBytes),
         temperature: 0.1,
-        maxOutputTokens: 2048,
-        parts: [
-          {
-            'text': 'Analyze this food plate photo. '
-                'Respond ONLY with a JSON object (not an array). '
-                'Write everything in $langName language.',
-          },
-          {
-            'inlineData': {
-              'mimeType': 'image/jpeg',
-              'data': base64Encode(imageBytes),
-            },
-          },
-        ],
+        maxTokens: 2048,
       );
-    } on GeminiBlockedException catch (e) {
+    } on AiBlockedException catch (e) {
       debugPrint('[FoodPhotoAnalyzerService] Blocked: $e');
       throw const AiServiceException(AiErrorType.blockedContent);
-    } on GeminiApiException catch (e) {
-      debugPrint('[FoodPhotoAnalyzerService] Gemini API error: $e');
-      throw AiServiceException(_geminiErrorType(e));
+    } on AiApiException catch (e) {
+      debugPrint('[FoodPhotoAnalyzerService] AI API error: $e');
+      throw AiServiceException(_aiErrorType(e));
     } on TimeoutException {
       throw const AiServiceException(AiErrorType.timeout);
     } catch (e) {
@@ -273,8 +296,9 @@ class FoodPhotoAnalyzerService {
       throw const AiServiceException(AiErrorType.emptyResponse);
     }
 
-    // Detect Gemini error messages in the text (API overload, quota, etc.)
-    if (_isGeminiErrorText(text)) {
+    // Detect provider error messages in the text (some free-tier providers
+    // return errors as plain text with a 200 status).
+    if (_isErrorText(text)) {
       throw const AiServiceException(AiErrorType.serviceUnavailable);
     }
 
@@ -296,7 +320,7 @@ class FoodPhotoAnalyzerService {
     final rawItems = json['items'] as List<dynamic>?;
     final items =
         rawItems
-            ?.map((i) => GeminiFoodItem.fromJson(i as Map<String, dynamic>))
+            ?.map((i) => FoodAnalysisItem.fromJson(i as Map<String, dynamic>))
             .where((item) => item.isValid)
             .toList() ??
         [];
@@ -310,11 +334,12 @@ class FoodPhotoAnalyzerService {
       throw const AiServiceException(AiErrorType.noFood);
     }
 
-    return GeminiAnalysisResult(summary: summary, notes: notes, items: items);
+    return FoodAnalysisResult(summary: summary, notes: notes, items: items);
   }
 
-  /// Check if the text is actually a Gemini error message, not JSON.
-  static bool _isGeminiErrorText(String text) {
+  /// Check if the text is actually an error message, not JSON. Some
+  /// providers return errors as plain text with a 200 status.
+  static bool _isErrorText(String text) {
     final lower = text.toLowerCase().trim();
     // Patterns that indicate an API error rather than a valid response
     final errorPatterns = [
@@ -331,8 +356,8 @@ class FoodPhotoAnalyzerService {
     return errorPatterns.any((p) => lower.contains(p));
   }
 
-  /// Map a Gemini API error to a localizable [AiErrorType].
-  static AiErrorType _geminiErrorType(GeminiApiException e) {
+  /// Map an AI API error to a localizable [AiErrorType].
+  static AiErrorType _aiErrorType(AiApiException e) {
     final lower = e.message.toLowerCase();
     if (lower.contains('quota') || lower.contains('rate limit')) {
       return AiErrorType.quotaExceeded;
@@ -341,6 +366,9 @@ class FoodPhotoAnalyzerService {
       return AiErrorType.invalidApiKey;
     }
     if (lower.contains('permission') || lower.contains('access')) {
+      return AiErrorType.noModelAccess;
+    }
+    if (e.statusCode == 404) {
       return AiErrorType.noModelAccess;
     }
     return AiErrorType.serviceUnavailable;
