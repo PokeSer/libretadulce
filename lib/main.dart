@@ -13,6 +13,7 @@ import 'core/theme/app_dimens.dart';
 import 'l10n/app_localizations.dart';
 import 'pages/login_page.dart';
 import 'pages/home_page.dart';
+import 'services/ai_config.dart';
 import 'services/food_photo_analyzer_service.dart';
 
 // DIRECTION CONTRACT — Libreta Dulce · mundo «El paisaje de la glucemia»
@@ -62,6 +63,7 @@ void main() async {
   ];
   await Future.wait(locales.map((l) => initializeDateFormatting(l, null)));
   await FoodPhotoAnalyzerService.initApiKeyStatus();
+  await AiConfig.init();
   runApp(AppSettingsScope(settings: appSettings, child: const MyApp()));
 }
 

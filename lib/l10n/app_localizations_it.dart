@@ -1068,7 +1068,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get photoAnalyzingHint =>
-      'Gemini sta identificando gli alimenti e stimando i valori nutrizionali';
+      'L\'IA sta identificando gli alimenti e stimando i valori nutrizionali';
 
   @override
   String get photoNoFoodDetected =>
@@ -1088,7 +1088,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get photoEmptySubtitle =>
-      'Gemini identificherà gli alimenti, stimerà le porzioni e calcolerà i valori nutrizionali';
+      'L\'IA identificherà gli alimenti, stimerà le porzioni e calcolerà i valori nutrizionali';
 
   @override
   String get photoResultsTitle => 'Alimenti rilevati';
@@ -1122,20 +1122,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get photoApiKeyMissing =>
-      'Per usare l\'analisi IA serve una chiave API Gemini. Gratuita su aistudio.google.com';
+      'Per usare l\'analisi IA serve una chiave API. Configurala nelle impostazioni.';
 
   @override
   String get photoConfigureKey => 'Vai alle impostazioni';
-
-  @override
-  String get profileGeminiKey => 'Chiave API Gemini';
 
   @override
   String get photoPrivacyTitle => 'Privacy';
 
   @override
   String get photoPrivacyText =>
-      'La foto del tuo piatto sarà inviata all\'API Gemini (Google) per l\'analisi. Non viene archiviata né usata per l\'addestramento. Accetti?';
+      'La foto del tuo piatto sarà inviata al fornitore IA scelto nelle impostazioni per l\'analisi. Consulta l\'informativa sulla privacy del tuo fornitore. Accetti?';
 
   @override
   String get photoPrivacyCancel => 'Annulla';
@@ -1228,14 +1225,78 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questa è una stima. Controlla sempre la glicemia attuale per applicare la correzione necessaria e consulta il medico per qualsiasi dubbio sulla terapia insulinica.';
 
   @override
-  String get profileGeminiKeyHint => 'Incolla qui la tua chiave API';
+  String get profileAiProviderPickerTitle => 'Fornitore IA';
 
   @override
-  String get profileGeminiKeyDesc =>
-      'Necessaria per l\'analisi IA degli alimenti. Gratuita su aistudio.google.com';
+  String get profileAiProviderGemini => 'Gemini (Google)';
 
   @override
-  String get profileGeminiKeySaved => 'Chiave API salvata';
+  String get profileAiProviderGroq => 'Groq';
+
+  @override
+  String get profileAiProviderOpenRouter => 'OpenRouter';
+
+  @override
+  String get profileAiProviderOpenAI => 'OpenAI';
+
+  @override
+  String get profileAiProviderCustom => 'Personalizzato';
+
+  @override
+  String get profileAiProviderCustomDesc =>
+      'Qualsiasi servizio compatibile con l\'API di OpenAI';
+
+  @override
+  String profileAiProviderAt(String url) {
+    return 'Ottieni la chiave su $url';
+  }
+
+  @override
+  String get profileAiModelPickerTitle => 'Modello IA';
+
+  @override
+  String get profileAiModelNone => 'Non selezionato';
+
+  @override
+  String get profileAiModelFetching => 'Recupero dei modelli...';
+
+  @override
+  String get profileAiModelFetchError =>
+      'Impossibile recuperare l\'elenco dei modelli';
+
+  @override
+  String get profileAiModelManualLabel => 'Identificatore del modello';
+
+  @override
+  String get profileAiModelManualHint =>
+      'Digita l\'identificatore esatto (es. llama3.2)';
+
+  @override
+  String get profileAiModelVisionHint =>
+      'L\'analisi delle foto richiede un modello con visione';
+
+  @override
+  String get profileAiModelSaved => 'Modello salvato';
+
+  @override
+  String get profileAiKeyLabel => 'Chiave API';
+
+  @override
+  String profileAiKeyHint(String url) {
+    return 'Incolla qui la tua chiave API $url';
+  }
+
+  @override
+  String get profileAiKeyHintCustom => 'Incolla qui la tua chiave API';
+
+  @override
+  String get profileAiKeySaved => 'Chiave API salvata';
+
+  @override
+  String get profileAiCustomUrlLabel => 'URL di base personalizzato';
+
+  @override
+  String get profileAiCustomUrlHint => 'es. http://localhost:1234/v1';
 
   @override
   String get historyAiAnalyzeButton => 'Analizza con IA';
@@ -1272,14 +1333,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get historyAiNoKey =>
-      'Configura la tua chiave Gemini nelle impostazioni per usare questa funzione.';
+      'Configura la tua chiave API nelle impostazioni per usare questa funzione.';
 
   @override
   String get commonRetry => 'Riprova';
 
   @override
   String get aiErrorNoApiKey =>
-      'Nessuna chiave API Gemini configurata. Aggiungine una nelle impostazioni.';
+      'Nessuna chiave API configurata. Aggiungine una nelle impostazioni.';
 
   @override
   String get aiErrorImageTooLarge =>
@@ -1295,7 +1356,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get aiErrorNoModelAccess =>
-      'La tua chiave API non ha accesso a questo modello. Controlla aistudio.google.com.';
+      'La tua chiave API non ha accesso a questo modello. Controlla il portale del tuo fornitore.';
+
+  @override
+  String get aiErrorModelNotSelected =>
+      'Seleziona un modello IA nelle impostazioni.';
 
   @override
   String get aiErrorServiceUnavailable =>

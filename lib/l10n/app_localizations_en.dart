@@ -1066,7 +1066,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get photoAnalyzingHint =>
-      'Gemini is identifying foods and estimating nutritional values';
+      'The AI is identifying foods and estimating nutritional values';
 
   @override
   String get photoNoFoodDetected =>
@@ -1085,7 +1085,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get photoEmptySubtitle =>
-      'Gemini will identify foods, estimate portions and calculate nutritional values';
+      'The AI will identify foods, estimate portions and calculate nutritional values';
 
   @override
   String get photoResultsTitle => 'Detected foods';
@@ -1118,20 +1118,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get photoApiKeyMissing =>
-      'To use AI analysis you need a Gemini API key. It\'s free at aistudio.google.com';
+      'To use AI analysis you need an API key. Set it up in Settings.';
 
   @override
   String get photoConfigureKey => 'Go to Settings';
-
-  @override
-  String get profileGeminiKey => 'Gemini API Key';
 
   @override
   String get photoPrivacyTitle => 'Privacy';
 
   @override
   String get photoPrivacyText =>
-      'Your plate photo will be sent to the Gemini API (Google) for analysis. It is not stored or used for model training. Do you accept?';
+      'Your plate photo will be sent to the AI provider chosen in Settings for analysis. Check your provider\'s privacy policy. Do you accept?';
 
   @override
   String get photoPrivacyCancel => 'Cancel';
@@ -1224,14 +1221,76 @@ class AppLocalizationsEn extends AppLocalizations {
       'This is an estimate. Always check your current blood glucose to apply the necessary correction and consult your doctor about your insulin regimen.';
 
   @override
-  String get profileGeminiKeyHint => 'Paste your API key here';
+  String get profileAiProviderPickerTitle => 'AI provider';
 
   @override
-  String get profileGeminiKeyDesc =>
-      'Required for AI food analysis. Free at aistudio.google.com';
+  String get profileAiProviderGemini => 'Gemini (Google)';
 
   @override
-  String get profileGeminiKeySaved => 'API key saved';
+  String get profileAiProviderGroq => 'Groq';
+
+  @override
+  String get profileAiProviderOpenRouter => 'OpenRouter';
+
+  @override
+  String get profileAiProviderOpenAI => 'OpenAI';
+
+  @override
+  String get profileAiProviderCustom => 'Custom';
+
+  @override
+  String get profileAiProviderCustomDesc => 'Any OpenAI-compatible API service';
+
+  @override
+  String profileAiProviderAt(String url) {
+    return 'Get your key at $url';
+  }
+
+  @override
+  String get profileAiModelPickerTitle => 'AI model';
+
+  @override
+  String get profileAiModelNone => 'Not selected';
+
+  @override
+  String get profileAiModelFetching => 'Fetching models...';
+
+  @override
+  String get profileAiModelFetchError => 'Could not fetch the model list';
+
+  @override
+  String get profileAiModelManualLabel => 'Model identifier';
+
+  @override
+  String get profileAiModelManualHint =>
+      'Type the exact identifier (e.g. llama3.2)';
+
+  @override
+  String get profileAiModelVisionHint =>
+      'Photo analysis requires a vision-capable model';
+
+  @override
+  String get profileAiModelSaved => 'Model saved';
+
+  @override
+  String get profileAiKeyLabel => 'API key';
+
+  @override
+  String profileAiKeyHint(String url) {
+    return 'Paste your $url API key here';
+  }
+
+  @override
+  String get profileAiKeyHintCustom => 'Paste your API key here';
+
+  @override
+  String get profileAiKeySaved => 'API key saved';
+
+  @override
+  String get profileAiCustomUrlLabel => 'Custom base URL';
+
+  @override
+  String get profileAiCustomUrlHint => 'e.g. http://localhost:1234/v1';
 
   @override
   String get historyAiAnalyzeButton => 'Analyze with AI';
@@ -1268,14 +1327,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get historyAiNoKey =>
-      'Set up your Gemini key in Settings to use this feature.';
+      'Set up your API key in Settings to use this feature.';
 
   @override
   String get commonRetry => 'Retry';
 
   @override
-  String get aiErrorNoApiKey =>
-      'No Gemini API key configured. Add one in Settings.';
+  String get aiErrorNoApiKey => 'No API key configured. Add one in Settings.';
 
   @override
   String get aiErrorImageTooLarge =>
@@ -1291,7 +1349,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiErrorNoModelAccess =>
-      'Your API key doesn\'t have access to this model. Check aistudio.google.com.';
+      'Your API key doesn\'t have access to this model. Check your provider\'s portal.';
+
+  @override
+  String get aiErrorModelNotSelected => 'Select an AI model in Settings.';
 
   @override
   String get aiErrorServiceUnavailable =>

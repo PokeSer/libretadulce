@@ -7,6 +7,9 @@ enum AiErrorType {
   /// No API key has been configured by the user.
   noApiKey,
 
+  /// No model has been selected yet (e.g. custom provider not set up).
+  modelNotSelected,
+
   /// The selected image exceeds the size limit.
   imageTooLarge,
 

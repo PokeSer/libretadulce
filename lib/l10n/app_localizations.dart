@@ -2021,7 +2021,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoAnalyzingHint.
   ///
   /// In es, this message translates to:
-  /// **'Gemini está identificando alimentos y estimando valores nutricionales'**
+  /// **'La IA está identificando alimentos y estimando valores nutricionales'**
   String get photoAnalyzingHint;
 
   /// No description provided for @photoNoFoodDetected.
@@ -2051,7 +2051,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoEmptySubtitle.
   ///
   /// In es, this message translates to:
-  /// **'Gemini identificará los alimentos, estimará las porciones y calculará los valores nutricionales'**
+  /// **'La IA identificará los alimentos, estimará las porciones y calculará los valores nutricionales'**
   String get photoEmptySubtitle;
 
   /// No description provided for @photoResultsTitle.
@@ -2111,7 +2111,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoApiKeyMissing.
   ///
   /// In es, this message translates to:
-  /// **'Para usar el análisis con IA necesitas una clave de API de Gemini. Es gratis, puedes obtenerla en aistudio.google.com'**
+  /// **'Para usar el análisis con IA necesitas una clave de API. Configúrala en Ajustes.'**
   String get photoApiKeyMissing;
 
   /// No description provided for @photoConfigureKey.
@@ -2119,12 +2119,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Ir a Ajustes'**
   String get photoConfigureKey;
-
-  /// No description provided for @profileGeminiKey.
-  ///
-  /// In es, this message translates to:
-  /// **'Clave API de Gemini'**
-  String get profileGeminiKey;
 
   /// No description provided for @photoPrivacyTitle.
   ///
@@ -2135,7 +2129,7 @@ abstract class AppLocalizations {
   /// No description provided for @photoPrivacyText.
   ///
   /// In es, this message translates to:
-  /// **'La foto de tu plato se enviará a la API de Gemini (Google) para su análisis. No se almacena ni se usa para entrenar modelos. ¿Aceptas?'**
+  /// **'La foto de tu plato se enviará al proveedor de IA elegido en Ajustes para su análisis. Consulta la política de privacidad de tu proveedor. ¿Aceptas?'**
   String get photoPrivacyText;
 
   /// No description provided for @photoPrivacyCancel.
@@ -2306,23 +2300,137 @@ abstract class AppLocalizations {
   /// **'Este cálculo es orientativo. Verifica siempre tu glucemia actual para aplicar la corrección necesaria y consulta con tu médico cualquier duda sobre tu pauta de insulina.'**
   String get photoBolusReminder;
 
-  /// No description provided for @profileGeminiKeyHint.
+  /// No description provided for @profileAiProviderPickerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Proveedor de IA'**
+  String get profileAiProviderPickerTitle;
+
+  /// No description provided for @profileAiProviderGemini.
+  ///
+  /// In es, this message translates to:
+  /// **'Gemini (Google)'**
+  String get profileAiProviderGemini;
+
+  /// No description provided for @profileAiProviderGroq.
+  ///
+  /// In es, this message translates to:
+  /// **'Groq'**
+  String get profileAiProviderGroq;
+
+  /// No description provided for @profileAiProviderOpenRouter.
+  ///
+  /// In es, this message translates to:
+  /// **'OpenRouter'**
+  String get profileAiProviderOpenRouter;
+
+  /// No description provided for @profileAiProviderOpenAI.
+  ///
+  /// In es, this message translates to:
+  /// **'OpenAI'**
+  String get profileAiProviderOpenAI;
+
+  /// No description provided for @profileAiProviderCustom.
+  ///
+  /// In es, this message translates to:
+  /// **'Personalizado'**
+  String get profileAiProviderCustom;
+
+  /// No description provided for @profileAiProviderCustomDesc.
+  ///
+  /// In es, this message translates to:
+  /// **'Cualquier servicio compatible con la API de OpenAI'**
+  String get profileAiProviderCustomDesc;
+
+  /// No description provided for @profileAiProviderAt.
+  ///
+  /// In es, this message translates to:
+  /// **'Consigue la clave en {url}'**
+  String profileAiProviderAt(String url);
+
+  /// No description provided for @profileAiModelPickerTitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Modelo de IA'**
+  String get profileAiModelPickerTitle;
+
+  /// No description provided for @profileAiModelNone.
+  ///
+  /// In es, this message translates to:
+  /// **'Sin seleccionar'**
+  String get profileAiModelNone;
+
+  /// No description provided for @profileAiModelFetching.
+  ///
+  /// In es, this message translates to:
+  /// **'Obteniendo modelos...'**
+  String get profileAiModelFetching;
+
+  /// No description provided for @profileAiModelFetchError.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo obtener la lista de modelos'**
+  String get profileAiModelFetchError;
+
+  /// No description provided for @profileAiModelManualLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Identificador del modelo'**
+  String get profileAiModelManualLabel;
+
+  /// No description provided for @profileAiModelManualHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Escribe el identificador exacto (p. ej. llama3.2)'**
+  String get profileAiModelManualHint;
+
+  /// No description provided for @profileAiModelVisionHint.
+  ///
+  /// In es, this message translates to:
+  /// **'El análisis de fotos requiere un modelo con visión'**
+  String get profileAiModelVisionHint;
+
+  /// No description provided for @profileAiModelSaved.
+  ///
+  /// In es, this message translates to:
+  /// **'Modelo guardado'**
+  String get profileAiModelSaved;
+
+  /// No description provided for @profileAiKeyLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'Clave de API'**
+  String get profileAiKeyLabel;
+
+  /// No description provided for @profileAiKeyHint.
+  ///
+  /// In es, this message translates to:
+  /// **'Pega aquí tu clave API de {url}'**
+  String profileAiKeyHint(String url);
+
+  /// No description provided for @profileAiKeyHintCustom.
   ///
   /// In es, this message translates to:
   /// **'Pega aquí tu clave API'**
-  String get profileGeminiKeyHint;
+  String get profileAiKeyHintCustom;
 
-  /// No description provided for @profileGeminiKeyDesc.
-  ///
-  /// In es, this message translates to:
-  /// **'Necesaria para el análisis de alimentos con IA. Gratis en aistudio.google.com'**
-  String get profileGeminiKeyDesc;
-
-  /// No description provided for @profileGeminiKeySaved.
+  /// No description provided for @profileAiKeySaved.
   ///
   /// In es, this message translates to:
   /// **'Clave API guardada'**
-  String get profileGeminiKeySaved;
+  String get profileAiKeySaved;
+
+  /// No description provided for @profileAiCustomUrlLabel.
+  ///
+  /// In es, this message translates to:
+  /// **'URL base personalizada'**
+  String get profileAiCustomUrlLabel;
+
+  /// No description provided for @profileAiCustomUrlHint.
+  ///
+  /// In es, this message translates to:
+  /// **'p. ej. http://localhost:1234/v1'**
+  String get profileAiCustomUrlHint;
 
   /// No description provided for @historyAiAnalyzeButton.
   ///
@@ -2393,7 +2501,7 @@ abstract class AppLocalizations {
   /// No description provided for @historyAiNoKey.
   ///
   /// In es, this message translates to:
-  /// **'Configura tu clave Gemini en Ajustes para usar esta función.'**
+  /// **'Configura tu clave de API en Ajustes para usar esta función.'**
   String get historyAiNoKey;
 
   /// No description provided for @commonRetry.
@@ -2405,7 +2513,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiErrorNoApiKey.
   ///
   /// In es, this message translates to:
-  /// **'No hay clave de API de Gemini configurada. Añade una en Ajustes.'**
+  /// **'No hay clave de API configurada. Añádela en Ajustes.'**
   String get aiErrorNoApiKey;
 
   /// No description provided for @aiErrorImageTooLarge.
@@ -2429,8 +2537,14 @@ abstract class AppLocalizations {
   /// No description provided for @aiErrorNoModelAccess.
   ///
   /// In es, this message translates to:
-  /// **'Tu clave de API no tiene acceso a este modelo. Revisa aistudio.google.com.'**
+  /// **'Tu clave de API no tiene acceso a este modelo. Revisa el portal de tu proveedor.'**
   String get aiErrorNoModelAccess;
+
+  /// No description provided for @aiErrorModelNotSelected.
+  ///
+  /// In es, this message translates to:
+  /// **'Selecciona un modelo de IA en Ajustes.'**
+  String get aiErrorModelNotSelected;
 
   /// No description provided for @aiErrorServiceUnavailable.
   ///

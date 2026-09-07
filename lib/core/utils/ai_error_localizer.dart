@@ -7,6 +7,8 @@ String localizeAiError(AiErrorType type, AppLocalizations l10n) {
   switch (type) {
     case AiErrorType.noApiKey:
       return l10n.aiErrorNoApiKey;
+    case AiErrorType.modelNotSelected:
+      return l10n.aiErrorModelNotSelected;
     case AiErrorType.imageTooLarge:
       return l10n.aiErrorImageTooLarge;
     case AiErrorType.invalidApiKey:

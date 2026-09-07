@@ -1066,7 +1066,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get photoAnalyzingHint =>
-      'Gemini identifikuje potraviny a odhaduje nutriční hodnoty';
+      'AI identifikuje potraviny a odhaduje nutriční hodnoty';
 
   @override
   String get photoNoFoodDetected =>
@@ -1085,7 +1085,7 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get photoEmptySubtitle =>
-      'Gemini identifikuje potraviny, odhadne porce a vypočítá nutriční hodnoty';
+      'AI identifikuje potraviny, odhadne porce a vypočítá nutriční hodnoty';
 
   @override
   String get photoResultsTitle => 'Rozpoznané potraviny';
@@ -1119,20 +1119,17 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get photoApiKeyMissing =>
-      'Pro analýzu pomocí AI potřebujete Gemini API klíč. Zdarma na aistudio.google.com';
+      'Pro analýzu pomocí AI potřebujete klíč API. Nastavte jej v nastavení.';
 
   @override
   String get photoConfigureKey => 'Přejít do nastavení';
-
-  @override
-  String get profileGeminiKey => 'Gemini API klíč';
 
   @override
   String get photoPrivacyTitle => 'Soukromí';
 
   @override
   String get photoPrivacyText =>
-      'Fotografie vašeho talíře bude odeslána do Gemini API (Google) k analýze. Není ukládána ani používána k trénování modelů. Souhlasíte?';
+      'Fotografie vašeho talíře bude odeslána poskytovateli AI zvolenému v nastavení k analýze. Prohlédněte si zásady ochrany osobních údajů svého poskytovatele. Souhlasíte?';
 
   @override
   String get photoPrivacyCancel => 'Zrušit';
@@ -1225,14 +1222,77 @@ class AppLocalizationsCs extends AppLocalizations {
       'Toto je orientační výpočet. Vždy zkontrolujte aktuální glykémii pro potřebnou korekci a konzultujte s lékařem jakékoli pochybnosti o dávkování inzulínu.';
 
   @override
-  String get profileGeminiKeyHint => 'Vložte svůj API klíč';
+  String get profileAiProviderPickerTitle => 'Poskytovatel AI';
 
   @override
-  String get profileGeminiKeyDesc =>
-      'Vyžadováno pro AI analýzu potravin. Zdarma na aistudio.google.com';
+  String get profileAiProviderGemini => 'Gemini (Google)';
 
   @override
-  String get profileGeminiKeySaved => 'API klíč uložen';
+  String get profileAiProviderGroq => 'Groq';
+
+  @override
+  String get profileAiProviderOpenRouter => 'OpenRouter';
+
+  @override
+  String get profileAiProviderOpenAI => 'OpenAI';
+
+  @override
+  String get profileAiProviderCustom => 'Vlastní';
+
+  @override
+  String get profileAiProviderCustomDesc =>
+      'Jakákoli služba kompatibilní s API OpenAI';
+
+  @override
+  String profileAiProviderAt(String url) {
+    return 'Získejte klíč na $url';
+  }
+
+  @override
+  String get profileAiModelPickerTitle => 'Model AI';
+
+  @override
+  String get profileAiModelNone => 'Nevybráno';
+
+  @override
+  String get profileAiModelFetching => 'Načítání modelů...';
+
+  @override
+  String get profileAiModelFetchError => 'Seznam modelů se nepodařilo načíst';
+
+  @override
+  String get profileAiModelManualLabel => 'Identifikátor modelu';
+
+  @override
+  String get profileAiModelManualHint =>
+      'Napište přesný identifikátor (např. llama3.2)';
+
+  @override
+  String get profileAiModelVisionHint =>
+      'Analýza fotografií vyžaduje model s podporou zpracování obrazu';
+
+  @override
+  String get profileAiModelSaved => 'Model uložen';
+
+  @override
+  String get profileAiKeyLabel => 'Klíč API';
+
+  @override
+  String profileAiKeyHint(String url) {
+    return 'Vložte zde svůj klíč API služby $url';
+  }
+
+  @override
+  String get profileAiKeyHintCustom => 'Vložte svůj API klíč';
+
+  @override
+  String get profileAiKeySaved => 'API klíč uložen';
+
+  @override
+  String get profileAiCustomUrlLabel => 'Vlastní základní URL';
+
+  @override
+  String get profileAiCustomUrlHint => 'např. http://localhost:1234/v1';
 
   @override
   String get historyAiAnalyzeButton => 'Analyzovat s AI';
@@ -1270,14 +1330,14 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get historyAiNoKey =>
-      'Nastavte klíč Gemini v nastavení pro použití této funkce.';
+      'Nastavte klíč API v nastavení pro použití této funkce.';
 
   @override
   String get commonRetry => 'Zkusit znovu';
 
   @override
   String get aiErrorNoApiKey =>
-      'Není nastaven žádný klíč API Gemini. Přidejte jej v nastavení.';
+      'Není nastaven žádný klíč API. Přidejte jej v nastavení.';
 
   @override
   String get aiErrorImageTooLarge =>
@@ -1293,7 +1353,10 @@ class AppLocalizationsCs extends AppLocalizations {
 
   @override
   String get aiErrorNoModelAccess =>
-      'Váš klíč API nemá přístup k tomuto modelu. Viz aistudio.google.com.';
+      'Váš klíč API nemá přístup k tomuto modelu. Podívejte se na portál svého poskytovatele.';
+
+  @override
+  String get aiErrorModelNotSelected => 'Vyberte model AI v nastavení.';
 
   @override
   String get aiErrorServiceUnavailable =>
